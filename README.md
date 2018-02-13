@@ -1,0 +1,1 @@
+This package provides methods to connect to the SynXis CRS by means of a SOAP API.

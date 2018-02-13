@@ -1,0 +1,13 @@
+{
+    "name": "gurwinderantal/synxis-php",
+    "description": "A PHP library to connect to SynXis CRS.",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Gurwinder Antal",
+            "email": "gantal@elevatedthird.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {}
+}
