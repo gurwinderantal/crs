@@ -1,11 +1,11 @@
 <?php
 
-namespace GurwinderAntal\Synxis\DataType\HotelAvailRQ;
+namespace GurwinderAntal\crs\DataType\HotelAvailRQ;
 
 /**
  * Class AvailRequestSegment
  *
- * @package GurwinderAntal\Synxis\DataType\HotelAvailRQ
+ * @package GurwinderAntal\crs\DataType\HotelAvailRQ
  */
 class AvailRequestSegment {
 
@@ -15,17 +15,17 @@ class AvailRequestSegment {
     protected $availReqType;
 
     /**
-     * @var \GurwinderAntal\Synxis\DataType\HotelAvailRQ\StayDateRange
+     * @var \GurwinderAntal\crs\DataType\HotelAvailRQ\StayDateRange
      */
     protected $stayDateRange;
 
     /**
-     * @var \GurwinderAntal\Synxis\DataType\HotelAvailRQ\RoomStayCandidate[]
+     * @var \GurwinderAntal\crs\DataType\HotelAvailRQ\RoomStayCandidate[]
      */
     protected $roomStayCandidates;
 
     /**
-     * @var \GurwinderAntal\Synxis\DataType\HotelAvailRQ\Criterion[]
+     * @var \GurwinderAntal\crs\DataType\HotelAvailRQ\Criterion[]
      */
     protected $hotelSearchCriteria;
 

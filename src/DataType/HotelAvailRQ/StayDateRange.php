@@ -1,11 +1,11 @@
 <?php
 
-namespace GurwinderAntal\Synxis\DataType\HotelAvailRQ;
+namespace GurwinderAntal\crs\DataType\HotelAvailRQ;
 
 /**
  * Class StayDateRange
  *
- * @package GurwinderAntal\Synxis\DataType\HotelAvailRQ
+ * @package GurwinderAntal\crs\DataType\HotelAvailRQ
  */
 class StayDateRange {
 

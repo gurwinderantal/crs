@@ -1,11 +1,11 @@
 <?php
 
-namespace GurwinderAntal\Synxis\DataType\shared;
+namespace GurwinderAntal\crs\DataType\shared;
 
 /**
  * Class POS
  *
- * @package GurwinderAntal\Synxis\DataType\shared
+ * @package GurwinderAntal\crs\DataType\shared
  */
 class POS {
 

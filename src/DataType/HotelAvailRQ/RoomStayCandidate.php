@@ -1,11 +1,11 @@
 <?php
 
-namespace GurwinderAntal\Synxis\DataType\HotelAvailRQ;
+namespace GurwinderAntal\crs\DataType\HotelAvailRQ;
 
 /**
  * Class RoomStayCandidate
  *
- * @package GurwinderAntal\Synxis\DataType\HotelAvailRQ
+ * @package GurwinderAntal\crs\DataType\HotelAvailRQ
  */
 class RoomStayCandidate {
 
@@ -15,7 +15,7 @@ class RoomStayCandidate {
     protected $quantity;
 
     /**
-     * @var \GurwinderAntal\Synxis\DataType\HotelAvailRQ\GuestCount[]
+     * @var \GurwinderAntal\crs\DataType\HotelAvailRQ\GuestCount[]
      */
     protected $guestCounts;
 

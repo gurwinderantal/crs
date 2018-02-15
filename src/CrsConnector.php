@@ -1,21 +1,21 @@
 <?php
 
-namespace GurwinderAntal\Synxis;
+namespace GurwinderAntal\crs;
 
-use GurwinderAntal\Synxis\DataType\HotelAvailRQ\AvailRequestSegment;
-use GurwinderAntal\Synxis\DataType\HotelAvailRQ\Criterion;
-use GurwinderAntal\Synxis\DataType\HotelAvailRQ\GuestCount;
-use GurwinderAntal\Synxis\DataType\HotelAvailRQ\HotelAvailRQ;
-use GurwinderAntal\Synxis\DataType\HotelAvailRQ\RoomStayCandidate;
-use GurwinderAntal\Synxis\DataType\HotelAvailRQ\StayDateRange;
-use GurwinderAntal\Synxis\DataType\shared\POS;
+use GurwinderAntal\crs\DataType\HotelAvailRQ\AvailRequestSegment;
+use GurwinderAntal\crs\DataType\HotelAvailRQ\Criterion;
+use GurwinderAntal\crs\DataType\HotelAvailRQ\GuestCount;
+use GurwinderAntal\crs\DataType\HotelAvailRQ\HotelAvailRQ;
+use GurwinderAntal\crs\DataType\HotelAvailRQ\RoomStayCandidate;
+use GurwinderAntal\crs\DataType\HotelAvailRQ\StayDateRange;
+use GurwinderAntal\crs\DataType\shared\POS;
 
 /**
- * Class SynxisConnector
+ * Class CrsConnector
  *
- * @package GurwinderAntal\Synxis
+ * @package GurwinderAntal\crs
  */
-class SynxisConnector {
+class CrsConnector {
 
     /**
      * @var \SoapClient
@@ -23,7 +23,7 @@ class SynxisConnector {
     protected $client;
 
     /**
-     * SynxisConnector constructor.
+     * CrsConnector constructor.
      *
      * @param $wsdl
      *    URI of the WSDL file.

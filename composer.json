@@ -1,10 +1,10 @@
 {
-    "name": "gurwinderantal/synxis-php",
-    "description": "A PHP library to connect to SynXis CRS.",
+    "name": "gurwinderantal/crs",
+    "description": "A PHP library to connect to SynXis/Windsurfer CRS.",
     "license": "GPL-2.0-or-later",
     "autoload": {
         "psr-4": {
-            "GurwinderAntal\\Synxis\\": "src/"
+            "GurwinderAntal\\crs\\": "src/"
         }
     },
     "authors": [

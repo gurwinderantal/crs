@@ -1,11 +1,11 @@
 <?php
 
-namespace GurwinderAntal\Synxis\DataType\HotelAvailRQ;
+namespace GurwinderAntal\crs\DataType\HotelAvailRQ;
 
 /**
  * Class HotelAvailRQ
  *
- * @package GurwinderAntal\Synxis\DataType\HotelAvailRQ
+ * @package GurwinderAntal\crs\DataType\HotelAvailRQ
  */
 class HotelAvailRQ {
 
@@ -25,12 +25,12 @@ class HotelAvailRQ {
     protected $exactMatchOnly;
 
     /**
-     * @var \GurwinderAntal\Synxis\DataType\shared\POS
+     * @var \GurwinderAntal\crs\DataType\shared\POS
      */
     protected $pos;
 
     /**
-     * @var \GurwinderAntal\Synxis\DataType\HotelAvailRQ\AvailRequestSegment[]
+     * @var \GurwinderAntal\crs\DataType\HotelAvailRQ\AvailRequestSegment[]
      */
     protected $availRequestSegments;
 
