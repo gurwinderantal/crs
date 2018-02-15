@@ -1,11 +1,11 @@
 <?php
 
-namespace GurwinderAntal\SynxisPhp;
+namespace GurwinderAntal\Synxis;
 
 /**
  * Class SynxisConnector
  *
- * @package GurwinderAntal\SynxisPhp
+ * @package GurwinderAntal\Synxis
  */
 class SynxisConnector {
 
@@ -19,12 +19,12 @@ class SynxisConnector {
      *
      * @param $wsdl
      *    URI of the WSDL file.
-     * @param null $options
+     * @param array $options
      *    An array of options.
      *
      * @throws \Exception
      */
-    public function __construct($wsdl, $options = NULL) {
+    public function __construct($wsdl, $options = []) {
         if (!class_exists('SoapClient')) {
             throw new \Exception('PHP SOAP extension not installed.');
         }
@@ -49,17 +49,13 @@ class SynxisConnector {
      * @param $password
      */
     public function setHeaders($systemId, $username, $password) {
-        $namespace = 'http://htng.org/1.1/Header';
-        $headerBody = [
-            'From' => [
-                'systemId'   => $systemId,
-                'Credential' => [
-                    'userName' => $username,
-                    'password' => $password,
-                ],
-            ],
-        ];
-        $header = new \SoapHeader($namespace, 'HTNGHeader', $headerBody);
+        $namespace = 'http://htng.org/1.1/Header/';
+        $uNode = new \SoapVar($username, XSD_STRING, NULL, NULL, 'userName', $namespace);
+        $pNode = new \SoapVar($password, XSD_STRING, NULL, NULL, 'password', $namespace);
+        $credential = new \SoapVar([$uNode,$pNode], SOAP_ENC_OBJECT, NULL, NULL, 'Credential', $namespace);
+        $from = new \SoapVar([$credential], SOAP_ENC_OBJECT, NULL, NULL, 'From', $namespace);
+        $headerBody = new \SoapVar([$from], SOAP_ENC_OBJECT, NULL, NULL, 'HTNGHeader', $namespace);
+        $header = new \SoapHeader($namespace, 'HTNGHeader', $headerBody, FALSE);
         $this->client->__setSoapHeaders($header);
     }
 
@@ -77,20 +73,27 @@ class SynxisConnector {
         return [
             'Source' => [
                 'RequestorId' => [
-                    '_'          => [
-                        'CompanyName' => [
-                            'Code' => $channelCode,
-                        ],
+                    'CompanyName' => [
+                        'Code' => $channelCode,
                     ],
-                    'ID'         => $channelId,
-                    'ID_Context' => 'Synxis',
+                    'ID'          => $channelId,
+                    'ID_Context'  => 'Synxis',
                 ],
             ],
         ];
     }
 
+    /**
+     * Checks availability.
+     */
     public function getAvailability() {
-        //@TODO: Get availability
+        $this->setHeaders('Elevated Third', '***REMOVED***', '***REMOVED***');
+        $params = [
+            'OTA_HotelAvailRQ' => [
+                'POS' => $this->getPos('10', 'WSBE'),
+            ],
+        ];
+        //$response = $this->client->__soapCall('CheckAvailability', $params);
     }
 
 }
