@@ -2,6 +2,14 @@
 
 namespace GurwinderAntal\Synxis;
 
+use GurwinderAntal\Synxis\DataType\HotelAvailRQ\AvailRequestSegment;
+use GurwinderAntal\Synxis\DataType\HotelAvailRQ\Criterion;
+use GurwinderAntal\Synxis\DataType\HotelAvailRQ\GuestCount;
+use GurwinderAntal\Synxis\DataType\HotelAvailRQ\HotelAvailRQ;
+use GurwinderAntal\Synxis\DataType\HotelAvailRQ\RoomStayCandidate;
+use GurwinderAntal\Synxis\DataType\HotelAvailRQ\StayDateRange;
+use GurwinderAntal\Synxis\DataType\shared\POS;
+
 /**
  * Class SynxisConnector
  *
@@ -52,7 +60,10 @@ class SynxisConnector {
         $namespace = 'http://htng.org/1.1/Header/';
         $uNode = new \SoapVar($username, XSD_STRING, NULL, NULL, 'userName', $namespace);
         $pNode = new \SoapVar($password, XSD_STRING, NULL, NULL, 'password', $namespace);
-        $credential = new \SoapVar([$uNode,$pNode], SOAP_ENC_OBJECT, NULL, NULL, 'Credential', $namespace);
+        $credential = new \SoapVar([
+            $uNode,
+            $pNode,
+        ], SOAP_ENC_OBJECT, NULL, NULL, 'Credential', $namespace);
         $from = new \SoapVar([$credential], SOAP_ENC_OBJECT, NULL, NULL, 'From', $namespace);
         $headerBody = new \SoapVar([$from], SOAP_ENC_OBJECT, NULL, NULL, 'HTNGHeader', $namespace);
         $header = new \SoapHeader($namespace, 'HTNGHeader', $headerBody, FALSE);
@@ -60,40 +71,40 @@ class SynxisConnector {
     }
 
     /**
-     * Construct a POS element.
-     *
-     * @param $channelId
-     *     The channel ID as provided by Sabre.
-     * @param $channelCode
-     *     The channel name as provided by Sabre.
-     *
-     * @return array
-     */
-    public function getPos($channelId, $channelCode) {
-        return [
-            'Source' => [
-                'RequestorId' => [
-                    'CompanyName' => [
-                        'Code' => $channelCode,
-                    ],
-                    'ID'          => $channelId,
-                    'ID_Context'  => 'Synxis',
-                ],
-            ],
-        ];
-    }
-
-    /**
      * Checks availability.
+     *
+     * @TODO: Break out all params for building data to this function's params
      */
-    public function getAvailability() {
-        $this->setHeaders('Elevated Third', '***REMOVED***', '***REMOVED***');
-        $params = [
-            'OTA_HotelAvailRQ' => [
-                'POS' => $this->getPos('10', 'WSBE'),
-            ],
+    public function checkAvailability() {
+        // Build POS
+        $pos = new POS('WSBE', '10');
+        // Build GuestCount
+        $guestCounts = [
+            new GuestCount(10, 1),
         ];
-        //$response = $this->client->__soapCall('CheckAvailability', $params);
+        // Build RoomStayCandidates
+        $roomStayCandidates = [
+            new RoomStayCandidate(1, $guestCounts),
+        ];
+        // Build Criteria
+        $criteria = [
+            new Criterion('64888'),
+        ];
+        // Build StayDateRange
+        $stayDateRange = new StayDateRange('2018-03-01', '2018-03-08');
+        // Build AvailRequestSegments
+        $availRequestSegments = [
+            new AvailRequestSegment('Room', $stayDateRange, $roomStayCandidates, $criteria),
+        ];
+        // Build request
+        $hotelAvailRQ = new HotelAvailRQ(10, 'en', FALSE, $pos, $availRequestSegments);
+        $params = [
+            'OTA_HotelAvailRQ' => $hotelAvailRQ->getRequestData(),
+        ];
+        // Send request
+        $this->setHeaders('Elevated Third', '***REMOVED***', '***REMOVED***');
+        $response = $this->client->__soapCall('CheckAvailability', $params);
+        return $response;
     }
 
 }
