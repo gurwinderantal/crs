@@ -37,6 +37,7 @@ class SynxisConnector {
             throw new \Exception('PHP SOAP extension not installed.');
         }
         $this->client = new \SoapClient($wsdl, $options);
+        $this->setHeaders('Elevated Third', '***REMOVED***', '***REMOVED***');
     }
 
     /**
@@ -73,36 +74,54 @@ class SynxisConnector {
     /**
      * Checks availability.
      *
-     * @TODO: Break out all params for building data to this function's params
+     * @param string $channelCode
+     * @param int $channelId
+     * @param int $ageQualifyingCode
+     * @param int $guestCount
+     * @param int $quantity
+     * @param string $hotelCode
+     * @param string $startDate
+     * @param string $endDate
+     * @param string $langCode
+     *
+     * @return mixed
      */
-    public function checkAvailability() {
+    public function checkAvailability(
+        $channelCode,
+        $channelId,
+        $ageQualifyingCode,
+        $guestCount,
+        $quantity,
+        $hotelCode,
+        $startDate,
+        $endDate,
+        $langCode) {
         // Build POS
-        $pos = new POS('WSBE', '10');
+        $pos = new POS($channelCode, $channelId);
         // Build GuestCount
         $guestCounts = [
-            new GuestCount(10, 1),
+            new GuestCount($ageQualifyingCode, $guestCount),
         ];
         // Build RoomStayCandidates
         $roomStayCandidates = [
-            new RoomStayCandidate(1, $guestCounts),
+            new RoomStayCandidate($quantity, $guestCounts),
         ];
         // Build Criteria
         $criteria = [
-            new Criterion('64888'),
+            new Criterion($hotelCode),
         ];
         // Build StayDateRange
-        $stayDateRange = new StayDateRange('2018-03-01', '2018-03-08');
+        $stayDateRange = new StayDateRange($startDate, $endDate);
         // Build AvailRequestSegments
         $availRequestSegments = [
             new AvailRequestSegment('Room', $stayDateRange, $roomStayCandidates, $criteria),
         ];
         // Build request
-        $hotelAvailRQ = new HotelAvailRQ(10, 'en', FALSE, $pos, $availRequestSegments);
+        $hotelAvailRQ = new HotelAvailRQ(10, $langCode, FALSE, $pos, $availRequestSegments);
         $params = [
             'OTA_HotelAvailRQ' => $hotelAvailRQ->getRequestData(),
         ];
         // Send request
-        $this->setHeaders('Elevated Third', '***REMOVED***', '***REMOVED***');
         $response = $this->client->__soapCall('CheckAvailability', $params);
         return $response;
     }
