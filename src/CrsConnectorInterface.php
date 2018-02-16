@@ -40,13 +40,13 @@ interface CrsConnectorInterface {
      *    Check-out date.
      * @param $roomCount
      *    Number of rooms required.
-     * @param $adults
+     * @param $adultCount
      *    Number of adults.
-     * @param $children
+     * @param $childCount
      *    Number of children.
      *
      * @return mixed
      */
-    public function checkAvailability($hotelRef, $start_date, $end_date, $roomCount, $adults, $children);
+    public function checkAvailability($hotelRef, $start_date, $end_date, $roomCount, $adultCount, $childCount);
 
 }

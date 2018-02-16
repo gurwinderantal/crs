@@ -29,13 +29,13 @@ class SynxisConnector extends CrsConnectorBase {
     /**
      * {@inheritdoc}
      */
-    public function checkAvailability($hotelRef, $start_date, $end_date, $roomCount, $adults, $children) {
+    public function checkAvailability($hotelRef, $start_date, $end_date, $roomCount, $adultCount, $childCount) {
         // Build POS
         $pos = new POS($this->credentials);
-        // Build GuestCount
+        // Build GuestCounts
         $guestCounts = [
-            new GuestCount(self::ADULT_AGE_QUALIFYING_CODE, $adults),
-            new GuestCount(self::CHILD_AGE_QUALIFYING_CODE, $children),
+            new GuestCount(self::ADULT_AGE_QUALIFYING_CODE, $adultCount),
+            new GuestCount(self::CHILD_AGE_QUALIFYING_CODE, $childCount),
         ];
         // Build RoomStayCandidates
         $roomStayCandidates = [
@@ -58,7 +58,6 @@ class SynxisConnector extends CrsConnectorBase {
         ];
         // Send request
         $response = $this->client->__soapCall('CheckAvailability', $request);
-        ksm($this->client->__getLastRequest());
         return $response;
     }
 
