@@ -11,11 +11,11 @@ use GurwinderAntal\crs\DataType\HotelAvailRQ\StayDateRange;
 use GurwinderAntal\crs\DataType\shared\POS;
 
 /**
- * Class CrsConnector
+ * Class SynxisConnector
  *
  * @package GurwinderAntal\crs
  */
-class CrsConnector {
+class SynxisConnector {
 
     /**
      * @var \SoapClient
@@ -23,7 +23,7 @@ class CrsConnector {
     protected $client;
 
     /**
-     * CrsConnector constructor.
+     * SynxisConnector constructor.
      *
      * @param $wsdl
      *    URI of the WSDL file.
@@ -123,6 +123,7 @@ class CrsConnector {
         ];
         // Send request
         $response = $this->client->__soapCall('CheckAvailability', $params);
+        ksm($this->client->__getLastRequest());
         return $response;
     }
 
