@@ -9,7 +9,15 @@ namespace GurwinderAntal\crs;
  */
 class WindsurferConnector implements CrsConnectorInterface {
 
+    /**
+     * @var \SoapClient
+     */
     protected $client;
+
+    /**
+     * @var
+     */
+    protected $credentials;
 
     public function __construct($wsdl, $options = []) {
         if (!class_exists('SoapClient')) {

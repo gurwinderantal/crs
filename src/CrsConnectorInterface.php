@@ -10,6 +10,12 @@ namespace GurwinderAntal\crs;
 interface CrsConnectorInterface {
 
     /**
+     * Constants.
+     */
+    const ADULT_AGE_QUALIFYING_CODE = 10;
+    const CHILD_AGE_QUALIFYING_CODE = 8;
+
+    /**
      * Sets required request headers.
      */
     public function setHeaders();

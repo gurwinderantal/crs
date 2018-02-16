@@ -18,12 +18,6 @@ use GurwinderAntal\crs\DataType\shared\POS;
 class SynxisConnector implements CrsConnectorInterface {
 
     /**
-     * Constants.
-     */
-    const ADULT_AGE_QUALIFYING_CODE = 10;
-    const CHILD_AGE_QUALIFYING_CODE = 8;
-
-    /**
      * @var \SoapClient
      */
     protected $client;
@@ -37,7 +31,7 @@ class SynxisConnector implements CrsConnectorInterface {
      *        - channel code
      *        - other POS information
      */
-    protected $credentials;
+    private $credentials;
 
     /**
      * SynxisConnector constructor.
@@ -63,13 +57,6 @@ class SynxisConnector implements CrsConnectorInterface {
     /**
      * {@inheritdoc}
      */
-    public function getFunctions() {
-        return $this->client->__getFunctions();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function setHeaders() {
         $namespace = 'http://htng.org/1.1/Header/';
         $uNode = new \SoapVar($this->credentials['username'], XSD_STRING, NULL, NULL, 'userName', $namespace);
@@ -82,6 +69,13 @@ class SynxisConnector implements CrsConnectorInterface {
         $headerBody = new \SoapVar([$from], SOAP_ENC_OBJECT, NULL, NULL, 'HTNGHeader', $namespace);
         $header = new \SoapHeader($namespace, 'HTNGHeader', $headerBody, FALSE);
         $this->client->__setSoapHeaders($header);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFunctions() {
+        return $this->client->__getFunctions();
     }
 
     /**
