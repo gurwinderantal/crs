@@ -74,56 +74,48 @@ class SynxisConnector {
     /**
      * Checks availability.
      *
-     * @param string $channelCode
-     * @param int $channelId
-     * @param int $ageQualifyingCode
-     * @param int $guestCount
-     * @param int $quantity
-     * @param string $hotelCode
-     * @param string $startDate
-     * @param string $endDate
-     * @param string $langCode
+     * @param array $params
+     *    An array with the following keys:
+     *       - channelCode
+     *       - channelId,
+     *       - ageQualifyingCode
+     *       - guestCount
+     *       - quantity
+     *       - hotelCode
+     *       - startDate
+     *       - endDate
+     *       - langCode
      *
      * @return mixed
      */
-    public function checkAvailability(
-        $channelCode,
-        $channelId,
-        $ageQualifyingCode,
-        $guestCount,
-        $quantity,
-        $hotelCode,
-        $startDate,
-        $endDate,
-        $langCode) {
+    public function checkAvailability($params) {
         // Build POS
-        $pos = new POS($channelCode, $channelId);
+        $pos = new POS($params['channelCode'], $params['channelId']);
         // Build GuestCount
         $guestCounts = [
-            new GuestCount($ageQualifyingCode, $guestCount),
+            new GuestCount($params['ageQualifyingCode'], $params['guestCount']),
         ];
         // Build RoomStayCandidates
         $roomStayCandidates = [
-            new RoomStayCandidate($quantity, $guestCounts),
+            new RoomStayCandidate($params['quantity'], $guestCounts),
         ];
         // Build Criteria
         $criteria = [
-            new Criterion($hotelCode),
+            new Criterion($params['hotelCode']),
         ];
         // Build StayDateRange
-        $stayDateRange = new StayDateRange($startDate, $endDate);
+        $stayDateRange = new StayDateRange($params['startDate'], $params['endDate']);
         // Build AvailRequestSegments
         $availRequestSegments = [
             new AvailRequestSegment('Room', $stayDateRange, $roomStayCandidates, $criteria),
         ];
         // Build request
-        $hotelAvailRQ = new HotelAvailRQ(10, $langCode, FALSE, $pos, $availRequestSegments);
-        $params = [
+        $hotelAvailRQ = new HotelAvailRQ(10, $params['langCode'], FALSE, $pos, $availRequestSegments);
+        $request = [
             'OTA_HotelAvailRQ' => $hotelAvailRQ->getRequestData(),
         ];
         // Send request
-        $response = $this->client->__soapCall('CheckAvailability', $params);
-        ksm($this->client->__getLastRequest());
+        $response = $this->client->__soapCall('CheckAvailability', $request);
         return $response;
     }
 
