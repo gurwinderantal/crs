@@ -17,8 +17,11 @@ interface CrsConnectorInterface {
 
     /**
      * Sets required request headers.
+     *
+     * @param string $namespace
+     *    The namespace of the SOAP header element.
      */
-    public function setHeaders();
+    public function setHeaders($namespace);
 
     /**
      * Gets available functions from the web service.

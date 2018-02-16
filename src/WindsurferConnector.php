@@ -4,26 +4,25 @@ namespace GurwinderAntal\crs;
 
 /**
  * Class WindsurferConnector
+ * Provides functionality specific to Windsurfer.
  *
  * @package GurwinderAntal\crs
  */
-class WindsurferConnector implements CrsConnectorInterface {
+class WindsurferConnector extends CrsConnectorBase {
 
     /**
-     * @var \SoapClient
+     * {@inheritdoc}
      */
-    protected $client;
+    public function __construct($wsdl, $credentials, array $options = []) {
+        parent::__construct($wsdl, $credentials, $options);
+        $this->setHeaders('http://htng.org/2009B');
+    }
 
     /**
-     * @var
+     * {@inheritdoc}
      */
-    protected $credentials;
-
-    public function __construct($wsdl, $options = []) {
-        if (!class_exists('SoapClient')) {
-            throw new \Exception('PHP SOAP extension not installed.');
-        }
-        $this->client = new \SoapClient($wsdl, $options);
+    public function checkAvailability($hotelRef, $start_date, $end_date, $roomCount, $adults, $children) {
+        // TODO: Implement checkAvailability() method.
     }
 
 }
