@@ -7,8 +7,15 @@ namespace GurwinderAntal\crs;
  *
  * @package GurwinderAntal\crs
  */
-class WindsurferConnector {
+class WindsurferConnector implements CrsConnectorInterface {
 
-    //@TODO
+    protected $client;
+
+    public function __construct($wsdl, $options = []) {
+        if (!class_exists('SoapClient')) {
+            throw new \Exception('PHP SOAP extension not installed.');
+        }
+        $this->client = new \SoapClient($wsdl, $options);
+    }
 
 }

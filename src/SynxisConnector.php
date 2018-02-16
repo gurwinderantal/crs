@@ -15,7 +15,13 @@ use GurwinderAntal\crs\DataType\shared\POS;
  *
  * @package GurwinderAntal\crs
  */
-class SynxisConnector {
+class SynxisConnector implements CrsConnectorInterface {
+
+    /**
+     * Constants.
+     */
+    const ADULT_AGE_QUALIFYING_CODE = 10;
+    const CHILD_AGE_QUALIFYING_CODE = 8;
 
     /**
      * @var \SoapClient
@@ -23,44 +29,51 @@ class SynxisConnector {
     protected $client;
 
     /**
+     * @var array
+     *    Credentials supplied by the CRS provider such as:
+     *        - username
+     *        - password
+     *        - channel ID
+     *        - channel code
+     *        - other POS information
+     */
+    protected $credentials;
+
+    /**
      * SynxisConnector constructor.
      *
      * @param $wsdl
      *    URI of the WSDL file.
+     * @param $credentials
+     *    An array containing credentials supplied by the CRS provider.
      * @param array $options
      *    An array of options.
      *
      * @throws \Exception
      */
-    public function __construct($wsdl, $options = []) {
+    public function __construct($wsdl, $credentials, $options = []) {
         if (!class_exists('SoapClient')) {
             throw new \Exception('PHP SOAP extension not installed.');
         }
         $this->client = new \SoapClient($wsdl, $options);
-        $this->setHeaders('Elevated Third', '***REMOVED***', '***REMOVED***');
+        $this->credentials = $credentials;
+        $this->setHeaders();
     }
 
     /**
-     * Wrapper to get a list of available SOAP functions.
-     *
-     * @return array
-     *    An array containing SOAP function prototypes.
+     * {@inheritdoc}
      */
     public function getFunctions() {
         return $this->client->__getFunctions();
     }
 
     /**
-     * Set SOAP headers.
-     *
-     * @param $systemId
-     * @param $username
-     * @param $password
+     * {@inheritdoc}
      */
-    public function setHeaders($systemId, $username, $password) {
+    public function setHeaders() {
         $namespace = 'http://htng.org/1.1/Header/';
-        $uNode = new \SoapVar($username, XSD_STRING, NULL, NULL, 'userName', $namespace);
-        $pNode = new \SoapVar($password, XSD_STRING, NULL, NULL, 'password', $namespace);
+        $uNode = new \SoapVar($this->credentials['username'], XSD_STRING, NULL, NULL, 'userName', $namespace);
+        $pNode = new \SoapVar($this->credentials['password'], XSD_STRING, NULL, NULL, 'password', $namespace);
         $credential = new \SoapVar([
             $uNode,
             $pNode,
@@ -72,50 +85,38 @@ class SynxisConnector {
     }
 
     /**
-     * Checks availability.
-     *
-     * @param array $params
-     *    An array with the following keys:
-     *       - channelCode
-     *       - channelId,
-     *       - ageQualifyingCode
-     *       - guestCount
-     *       - quantity
-     *       - hotelCode
-     *       - startDate
-     *       - endDate
-     *       - langCode
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
-    public function checkAvailability($params) {
+    public function checkAvailability($hotelRef, $start_date, $end_date, $roomCount, $adults, $children) {
         // Build POS
-        $pos = new POS($params['channelCode'], $params['channelId']);
+        $pos = new POS($this->credentials);
         // Build GuestCount
         $guestCounts = [
-            new GuestCount($params['ageQualifyingCode'], $params['guestCount']),
+            new GuestCount(self::ADULT_AGE_QUALIFYING_CODE, $adults),
+            new GuestCount(self::CHILD_AGE_QUALIFYING_CODE, $children),
         ];
         // Build RoomStayCandidates
         $roomStayCandidates = [
-            new RoomStayCandidate($params['quantity'], $guestCounts),
+            new RoomStayCandidate($roomCount, $guestCounts),
         ];
         // Build Criteria
         $criteria = [
-            new Criterion($params['hotelCode']),
+            new Criterion($hotelRef),
         ];
         // Build StayDateRange
-        $stayDateRange = new StayDateRange($params['startDate'], $params['endDate']);
+        $stayDateRange = new StayDateRange($start_date, $end_date);
         // Build AvailRequestSegments
         $availRequestSegments = [
             new AvailRequestSegment('Room', $stayDateRange, $roomStayCandidates, $criteria),
         ];
         // Build request
-        $hotelAvailRQ = new HotelAvailRQ(10, $params['langCode'], FALSE, $pos, $availRequestSegments);
+        $hotelAvailRQ = new HotelAvailRQ(10, 'en', FALSE, $pos, $availRequestSegments);
         $request = [
             'OTA_HotelAvailRQ' => $hotelAvailRQ->getRequestData(),
         ];
         // Send request
         $response = $this->client->__soapCall('CheckAvailability', $request);
+        ksm($this->client->__getLastRequest());
         return $response;
     }
 
