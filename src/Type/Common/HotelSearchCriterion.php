@@ -1,6 +1,6 @@
 <?php
 
-namespace GurwinderAntal\crs\Type\Request;
+namespace GurwinderAntal\crs\Type\shared;
 
 /**
  * Class HotelSearchCriterion
