@@ -32,11 +32,11 @@ interface CrsConnectorInterface {
     public function getFunctions();
 
     /**
-     * @param $hotelRef
+     * @param $hotelCode
      *    Hotel or chain reference to look up.
-     * @param $start_date
+     * @param $start
      *    Check-in date.
-     * @param $end_date
+     * @param $end
      *    Check-out date.
      * @param $roomCount
      *    Number of rooms required.
@@ -47,6 +47,6 @@ interface CrsConnectorInterface {
      *
      * @return mixed
      */
-    public function checkAvailability($hotelRef, $start_date, $end_date, $roomCount, $adultCount, $childCount);
+    public function checkAvailability($hotelCode, $start, $end, $roomCount, $adultCount, $childCount);
 
 }

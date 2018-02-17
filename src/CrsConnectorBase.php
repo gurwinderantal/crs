@@ -11,6 +11,11 @@ namespace GurwinderAntal\crs;
 abstract class CrsConnectorBase implements CrsConnectorInterface {
 
     /**
+     * @var string
+     */
+    protected $wsdl;
+
+    /**
      * @var \SoapClient
      */
     protected $client;
@@ -42,7 +47,7 @@ abstract class CrsConnectorBase implements CrsConnectorInterface {
         if (!class_exists('SoapClient')) {
             throw new \Exception('PHP SOAP extension not installed.');
         }
-        $this->client = new \SoapClient($wsdl, $options);
+        $this->wsdl = $wsdl;
         $this->credentials = $credentials;
     }
 

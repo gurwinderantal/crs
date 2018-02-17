@@ -2,13 +2,17 @@
 
 namespace GurwinderAntal\crs;
 
-use GurwinderAntal\crs\DataType\HotelAvailRQ\AvailRequestSegment;
-use GurwinderAntal\crs\DataType\HotelAvailRQ\Criterion;
-use GurwinderAntal\crs\DataType\HotelAvailRQ\GuestCount;
-use GurwinderAntal\crs\DataType\HotelAvailRQ\HotelAvailRQ;
-use GurwinderAntal\crs\DataType\HotelAvailRQ\RoomStayCandidate;
-use GurwinderAntal\crs\DataType\HotelAvailRQ\StayDateRange;
-use GurwinderAntal\crs\DataType\shared\POS;
+use GurwinderAntal\crs\Type\Request\AvailRequestSegment;
+use GurwinderAntal\crs\Type\Request\CompanyName;
+use GurwinderAntal\crs\Type\Request\GuestCount;
+use GurwinderAntal\crs\Type\Request\HotelReferenceGroup;
+use GurwinderAntal\crs\Type\Request\HotelSearchCriterion;
+use GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ;
+use GurwinderAntal\crs\Type\Request\POS;
+use GurwinderAntal\crs\Type\Request\RequestorID;
+use GurwinderAntal\crs\Type\Request\RoomStayCandidate;
+use GurwinderAntal\crs\Type\Request\Source;
+use GurwinderAntal\crs\Type\Request\StayDateRange;
 
 /**
  * Class SynxisConnector
@@ -21,43 +25,37 @@ class SynxisConnector extends CrsConnectorBase {
     /**
      * {@inheritdoc}
      */
-    public function __construct($wsdl, $credentials, $options = []) {
-        parent::__construct($wsdl, $credentials, $options);
-        $this->setHeaders('http://htng.org/1.1/Header/');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function checkAvailability($hotelRef, $start_date, $end_date, $roomCount, $adultCount, $childCount) {
+    public function checkAvailability($hotelCode, $start, $end, $roomCount, $adultCount, $childCount) {
+        $this->client = new \SoapClient($this->wsdl, [
+            'classmap' => [
+                'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
+            ],
+        ]);
+        $this->setHeaders($this->credentials);
         // Build POS
-        $pos = new POS($this->credentials);
-        // Build GuestCounts
-        $guestCounts = [
-            new GuestCount(self::ADULT_AGE_QUALIFYING_CODE, $adultCount),
-            new GuestCount(self::CHILD_AGE_QUALIFYING_CODE, $childCount),
-        ];
-        // Build RoomStayCandidates
-        $roomStayCandidates = [
-            new RoomStayCandidate($roomCount, $guestCounts),
-        ];
-        // Build Criteria
-        $criteria = [
-            new Criterion($hotelRef),
-        ];
-        // Build StayDateRange
-        $stayDateRange = new StayDateRange($start_date, $end_date);
+        $companyName = new CompanyName(NULL, NULL, NULL, 'WSBE');
+        $requestorId = new RequestorID($companyName, '10', 'Synxis', NULL, NULL, NULL);
+        $source = new Source(NULL, $requestorId);
+        $pos = new POS($source);
         // Build AvailRequestSegments
+        $stayDateRange = new StayDateRange($start, $end, NULL);
+        $guestCounts = [
+            new GuestCount(self::ADULT_AGE_QUALIFYING_CODE, $adultCount, NULL),
+            new GuestCount(self::CHILD_AGE_QUALIFYING_CODE, $childCount, NULL),
+        ];
+        $roomStayCandidates = [
+            new RoomStayCandidate($guestCounts, $roomCount, NULL, NULL, NULL, NULL, NULL),
+        ];
+        $hotelRef = new HotelReferenceGroup($hotelCode, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+        $hotelSearchCriteria = [
+            new HotelSearchCriterion(NULL, NULL, $hotelRef, NULL, NULL, NULL, NULL),
+        ];
         $availRequestSegments = [
-            new AvailRequestSegment('Room', $stayDateRange, $roomStayCandidates, $criteria),
+            new AvailRequestSegment($stayDateRange, NULL, NULL, NULL, $roomStayCandidates, $hotelSearchCriteria, NULL, NULL, 'Room', NULL),
         ];
-        // Build request
-        $hotelAvailRQ = new HotelAvailRQ(10, 'en', FALSE, $pos, $availRequestSegments);
-        $request = [
-            'OTA_HotelAvailRQ' => $hotelAvailRQ->getRequestData(),
-        ];
-        // Send request
-        $response = $this->client->__soapCall('CheckAvailability', $request);
+        // Build Request
+        $request = new OTA_HotelAvailRQ($pos, $availRequestSegments, NULL, 10, NULL, FALSE, FALSE, FALSE, FALSE, FALSE, TRUE);
+        $response = $this->client->CheckAvailability($request);
         return $response;
     }
 
