@@ -38,7 +38,7 @@ class AvailRequestSegment {
     protected $RoomStayCandidates;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\HotelSearchCriterion[]
+     * @var \GurwinderAntal\crs\Type\Common\HotelSearchCriterion[]
      */
     protected $HotelSearchCriteria;
 
@@ -71,7 +71,7 @@ class AvailRequestSegment {
      * @param $RatePlanCandidates
      * @param $Profiles
      * @param \GurwinderAntal\crs\Type\Request\RoomStayCandidate[] $RoomStayCandidates
-     * @param \GurwinderAntal\crs\Type\Request\HotelSearchCriterion[] $HotelSearchCriteria
+     * @param \GurwinderAntal\crs\Type\Common\HotelSearchCriterion[] $HotelSearchCriteria
      * @param $TPA_Extensions
      * @param string $ResponseType
      * @param string $AvailReqType

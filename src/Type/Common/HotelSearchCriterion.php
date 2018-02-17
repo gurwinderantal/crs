@@ -1,6 +1,9 @@
 <?php
 
-namespace GurwinderAntal\crs\Type\shared;
+namespace GurwinderAntal\crs\Type\Common;
+
+use GurwinderAntal\crs\Type\Request\HotelReferenceGroup;
+use GurwinderAntal\crs\Type\Request\StayDateRange;
 
 /**
  * Class HotelSearchCriterion
