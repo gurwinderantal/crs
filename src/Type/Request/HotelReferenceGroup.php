@@ -72,15 +72,15 @@ class HotelReferenceGroup {
      * @param string $HotelCityCode
      */
     public function __construct(
-        string $HotelCode,
-        string $HotelName,
-        string $AreaID,
-        string $HotelCodeContext,
-        string $ChainCode,
-        string $ChainName,
-        string $BrandCode,
-        string $BrandName,
-        string $HotelCityCode
+        string $HotelCode = NULL,
+        string $HotelName = NULL,
+        string $AreaID = NULL,
+        string $HotelCodeContext = NULL,
+        string $ChainCode = NULL,
+        string $ChainName = NULL,
+        string $BrandCode = NULL,
+        string $BrandName = NULL,
+        string $HotelCityCode = NULL
     ) {
         $this->HotelCode = $HotelCode;
         $this->HotelName = $HotelName;

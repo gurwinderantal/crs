@@ -38,10 +38,10 @@ class BookingChannel {
      * @param bool $AnyBookingChannelInd
      */
     public function __construct(
-        CompanyName $CompanyName,
-        string $Primary,
-        string $Type,
-        bool $AnyBookingChannelInd
+        CompanyName $CompanyName = NULL,
+        string $Primary = NULL,
+        string $Type = NULL,
+        bool $AnyBookingChannelInd = NULL
     ) {
         $this->CompanyName = $CompanyName;
         $this->Primary = $Primary;

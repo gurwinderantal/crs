@@ -56,13 +56,13 @@ class RoomStayCandidate {
      * @param string $NonSmoking
      */
     public function __construct(
-        array $GuestCounts,
-        string $Quantity,
-        string $RoomType,
-        string $RoomTypeCode,
-        string $RoomCategory,
-        string $PromotionCode,
-        string $NonSmoking
+        array $GuestCounts = NULL,
+        string $Quantity = NULL,
+        string $RoomType = NULL,
+        string $RoomTypeCode = NULL,
+        string $RoomCategory = NULL,
+        string $PromotionCode = NULL,
+        string $NonSmoking = NULL
     ) {
         $this->GuestCounts = $GuestCounts;
         $this->Quantity = $Quantity;

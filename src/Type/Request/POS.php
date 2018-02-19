@@ -19,7 +19,7 @@ class POS {
      *
      * @param \GurwinderAntal\crs\Type\Request\Source $Source
      */
-    public function __construct(Source $Source) {
+    public function __construct(Source $Source = NULL) {
         $this->Source = $Source;
     }
 

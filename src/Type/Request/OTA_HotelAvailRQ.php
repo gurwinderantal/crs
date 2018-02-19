@@ -91,17 +91,17 @@ class OTA_HotelAvailRQ {
      * @param bool $AvailRatesOnly
      */
     public function __construct(
-        POS $POS,
-        array $AvailRequestSegments,
-        $HotelReservationIDs,
-        int $MaxResponses,
-        string $RequestedCurrency,
-        bool $ExactMatchOnly,
-        bool $BestOnly,
-        bool $SummaryOnly,
-        bool $HotelStayOnly,
-        string $PricingMethod,
-        bool $AvailRatesOnly
+        POS $POS = NULL,
+        array $AvailRequestSegments = NULL,
+        $HotelReservationIDs = NULL,
+        int $MaxResponses = NULL,
+        string $RequestedCurrency = NULL,
+        bool $ExactMatchOnly = NULL,
+        bool $BestOnly = NULL,
+        bool $SummaryOnly = NULL,
+        bool $HotelStayOnly = NULL,
+        string $PricingMethod = NULL,
+        bool $AvailRatesOnly = NULL
     ) {
         $this->POS = $POS;
         $this->AvailRequestSegments = $AvailRequestSegments;

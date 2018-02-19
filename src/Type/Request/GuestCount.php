@@ -32,9 +32,9 @@ class GuestCount {
      * @param string $Age
      */
     public function __construct(
-        string $AgeQualifyingCode,
-        string $Count,
-        string $Age
+        string $AgeQualifyingCode = NULL,
+        string $Count = NULL,
+        string $Age = NULL
     ) {
         $this->AgeQualifyingCode = $AgeQualifyingCode;
         $this->Count = $Count;

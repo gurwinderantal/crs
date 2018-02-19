@@ -32,9 +32,9 @@ class StayDateRange {
      * @param string $Duration
      */
     public function __construct(
-        string $Start,
-        string $End,
-        string $Duration
+        string $Start = NULL,
+        string $End = NULL,
+        string $Duration = NULL
     ) {
         $this->Start = $Start;
         $this->End = $End;

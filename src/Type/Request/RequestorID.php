@@ -50,12 +50,12 @@ class RequestorID {
      * @param string $MessagePassword
      */
     public function __construct(
-        CompanyName $CompanyName,
-        string $ID,
-        string $ID_Context,
-        string $Instance,
-        string $PinNumber,
-        string $MessagePassword
+        CompanyName $CompanyName = NULL,
+        string $ID = NULL,
+        string $ID_Context = NULL,
+        string $Instance = NULL,
+        string $PinNumber = NULL,
+        string $MessagePassword = NULL
     ) {
         $this->CompanyName = $CompanyName;
         $this->ID = $ID;

@@ -63,13 +63,13 @@ class HotelSearchCriterion {
      * @param $AcceptedPayments
      */
     public function __construct(
-        $RatePlanCandidates,
-        $Position,
-        HotelReferenceGroup $HotelRef,
-        $Radius,
-        StayDateRange $StayDateRange,
-        array $RoomStayCandidates,
-        $AcceptedPayments
+        $RatePlanCandidates = NULL,
+        $Position = NULL,
+        HotelReferenceGroup $HotelRef = NULL,
+        $Radius = NULL,
+        StayDateRange $StayDateRange = NULL,
+        array $RoomStayCandidates = NULL,
+        $AcceptedPayments = NULL
     ) {
         $this->RatePlanCandidates = $RatePlanCandidates;
         $this->Position = $Position;

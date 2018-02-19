@@ -26,8 +26,8 @@ class Source {
      * @param \GurwinderAntal\crs\Type\Request\RequestorID $RequestorId
      */
     public function __construct(
-        BookingChannel $BookingChannel,
-        RequestorID $RequestorId
+        BookingChannel $BookingChannel = NULL,
+        RequestorID $RequestorId = NULL
     ) {
         $this->BookingChannel = $BookingChannel;
         $this->RequestorId = $RequestorId;

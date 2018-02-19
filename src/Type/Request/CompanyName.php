@@ -38,10 +38,10 @@ class CompanyName {
      * @param string $Code
      */
     public function __construct(
-        string $CodeContext,
-        string $CompanyShortName,
-        string $TravelSelector,
-        string $Code
+        string $CodeContext = NULL,
+        string $CompanyShortName = NULL,
+        string $TravelSelector = NULL,
+        string $Code = NULL
     ) {
         $this->CodeContext = $CodeContext;
         $this->CompanyShortName = $CompanyShortName;

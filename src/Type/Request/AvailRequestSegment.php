@@ -78,16 +78,16 @@ class AvailRequestSegment {
      * @param string $MoreDataToken
      */
     public function __construct(
-        StayDateRange $StayDateRange,
-        $RateRange,
-        $RatePlanCandidates,
-        $Profiles,
-        array $RoomStayCandidates,
-        array $HotelSearchCriteria,
-        $TPA_Extensions,
-        string $ResponseType,
-        string $AvailReqType,
-        string $MoreDataToken
+        StayDateRange $StayDateRange = NULL,
+        $RateRange = NULL,
+        $RatePlanCandidates = NULL,
+        $Profiles = NULL,
+        array $RoomStayCandidates = NULL,
+        array $HotelSearchCriteria = NULL,
+        $TPA_Extensions = NULL,
+        string $ResponseType = NULL,
+        string $AvailReqType = NULL,
+        string $MoreDataToken = NULL
     ) {
         $this->StayDateRange = $StayDateRange;
         $this->RateRange = $RateRange;
