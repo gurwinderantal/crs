@@ -25,7 +25,8 @@ composer require gurwinderantal/crs
 ### Usage
 This library is currently able to connect to SynXis and Windsurfer central reservation systems.
 
-Build an array with all the credentials provided by your CRS provider. For example:
+Build an array with all the credentials provided by your CRS provider. Add your API username, password and the SOAP
+body's `<POS>` element attributes. For example:
 ```
 $credentials = [
     'username'   => 'MyUsername',
@@ -35,6 +36,10 @@ $credentials = [
     'ID_Context' => 'ID source eg. IATA, Synxis, Open Hospitality',
 ];
 ```
+The `username` and `password` keys *must* be present in your credential array, or else trying to instantiate a connector
+class will throw an exception. Other keys are optional but may lead to incorrect results. Follow your CRS provider's
+documentation carefully.
+
 Instantiate a connector class for the CRS you want:
 ```
 $wsdl = 'https://example.path/to/Service.asmx?WSDL';
