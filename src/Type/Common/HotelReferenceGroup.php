@@ -1,6 +1,6 @@
 <?php
 
-namespace GurwinderAntal\crs\Type\Request;
+namespace GurwinderAntal\crs\Type\Common;
 
 /**
  * Class HotelReferenceGroup
@@ -16,47 +16,47 @@ class HotelReferenceGroup {
     /**
      * @var string
      */
-    protected $HotelCode;
+    public $HotelCode;
 
     /**
      * @var string
      */
-    protected $HotelName;
+    public $HotelName;
 
     /**
      * @var string
      */
-    protected $AreaID;
+    public $AreaID;
 
     /**
      * @var string
      */
-    protected $HotelCodeContext;
+    public $HotelCodeContext;
 
     /**
      * @var string
      */
-    protected $ChainCode;
+    public $ChainCode;
 
     /**
      * @var string
      */
-    protected $ChainName;
+    public $ChainName;
 
     /**
      * @var string
      */
-    protected $BrandCode;
+    public $BrandCode;
 
     /**
      * @var string
      */
-    protected $BrandName;
+    public $BrandName;
 
     /**
      * @var string
      */
-    protected $HotelCityCode;
+    public $HotelCityCode;
 
     /**
      * HotelReferenceGroup constructor.

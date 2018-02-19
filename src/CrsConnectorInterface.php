@@ -45,7 +45,7 @@ interface CrsConnectorInterface {
      * @param $childCount
      *    Number of children.
      *
-     * @return mixed
+     * @return \GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS
      */
     public function checkAvailability($hotelCode, $start, $end, $roomCount, $adultCount, $childCount);
 

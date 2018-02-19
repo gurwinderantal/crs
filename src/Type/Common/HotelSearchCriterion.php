@@ -2,7 +2,6 @@
 
 namespace GurwinderAntal\crs\Type\Common;
 
-use GurwinderAntal\crs\Type\Request\HotelReferenceGroup;
 use GurwinderAntal\crs\Type\Request\StayDateRange;
 
 /**
@@ -16,47 +15,47 @@ class HotelSearchCriterion {
      * Currently unused.
      * @var
      */
-    protected $RatePlanCandidates;
+    public $RatePlanCandidates;
 
     /**
      * Currently unused.
      * @var
      */
-    protected $Position;
+    public $Position;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\HotelReferenceGroup
+     * @var \GurwinderAntal\crs\Type\Common\HotelReferenceGroup
      */
-    protected $HotelRef;
+    public $HotelRef;
 
     /**
      * Currently unused.
      * @var
      */
-    protected $Radius;
+    public $Radius;
 
     /**
      * @var \GurwinderAntal\crs\Type\Request\StayDateRange
      */
-    protected $StayDateRange;
+    public $StayDateRange;
 
     /**
      * @var \GurwinderAntal\crs\Type\Request\RoomStayCandidate[]
      */
-    protected $RoomStayCandidates;
+    public $RoomStayCandidates;
 
     /**
      * Currently unused.
      * @var
      */
-    protected $AcceptedPayments;
+    public $AcceptedPayments;
 
     /**
      * HotelSearchCriterion constructor.
      *
      * @param $RatePlanCandidates
      * @param $Position
-     * @param \GurwinderAntal\crs\Type\Request\HotelReferenceGroup $HotelRef
+     * @param \GurwinderAntal\crs\Type\Common\HotelReferenceGroup $HotelRef
      * @param $Radius
      * @param \GurwinderAntal\crs\Type\Request\StayDateRange $StayDateRange
      * @param \GurwinderAntal\crs\Type\Request\RoomStayCandidate[] $RoomStayCandidates

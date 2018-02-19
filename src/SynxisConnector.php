@@ -2,11 +2,11 @@
 
 namespace GurwinderAntal\crs;
 
+use GurwinderAntal\crs\Type\Common\HotelReferenceGroup;
 use GurwinderAntal\crs\Type\Common\HotelSearchCriterion;
 use GurwinderAntal\crs\Type\Request\AvailRequestSegment;
 use GurwinderAntal\crs\Type\Request\CompanyName;
 use GurwinderAntal\crs\Type\Request\GuestCount;
-use GurwinderAntal\crs\Type\Request\HotelReferenceGroup;
 use GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ;
 use GurwinderAntal\crs\Type\Request\POS;
 use GurwinderAntal\crs\Type\Request\RequestorID;
@@ -29,6 +29,7 @@ class SynxisConnector extends CrsConnectorBase {
         $this->client = new \SoapClient($this->wsdl, [
             'classmap' => [
                 'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
+                'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
             ],
             'trace' => TRUE,
         ]);
