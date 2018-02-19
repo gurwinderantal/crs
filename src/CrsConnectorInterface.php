@@ -21,7 +21,7 @@ interface CrsConnectorInterface {
      * @param string $namespace
      *    The namespace of the SOAP header element.
      */
-    public function setHeaders($namespace);
+    public function setHeaders(string $namespace);
 
     /**
      * Gets available functions from the web service.
@@ -32,17 +32,17 @@ interface CrsConnectorInterface {
     public function getFunctions();
 
     /**
-     * @param $hotelCode
+     * @param string $hotelCode
      *    Hotel or chain reference to look up.
-     * @param $start
+     * @param string $start
      *    Check-in date.
-     * @param $end
+     * @param string $end
      *    Check-out date.
-     * @param $roomCount
+     * @param string $roomCount
      *    Number of rooms required.
-     * @param $adultCount
+     * @param string $adultCount
      *    Number of adults.
-     * @param $childCount
+     * @param string $childCount
      *    Number of children.
      *
      * @return \GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS

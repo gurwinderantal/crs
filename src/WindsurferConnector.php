@@ -33,7 +33,6 @@ class WindsurferConnector extends CrsConnectorBase {
                 'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
                 'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
             ],
-            'trace' => TRUE,
         ]);
         $this->setHeaders('http://htng.org/2009B');
         // Build POS
