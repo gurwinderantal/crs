@@ -44,8 +44,8 @@ class WindsurferConnector extends CrsConnectorBase {
         // Build AvailRequestSegments
         $stayDateRange = new StayDateRange($start, $end, NULL);
         $guestCounts = [
-            new GuestCount(self::ADULT_AGE_QUALIFYING_CODE, $adultCount, NULL),
-            new GuestCount(self::CHILD_AGE_QUALIFYING_CODE, $childCount, NULL),
+            new GuestCount(self::AQC_ADULT, $adultCount, NULL),
+            new GuestCount(self::AQC_CHILD, $childCount, NULL),
         ];
         $roomStayCandidates = [
             new RoomStayCandidate($guestCounts, $roomCount, NULL, NULL, NULL, NULL, NULL),
@@ -55,7 +55,7 @@ class WindsurferConnector extends CrsConnectorBase {
             new HotelSearchCriterion(NULL, NULL, $hotelRef, NULL, NULL, NULL, NULL),
         ];
         $availRequestSegments = [
-            new AvailRequestSegment($stayDateRange, NULL, NULL, NULL, $roomStayCandidates, $hotelSearchCriteria, NULL, NULL, 'Room', NULL),
+            new AvailRequestSegment($stayDateRange, NULL, NULL, NULL, $roomStayCandidates, $hotelSearchCriteria, NULL, 'AreaList', NULL, NULL),
         ];
         // Build Request
         $request = new OTA_HotelAvailRQ($pos, $availRequestSegments, NULL, 10, NULL, FALSE, FALSE, FALSE, FALSE, NULL, TRUE);

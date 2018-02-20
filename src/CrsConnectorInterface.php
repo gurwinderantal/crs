@@ -10,10 +10,13 @@ namespace GurwinderAntal\crs;
 interface CrsConnectorInterface {
 
     /**
-     * Constants.
+     * OTA age qualifying codes (AQC).
      */
-    const ADULT_AGE_QUALIFYING_CODE = 10;
-    const CHILD_AGE_QUALIFYING_CODE = 8;
+    const AQC_INFANT = 7;
+    const AQC_CHILD = 8;
+    const AQC_TEENAGER = 9;
+    const AQC_ADULT = 10;
+    const AQC_SENIOR = 11;
 
     /**
      * Sets required request headers.

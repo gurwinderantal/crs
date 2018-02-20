@@ -41,8 +41,8 @@ class SynxisConnector extends CrsConnectorBase {
         // Build AvailRequestSegments
         $stayDateRange = new StayDateRange($start, $end, NULL);
         $guestCounts = [
-            new GuestCount(self::ADULT_AGE_QUALIFYING_CODE, $adultCount, NULL),
-            new GuestCount(self::CHILD_AGE_QUALIFYING_CODE, $childCount, NULL),
+            new GuestCount(self::AQC_ADULT, $adultCount, NULL),
+            new GuestCount(self::AQC_CHILD, $childCount, NULL),
         ];
         $roomStayCandidates = [
             new RoomStayCandidate($guestCounts, $roomCount, NULL, NULL, NULL, NULL, NULL),
