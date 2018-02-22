@@ -27,7 +27,7 @@ class WindsurferConnector extends CrsConnectorBase {
     /**
      * {@inheritdoc}
      */
-    public function checkAvailability($hotelCode, $start, $end, $roomCount, $adultCount, $childCount) {
+    public function checkAvailability($params) {
         $this->client = new \SoapClient($this->wsdl, [
             'classmap' => [
                 'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
@@ -42,18 +42,20 @@ class WindsurferConnector extends CrsConnectorBase {
         $source = new Source($bookingChannel, $requestorId);
         $pos = new POS($source);
         // Build AvailRequestSegments
-        $stayDateRange = new StayDateRange($start, $end, NULL);
-        $guestCounts = [
-            new GuestCount(self::AQC_ADULT, $adultCount, NULL),
-            new GuestCount(self::AQC_CHILD, $childCount, NULL),
-        ];
+        $stayDateRange = new StayDateRange($params['Start'], $params['End'], NULL);
+        $guestCounts = [];
+        foreach ($params['Count'] as $aqc => $count) {
+            $aqc = 'self::AQC_' . strtoupper($aqc);
+            $guestCounts[] = new GuestCount(constant($aqc), $count);
+        }
         $roomStayCandidates = [
-            new RoomStayCandidate($guestCounts, $roomCount, NULL, NULL, NULL, NULL, NULL),
+            new RoomStayCandidate($guestCounts, $params['Quantity'], NULL, NULL, NULL, NULL, NULL),
         ];
-        $hotelRef = new HotelReferenceGroup($hotelCode, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-        $hotelSearchCriteria = [
-            new HotelSearchCriterion(NULL, NULL, $hotelRef, NULL, NULL, NULL, NULL),
-        ];
+        $hotelSearchCriteria = [];
+        foreach ((array)$params['HotelCode'] as $hotelCode) {
+            $hotelRef = new HotelReferenceGroup($hotelCode, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
+            $hotelSearchCriteria[] = new HotelSearchCriterion(NULL, NULL, $hotelRef, NULL, NULL, NULL, NULL);
+        }
         $availRequestSegments = [
             new AvailRequestSegment($stayDateRange, NULL, NULL, NULL, $roomStayCandidates, $hotelSearchCriteria, NULL, 'AreaList', NULL, NULL),
         ];

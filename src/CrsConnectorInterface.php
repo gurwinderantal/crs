@@ -35,21 +35,19 @@ interface CrsConnectorInterface {
     public function getFunctions();
 
     /**
-     * @param string $hotelCode
-     *    Hotel or chain reference to look up.
-     * @param string $start
-     *    Check-in date.
-     * @param string $end
-     *    Check-out date.
-     * @param string $roomCount
-     *    Number of rooms required.
-     * @param string $adultCount
-     *    Number of adults.
-     * @param string $childCount
-     *    Number of children.
+     * @param array $params
+     *    An array containing availability search parameters. Array keys must be
+     *    the same as the SOAP XML element attributes. For example:
+     *        - HotelCode: The unique ID assigned by the CRS.
+     *        - Start: The check-in date.
+     *        - End: The check-out date.
+     *        - Quantity: Number of room required.
+     *        - Count:
+     *            - Child: Number of children.
+     *            - Adult: Number of adults.
      *
      * @return \GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS
      */
-    public function checkAvailability($hotelCode, $start, $end, $roomCount, $adultCount, $childCount);
+    public function checkAvailability($params);
 
 }
