@@ -27,20 +27,16 @@ composer require gurwinderantal/crs
 ### Usage
 This library is currently able to connect to SynXis and Windsurfer central reservation systems.
 
-Build an array with all the credentials provided by your CRS provider. Add your API username, password and the SOAP
-body's `<POS>` element attributes. For example:
+Build an array with all the credentials provided by your CRS provider. This will be used in the SOAP request header.
 ```
 $credentials = [
     'username'   => 'MyUsername',
     'password'   => 'MyPassword',
-    'Code'       => 'Channel code',
-    'ID'         => 'Channel ID',
-    'ID_Context' => 'ID source eg. IATA, Synxis, Open Hospitality',
 ];
 ```
 The `username` and `password` keys *must* be present in your credential array, or else trying to instantiate a connector
-class will throw an exception. Other keys are optional but may lead to incorrect results. Follow your CRS provider's
-documentation carefully.
+class will throw an exception. Other keys (such as `systemId`) are optional but may lead to incorrect results. Follow
+your CRS provider's documentation carefully.
 
 Instantiate a connector class for the CRS you want:
 ```
@@ -54,14 +50,31 @@ $response = $connector->getFunctions();
 ```
 Available methods are:
 1. **getFunctions**: Gets a list of available methods for the CRS service.
-2. **checkAvailability**: Checks availability based on the parameters provided. A list of available parameters is given
-below:
-  * *hotelCode*: The CRS code that uniquely identifies a single hotel property.
-  * *start*: Starting value of the time span.
-  * *end*: Ending value of the time span.
-  * *roomCount*: Number of rooms being requested.
-  * *adultCount*: Number of adults.
-  * *childCount*: Number of children.
+2. **checkAvailability**: Checks availability based on the parameters provided. All parameters must be put in a single
+array. The array keys must match the SOAP request's XML request exactly. Refer to your service's WSDL for available
+attributes. For example:
+   ```
+   $params = [
+       'ID'           => 'xx',
+       'ID_Context'   => 'Open Hospitality',
+       'Code'         => 'xxxx',
+       'RatePlanCode' => 'MYRATECODE',
+       'HotelCode'    => 'MYHOTELCODE',
+       'Start'        => '2018-06-03',
+       'End'          => '2018-06-07',
+       'Quantity'     => 1,
+       'Count'        => [
+           'Child' => 0,
+           'Adult' => 2,
+       ],
+   ];
+   ```
+   If multiple elements with the same attributes are allowed (such as `count` in the above example), make it an array with
+   different keys. A list of expected keys will be provided in the documentation once there is a stable release for this
+   package.
+3. **createReservation**
+4. **modifyReservation**
+5. **cancelReservation**
 
 Response objects in most cases will be returned as a single object containing attributes, arrays or references to other
 objects. The response object will be structured as per the response XML of the corresponding SOAP request. For example,
