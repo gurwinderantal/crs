@@ -26,39 +26,120 @@ class SynxisConnector extends CrsConnectorBase {
      * {@inheritdoc}
      */
     public function checkAvailability($params) {
+        // Instantiate SOAP client
         $this->client = new \SoapClient($this->wsdl, [
             'classmap' => [
                 'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
                 'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
             ],
+            'trace' => TRUE,
         ]);
         $this->setHeaders('http://htng.org/1.1/Header/');
-        // Build POS
-        $companyName = new CompanyName(NULL, NULL, NULL, 'WSBE');
-        $requestorId = new RequestorID($companyName, '10', 'Synxis', NULL, NULL, NULL);
-        $source = new Source(NULL, $requestorId);
+
+        // Build POS->Source->RequestorID->CompanyName
+        $companyName = new CompanyName(
+            $params['CodeContext'] ?? NULL,
+            $params['CompanyShortName'] ?? NULL,
+            $params['TravelSelector'] ?? NULL,
+            $params['Code'] ?? NULL
+        );
+        // Build POS->Source->RequestorID
+        $requestorId = new RequestorID(
+            $companyName,
+            $params['ID'] ?? NULL,
+            $params['ID_context'] ?? NULL,
+            $params['Instance'] ?? NULL,
+            $params['PinNumber'] ?? NULL,
+            $params['MessagePassword'] ?? NULL
+        );
+        // Build POS->Source
+        $source = new Source(
+            NULL,
+            $requestorId);
+        // Build OTA_HotelAvailRQ->POS
         $pos = new POS($source);
-        // Build AvailRequestSegments
-        $stayDateRange = new StayDateRange($params['Start'], $params['End'], NULL);
+
+        // Build AvailRequestSegment->StayDateRange
+        $stayDateRange = new StayDateRange(
+            $params['Start'] ?? NULL,
+            $params['End'] ?? NULL,
+            $params['Duration'] ?? NULL
+        );
+        // Build AvailRequestSegment->RoomStayCandidate->GuestCounts
         $guestCounts = [];
         foreach ($params['Count'] as $aqc => $count) {
             $aqc = 'self::AQC_' . strtoupper($aqc);
             $guestCounts[] = new GuestCount(constant($aqc), $count);
         }
+        // Build AvailRequestSegment->RoomStayCandidates
         $roomStayCandidates = [
-            new RoomStayCandidate($guestCounts, $params['Quantity'], NULL, NULL, NULL, NULL, NULL),
+            new RoomStayCandidate(
+                $guestCounts,
+                $params['Quantity'] ?? NULL,
+                $params['RoomType'] ?? NULL,
+                $params['RoomTypeCode'] ?? NULL,
+                $params['RoomCategory'] ?? NULL,
+                $params['PromotionCode'] ?? NULL,
+                $params['NonSmoking'] ?? NULL
+            ),
         ];
+        // Build AvailRequestSegment->HotelSearchCriteria
         $hotelSearchCriteria = [];
-        foreach ((array)$params['HotelCode'] as $hotelCode) {
-            $hotelRef = new HotelReferenceGroup($hotelCode, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-            $hotelSearchCriteria[] = new HotelSearchCriterion(NULL, NULL, $hotelRef, NULL, NULL, NULL, NULL);
+        foreach ((array) $params['HotelCode'] as $hotelCode) {
+            // Build AvailRequestSegment->HotelSearchCriteria->Criterion->HotelRef
+            $hotelRef = new HotelReferenceGroup(
+                $hotelCode,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            );
+            // Build AvailRequestSegment->HotelSearchCriteria->Criterion
+            $hotelSearchCriteria[] = new HotelSearchCriterion(
+                NULL,
+                NULL,
+                $hotelRef,
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            );
         }
+        // Build AvailRequestSegments
         $availRequestSegments = [
-            new AvailRequestSegment($stayDateRange, NULL, NULL, NULL, $roomStayCandidates, $hotelSearchCriteria, NULL, NULL, 'Room', NULL),
+            new AvailRequestSegment($stayDateRange,
+                NULL,
+                NULL,
+                NULL,
+                $roomStayCandidates,
+                $hotelSearchCriteria,
+                NULL,
+                NULL,
+                'Room',
+                NULL
+            ),
         ];
-        // Build Request
-        $request = new OTA_HotelAvailRQ($pos, $availRequestSegments, NULL, 10, NULL, FALSE, FALSE, FALSE, FALSE, NULL, TRUE);
+
+        // Build OTA_HotelAvailRQ
+        $request = new OTA_HotelAvailRQ(
+            $pos,
+            $availRequestSegments,
+            NULL,
+            $params['MaxResponses'] ?? NULL,
+            $params['RequestedCurrency'] ?? NULL,
+            $params['ExactMatchOnly'] ?? FALSE,
+            $params['ExactMatchOnly'] ?? FALSE,
+            $params['SummaryOnly'] ?? FALSE,
+            $params['HotelStayOnly'] ?? FALSE,
+            $params['PricingMethod'] ?? NULL,
+            $params['AvailRatesOnly'] ?? TRUE
+        );
         $response = $this->client->CheckAvailability($request);
+        ksm($this->client->__getLastRequest());
         return $response;
     }
 
