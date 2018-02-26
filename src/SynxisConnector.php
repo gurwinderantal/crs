@@ -9,6 +9,7 @@ use GurwinderAntal\crs\Type\Request\CompanyName;
 use GurwinderAntal\crs\Type\Request\GuestCount;
 use GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ;
 use GurwinderAntal\crs\Type\Request\POS;
+use GurwinderAntal\crs\Type\Request\RatePlanCandidate;
 use GurwinderAntal\crs\Type\Request\RequestorID;
 use GurwinderAntal\crs\Type\Request\RoomStayCandidate;
 use GurwinderAntal\crs\Type\Request\Source;
@@ -32,7 +33,7 @@ class SynxisConnector extends CrsConnectorBase {
                 'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
                 'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
             ],
-            'trace' => TRUE,
+            'trace'    => TRUE,
         ]);
         $this->setHeaders('http://htng.org/1.1/Header/');
 
@@ -65,6 +66,21 @@ class SynxisConnector extends CrsConnectorBase {
             $params['End'] ?? NULL,
             $params['Duration'] ?? NULL
         );
+        // Build AvailRequestSegment->RatePlanCandidates
+        $ratePlanCandidates = array_key_exists('PromotionCode', $params) ||
+        array_key_exists('RatePlanCode', $params) ? [
+            new RatePlanCandidate(
+                NULL,
+                NULL,
+                $params['PromotionCode'] ?? NULL,
+                $params['RatePlanCode'] ?? NULL,
+                $params['RatePlanType'] ?? NULL,
+                $params['RatePlanId'] ?? NULL,
+                $params['RatePlanQualifier'] ?? NULL,
+                $params['RatePlanCategory'] ?? NULL,
+                $params['RatePlanFilterCode'] ?? NULL
+            ),
+        ] : NULL;
         // Build AvailRequestSegment->RoomStayCandidate->GuestCounts
         $guestCounts = [];
         foreach ($params['Count'] as $aqc => $count) {
@@ -113,7 +129,7 @@ class SynxisConnector extends CrsConnectorBase {
         $availRequestSegments = [
             new AvailRequestSegment($stayDateRange,
                 NULL,
-                NULL,
+                $ratePlanCandidates,
                 NULL,
                 $roomStayCandidates,
                 $hotelSearchCriteria,
@@ -131,7 +147,7 @@ class SynxisConnector extends CrsConnectorBase {
             NULL,
             $params['MaxResponses'] ?? NULL,
             $params['RequestedCurrency'] ?? NULL,
-            $params['ExactMatchOnly'] ?? FALSE,
+            $params['ExactMatchOnly'] ?? TRUE,
             $params['ExactMatchOnly'] ?? FALSE,
             $params['SummaryOnly'] ?? FALSE,
             $params['HotelStayOnly'] ?? FALSE,

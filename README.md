@@ -5,7 +5,9 @@ API. It is currently under development and not ready for use just yet.
 ## Getting Started
 
 ### Prerequisites
-This package uses PHP's SOAP extension to connect to SOAP APIs. Please ensure that you have the PHP SOAP extension
+This package depends on certain operators that are only available in **PHP 7.0 or later**.
+
+It also uses PHP's SOAP extension to connect to SOAP APIs. Please ensure that you have the **PHP SOAP** extension
 installed.
 
 You can look for the SOAP extension in your phpinfo to see if it is already installed.
