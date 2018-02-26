@@ -33,7 +33,6 @@ class SynxisConnector extends CrsConnectorBase {
                 'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
                 'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
             ],
-            'trace'    => TRUE,
         ]);
         $this->setHeaders('http://htng.org/1.1/Header/');
 
@@ -48,7 +47,7 @@ class SynxisConnector extends CrsConnectorBase {
         $requestorId = new RequestorID(
             $companyName,
             $params['ID'] ?? NULL,
-            $params['ID_context'] ?? NULL,
+            $params['ID_Context'] ?? NULL,
             $params['Instance'] ?? NULL,
             $params['PinNumber'] ?? NULL,
             $params['MessagePassword'] ?? NULL
@@ -155,7 +154,6 @@ class SynxisConnector extends CrsConnectorBase {
             $params['AvailRatesOnly'] ?? TRUE
         );
         $response = $this->client->CheckAvailability($request);
-        ksm($this->client->__getLastRequest());
         return $response;
     }
 
