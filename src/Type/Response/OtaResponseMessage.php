@@ -2,6 +2,8 @@
 
 namespace GurwinderAntal\crs\Type\Response;
 
+use GurwinderAntal\crs\Type\Common\OtaMessage;
+
 /**
  * Class OtaResponseMessage
  *

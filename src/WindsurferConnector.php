@@ -28,42 +28,7 @@ class WindsurferConnector extends CrsConnectorBase {
      * {@inheritdoc}
      */
     public function checkAvailability($params) {
-        $this->client = new \SoapClient($this->wsdl, [
-            'classmap' => [
-                'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
-                'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
-            ],
-        ]);
-        $this->setHeaders('http://htng.org/2009B');
-        // Build POS
-        $companyName = new CompanyName(NULL, 'Secondary channel name', NULL, 'Secondary channel code');
-        $bookingChannel = new BookingChannel($companyName, TRUE, 'ADS');
-        $requestorId = new RequestorID(NULL, 'nn', 'Open Hospitality', NULL, NULL, NULL);
-        $source = new Source($bookingChannel, $requestorId);
-        $pos = new POS($source);
-        // Build AvailRequestSegments
-        $stayDateRange = new StayDateRange($params['Start'], $params['End'], NULL);
-        $guestCounts = [];
-        foreach ($params['Count'] as $aqc => $count) {
-            $aqc = 'self::AQC_' . strtoupper($aqc);
-            $guestCounts[] = new GuestCount(constant($aqc), $count);
-        }
-        $roomStayCandidates = [
-            new RoomStayCandidate($guestCounts, $params['Quantity'], NULL, NULL, NULL, NULL, NULL),
-        ];
-        $hotelSearchCriteria = [];
-        foreach ((array)$params['HotelCode'] as $hotelCode) {
-            $hotelRef = new HotelReferenceGroup($hotelCode, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
-            $hotelSearchCriteria[] = new HotelSearchCriterion(NULL, NULL, $hotelRef, NULL, NULL, NULL, NULL);
-        }
-        $availRequestSegments = [
-            new AvailRequestSegment($stayDateRange, NULL, NULL, NULL, $roomStayCandidates, $hotelSearchCriteria, NULL, 'AreaList', NULL, NULL),
-        ];
-        // Build Request
-        $request = new OTA_HotelAvailRQ($pos, $availRequestSegments, NULL, 10, NULL, FALSE, FALSE, FALSE, FALSE, NULL, TRUE);
-        $wrapper = new CheckHotelAvailability($request);
-        $response = $this->client->CheckHotelAvailability($wrapper);
-        return $response;
+        // @TODO
     }
 
 }

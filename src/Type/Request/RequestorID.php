@@ -7,32 +7,7 @@ namespace GurwinderAntal\crs\Type\Request;
  *
  * @package GurwinderAntal\crs\Type\Request
  */
-class RequestorID {
-
-    /**
-     * @var \GurwinderAntal\crs\Type\Request\CompanyName
-     */
-    protected $CompanyName;
-
-    /**
-     * @var string
-     */
-    protected $ID;
-
-    /**
-     * @var string
-     */
-    protected $ID_Context;
-
-    /**
-     * @var string
-     */
-    protected $Instance;
-
-    /**
-     * @var string
-     */
-    protected $PinNumber;
+class RequestorID extends UniqueID {
 
     /**
      * @var string
@@ -57,11 +32,7 @@ class RequestorID {
         string $PinNumber = NULL,
         string $MessagePassword = NULL
     ) {
-        $this->CompanyName = $CompanyName;
-        $this->ID = $ID;
-        $this->ID_Context = $ID_Context;
-        $this->Instance = $Instance;
-        $this->PinNumber = $PinNumber;
+        parent::__construct($CompanyName, $ID, $ID_Context, $Instance, $PinNumber);
         $this->MessagePassword = $MessagePassword;
     }
 

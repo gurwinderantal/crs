@@ -141,6 +141,14 @@ class SynxisConnector extends CrsConnectorBase {
 
         // Build OTA_HotelAvailRQ
         $request = new OTA_HotelAvailRQ(
+            $params['EchoToken'] ?? NULL,
+            $params['PrimaryLangID'] ?? NULL,
+            $params['AltLangID'] ?? NULL,
+            $params['TimeStamp'] ?? NULL, // Add timestamp
+            $params['Target'] ?? NULL,
+            $params['Version'] ?? NULL,
+            $params['MessageContentCode'] ?? NULL,
+            NULL,
             $pos,
             $availRequestSegments,
             NULL,

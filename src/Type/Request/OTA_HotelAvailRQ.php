@@ -7,7 +7,7 @@ namespace GurwinderAntal\crs\Type\Request;
  *
  * @package GurwinderAntal\crs\Type\Request
  */
-class OTA_HotelAvailRQ {
+class OTA_HotelAvailRQ extends OtaRequestMessage {
 
     /**
      * @var \GurwinderAntal\crs\Type\Request\POS
@@ -21,6 +21,7 @@ class OTA_HotelAvailRQ {
 
     /**
      * Currently unused.
+     *
      * @var
      */
     protected $HotelReservationIDs;
@@ -78,31 +79,47 @@ class OTA_HotelAvailRQ {
     /**
      * OTA_HotelAvailRQ constructor.
      *
-     * @param \GurwinderAntal\crs\Type\Request\POS $POS
-     * @param \GurwinderAntal\crs\Type\Request\AvailRequestSegment[] $AvailRequestSegments
+     * @param NULL|string $EchoToken
+     * @param NULL|string $PrimaryLangID
+     * @param NULL|string $AltLangID
+     * @param NULL|string $TimeStamp
+     * @param NULL|string $Target
+     * @param NULL|string $Version
+     * @param NULL|string $MessageContentCode
+     * @param $TPA_Extensions
+     * @param \GurwinderAntal\crs\Type\Request\POS|NULL $POS
+     * @param array|NULL $AvailRequestSegments
      * @param $HotelReservationIDs
-     * @param int $MaxResponses
-     * @param string $RequestedCurrency
-     * @param bool $ExactMatchOnly
-     * @param bool $BestOnly
-     * @param bool $SummaryOnly
-     * @param bool $HotelStayOnly
-     * @param string $PricingMethod
-     * @param bool $AvailRatesOnly
+     * @param int|NULL $MaxResponses
+     * @param null|string $RequestedCurrency
+     * @param bool|NULL $ExactMatchOnly
+     * @param bool|NULL $BestOnly
+     * @param bool|NULL $SummaryOnly
+     * @param bool|NULL $HotelStayOnly
+     * @param NULL|string $PricingMethod
+     * @param bool|NULL $AvailRatesOnly
      */
     public function __construct(
-        POS $POS = NULL,
-        array $AvailRequestSegments = NULL,
-        $HotelReservationIDs = NULL,
-        int $MaxResponses = NULL,
-        string $RequestedCurrency = NULL,
-        bool $ExactMatchOnly = NULL,
-        bool $BestOnly = NULL,
-        bool $SummaryOnly = NULL,
-        bool $HotelStayOnly = NULL,
-        string $PricingMethod = NULL,
-        bool $AvailRatesOnly = NULL
-    ) {
+        ?string $EchoToken,
+        ?string $PrimaryLangID,
+        ?string $AltLangID,
+        ?string $TimeStamp,
+        ?string $Target,
+        ?string $Version,
+        ?string $MessageContentCode,
+        $TPA_Extensions,
+        ?POS $POS,
+        ?array $AvailRequestSegments,
+        $HotelReservationIDs,
+        ?int $MaxResponses,
+        ?string $RequestedCurrency,
+        ?bool $ExactMatchOnly,
+        ?bool $BestOnly,
+        ?bool $SummaryOnly,
+        ?bool $HotelStayOnly,
+        ?string $PricingMethod,
+        ?bool $AvailRatesOnly) {
+        parent::__construct($EchoToken, $PrimaryLangID, $AltLangID, $TimeStamp, $Target, $Version, $MessageContentCode, $TPA_Extensions);
         $this->POS = $POS;
         $this->AvailRequestSegments = $AvailRequestSegments;
         $this->HotelReservationIDs = $HotelReservationIDs;
