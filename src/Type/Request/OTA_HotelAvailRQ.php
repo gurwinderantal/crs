@@ -10,94 +10,82 @@ namespace GurwinderAntal\crs\Type\Request;
 class OTA_HotelAvailRQ extends OtaRequestMessage {
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\POS
+     * @var \GurwinderAntal\crs\Type\Request\POS|null
      */
     protected $POS;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\AvailRequestSegment[]
+     * @var \GurwinderAntal\crs\Type\Request\AvailRequestSegment[]|null
      */
     protected $AvailRequestSegments;
 
     /**
      * Currently unused.
-     *
-     * @var
      */
     protected $HotelReservationIDs;
 
     /**
-     * Required.
-     *
-     * @var int
+     * @var int|null
      */
     protected $MaxResponses;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $RequestedCurrency;
 
     /**
-     * Required.
-     *
-     * @var bool
+     * @var bool|null
      */
     protected $ExactMatchOnly;
 
     /**
-     * Required.
-     *
-     * @var bool
+     * @var bool|null
      */
     protected $BestOnly;
 
     /**
-     * Required.
-     *
-     * @var bool
+     * @var bool|null
      */
     protected $SummaryOnly;
 
     /**
-     * Required.
-     *
-     * @var bool
+     * @var bool|null
      */
     protected $HotelStayOnly;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $PricingMethod;
 
     /**
-     * @var bool
+     * @var array|null
      */
     protected $AvailRatesOnly;
 
     /**
      * OTA_HotelAvailRQ constructor.
      *
-     * @param NULL|string $EchoToken
-     * @param NULL|string $PrimaryLangID
-     * @param NULL|string $AltLangID
-     * @param NULL|string $TimeStamp
-     * @param NULL|string $Target
-     * @param NULL|string $Version
-     * @param NULL|string $MessageContentCode
+     * @param null|string $EchoToken
+     * @param null|string $PrimaryLangID
+     * @param null|string $AltLangID
+     * @param null|string $TimeStamp
+     * @param null|string $Target
+     * @param null|string $Version
+     * @param null|string $MessageContentCode
      * @param $TPA_Extensions
-     * @param \GurwinderAntal\crs\Type\Request\POS|NULL $POS
-     * @param array|NULL $AvailRequestSegments
+     * @param \GurwinderAntal\crs\Type\Request\POS|null $POS
+     * @param array|null $AvailRequestSegments
      * @param $HotelReservationIDs
-     * @param int|NULL $MaxResponses
+     * @param int|null $MaxResponses
      * @param null|string $RequestedCurrency
-     * @param bool|NULL $ExactMatchOnly
-     * @param bool|NULL $BestOnly
-     * @param bool|NULL $SummaryOnly
-     * @param bool|NULL $HotelStayOnly
-     * @param NULL|string $PricingMethod
-     * @param bool|NULL $AvailRatesOnly
+     * @param bool|null $ExactMatchOnly
+     * @param bool|null $BestOnly
+     * @param bool|null $SummaryOnly
+     * @param bool|null $HotelStayOnly
+     * @param null|string $PricingMethod
+     * @param bool|null $AvailRatesOnly
      */
     public function __construct(
         ?string $EchoToken,

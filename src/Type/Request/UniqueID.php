@@ -10,45 +10,45 @@ namespace GurwinderAntal\crs\Type\Request;
 class UniqueID {
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\CompanyName
+     * @var \GurwinderAntal\crs\Type\Request\CompanyName|null
      */
     protected $CompanyName;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $ID;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $ID_Context;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $Instance;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $PinNumber;
 
     /**
      * UniqueID constructor.
      *
-     * @param \GurwinderAntal\crs\Type\Request\CompanyName|NULL $CompanyName
-     * @param string|NULL $ID
-     * @param string|NULL $ID_Context
-     * @param string|NULL $Instance
-     * @param string|NULL $PinNumber
+     * @param \GurwinderAntal\crs\Type\Request\CompanyName|null $CompanyName
+     * @param null|string $ID
+     * @param null|string $ID_Context
+     * @param null|string $Instance
+     * @param null|string $PinNumber
      */
     public function __construct(
-        CompanyName $CompanyName = NULL,
-        string $ID = NULL,
-        string $ID_Context = NULL,
-        string $Instance = NULL,
-        string $PinNumber = NULL
+        ?CompanyName $CompanyName,
+        ?string $ID,
+        ?string $ID_Context,
+        ?string $Instance,
+        ?string $PinNumber
     ) {
         $this->CompanyName = $CompanyName;
         $this->ID = $ID;

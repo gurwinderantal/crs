@@ -10,24 +10,24 @@ namespace GurwinderAntal\crs\Type\Common;
 class HtngHeaderFrom {
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $systemId;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Common\Credential
+     * @var \GurwinderAntal\crs\Type\Common\Credential|null
      */
     protected $Credential;
 
     /**
      * HtngHeaderFrom constructor.
      *
-     * @param string|NULL $systemId
-     * @param \GurwinderAntal\crs\Type\Common\Credential|NULL $Credential
+     * @param null|string $systemId
+     * @param \GurwinderAntal\crs\Type\Common\Credential|null $Credential
      */
     public function __construct(
-        string $systemId = NULL,
-        Credential $Credential = NULL
+        ?string $systemId,
+        ?Credential $Credential
     ) {
         $this->systemId = $systemId;
         $this->Credential = $Credential;

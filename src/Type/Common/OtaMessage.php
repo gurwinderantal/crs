@@ -11,20 +11,19 @@ abstract class OtaMessage extends OTA_PayloadStdAttributes {
 
     /**
      * Currently unused.
-     * @var
      */
     public $TPA_Extensions;
 
     /**
      * OtaMessage constructor.
      *
-     * @param NULL|string $EchoToken
-     * @param NULL|string $PrimaryLangID
-     * @param NULL|string $AltLangID
-     * @param NULL|string $TimeStamp
-     * @param NULL|string $Target
-     * @param NULL|string $Version
-     * @param NULL|string $MessageContentCode
+     * @param null|string $EchoToken
+     * @param null|string $PrimaryLangID
+     * @param null|string $AltLangID
+     * @param null|string $TimeStamp
+     * @param null|string $Target
+     * @param null|string $Version
+     * @param null|string $MessageContentCode
      * @param $TPA_Extensions
      */
     public function __construct(

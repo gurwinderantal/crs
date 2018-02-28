@@ -10,24 +10,24 @@ namespace GurwinderAntal\crs\Type\Request;
 class Source {
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\BookingChannel
+     * @var \GurwinderAntal\crs\Type\Request\BookingChannel|null
      */
     protected $BookingChannel;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\RequestorID
+     * @var \GurwinderAntal\crs\Type\Request\RequestorID|null
      */
     protected $RequestorId;
 
     /**
      * Source constructor.
      *
-     * @param \GurwinderAntal\crs\Type\Request\BookingChannel $BookingChannel
-     * @param \GurwinderAntal\crs\Type\Request\RequestorID $RequestorId
+     * @param \GurwinderAntal\crs\Type\Request\BookingChannel|null $BookingChannel
+     * @param \GurwinderAntal\crs\Type\Request\RequestorID|null $RequestorId
      */
     public function __construct(
-        BookingChannel $BookingChannel = NULL,
-        RequestorID $RequestorId = NULL
+        ?BookingChannel $BookingChannel,
+        ?RequestorID $RequestorId
     ) {
         $this->BookingChannel = $BookingChannel;
         $this->RequestorId = $RequestorId;

@@ -10,50 +10,50 @@ namespace GurwinderAntal\crs\Type\Common;
 class OTA_PayloadStdAttributes {
 
     /**
-     * @var NULL|string
+     * @var null|string
      */
     public $EchoToken;
 
     /**
-     * @var NULL|string
+     * @var null|string
      */
     public $PrimaryLangID;
 
     /**
-     * @var NULL|string
+     * @var null|string
      */
     public $AltLangID;
 
     /**
-     * @var NULL|string
+     * @var null|string
      */
     public $TimeStamp;
 
     /**
-     * @var NULL|string
+     * @var null|string
      */
     public $Target;
 
     /**
-     * @var NULL|string
+     * @var null|string
      */
     public $Version;
 
     /**
-     * @var NULL|string
+     * @var null|string
      */
     public $MessageContentCode;
 
     /**
      * OTA_PayloadStdAttributes constructor.
      *
-     * @param string|NULL $EchoToken
-     * @param string|NULL $PrimaryLangID
-     * @param string|NULL $AltLangID
-     * @param string|NULL $TimeStamp
-     * @param string|NULL $Target
-     * @param string|NULL $Version
-     * @param string|NULL $MessageContentCode
+     * @param null|string $EchoToken
+     * @param null|string $PrimaryLangID
+     * @param null|string $AltLangID
+     * @param null|string $TimeStamp
+     * @param null|string $Target
+     * @param null|string $Version
+     * @param null|string $MessageContentCode
      */
     public function __construct(
         ?string $EchoToken,

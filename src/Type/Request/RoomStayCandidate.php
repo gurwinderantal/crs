@@ -10,59 +10,59 @@ namespace GurwinderAntal\crs\Type\Request;
 class RoomStayCandidate {
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\GuestCount[]
+     * @var array|\GurwinderAntal\crs\Type\Common\GuestCount[]|null
      */
     protected $GuestCounts;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $Quantity;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $RoomType;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $RoomTypeCode;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $RoomCategory;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $PromotionCode;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $NonSmoking;
 
     /**
      * RoomStayCandidate constructor.
      *
-     * @param \GurwinderAntal\crs\Type\Request\GuestCount[] $GuestCounts
-     * @param string $Quantity
-     * @param string $RoomType
-     * @param string $RoomTypeCode
-     * @param string $RoomCategory
-     * @param string $PromotionCode
-     * @param string $NonSmoking
+     * @param \GurwinderAntal\crs\Type\Common\GuestCount[]|null $GuestCounts
+     * @param null|string $Quantity
+     * @param null|string $RoomType
+     * @param null|string $RoomTypeCode
+     * @param null|string $RoomCategory
+     * @param null|string $PromotionCode
+     * @param null|string $NonSmoking
      */
     public function __construct(
-        array $GuestCounts = NULL,
-        string $Quantity = NULL,
-        string $RoomType = NULL,
-        string $RoomTypeCode = NULL,
-        string $RoomCategory = NULL,
-        string $PromotionCode = NULL,
-        string $NonSmoking = NULL
+        ?array $GuestCounts,
+        ?string $Quantity,
+        ?string $RoomType,
+        ?string $RoomTypeCode,
+        ?string $RoomCategory,
+        ?string $PromotionCode,
+        ?string $NonSmoking
     ) {
         $this->GuestCounts = $GuestCounts;
         $this->Quantity = $Quantity;

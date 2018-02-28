@@ -10,52 +10,52 @@ namespace GurwinderAntal\crs\Type\Common;
 class HtngHeader {
 
     /**
-     * @var \GurwinderAntal\crs\Type\Common\HtngHeaderFrom
+     * @var \GurwinderAntal\crs\Type\Common\HtngHeaderFrom|null
      */
     protected $From;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Common\HtngHeaderTo
+     * @var \GurwinderAntal\crs\Type\Common\HtngHeaderTo|null
      */
     protected $To;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $timeStamp;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $echoToken;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $transactionId;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $action;
 
     /**
      * HtngHeader constructor.
      *
-     * @param \GurwinderAntal\crs\Type\Common\HtngHeaderFrom|NULL $From
-     * @param \GurwinderAntal\crs\Type\Common\HtngHeaderTo|NULL $To
-     * @param string|NULL $timeStamp
-     * @param string|NULL $echoToken
-     * @param string|NULL $transactionId
-     * @param string|NULL $action
+     * @param \GurwinderAntal\crs\Type\Common\HtngHeaderFrom|null $From
+     * @param \GurwinderAntal\crs\Type\Common\HtngHeaderTo|null $To
+     * @param null|string $timeStamp
+     * @param null|string $echoToken
+     * @param null|string $transactionId
+     * @param null|string $action
      */
     public function __construct(
-        HtngHeaderFrom $From = NULL,
-        HtngHeaderTo $To = NULL,
-        string $timeStamp = NULL,
-        string $echoToken = NULL,
-        string $transactionId = NULL,
-        string $action = NULL
+        ?HtngHeaderFrom $From,
+        ?HtngHeaderTo $To,
+        ?string $timeStamp,
+        ?string $echoToken,
+        ?string $transactionId,
+        ?string $action
     ) {
         $this->From = $From;
         $this->To = $To;

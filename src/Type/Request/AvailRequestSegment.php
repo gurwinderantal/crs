@@ -10,82 +10,80 @@ namespace GurwinderAntal\crs\Type\Request;
 class AvailRequestSegment {
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\StayDateRange|NULL
+     * @var \GurwinderAntal\crs\Type\Request\StayDateRange|null
      */
     protected $StayDateRange;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\RateRange|NULL
+     * @var \GurwinderAntal\crs\Type\Request\RateRange|null
      */
     protected $RateRange;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\RatePlanCandidate[]|NULL
+     * @var \GurwinderAntal\crs\Type\Request\RatePlanCandidate[]|null
      */
     protected $RatePlanCandidates;
 
     /**
      * Currently unused.
-     * @var
      */
     protected $Profiles;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\RoomStayCandidate[]|NULL
+     * @var \GurwinderAntal\crs\Type\Request\RoomStayCandidate[]|null
      */
     protected $RoomStayCandidates;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Common\HotelSearchCriterion[]|NULL
+     * @var \GurwinderAntal\crs\Type\Common\HotelSearchCriterion[]|null
      */
     protected $HotelSearchCriteria;
 
     /**
      * Currently unused.
-     * @var
      */
     protected $TPA_Extensions;
 
     /**
-     * @var string|NULL
+     * @var null|string
      */
     protected $ResponseType;
 
     /**
-     * @var string|NULL
+     * @var null|string
      */
     protected $AvailReqType;
 
     /**
-     * @var string|NULL
+     * @var null|string
      */
     protected $MoreDataToken;
 
     /**
      * AvailRequestSegment constructor.
      *
-     * @param \GurwinderAntal\crs\Type\Request\StayDateRange|NULL $StayDateRange
-     * @param \GurwinderAntal\crs\Type\Request\RateRange|NULL $RateRange
-     * @param \GurwinderAntal\crs\Type\Request\RatePlanCandidate[]|NULL $RatePlanCandidates
+     * @param \GurwinderAntal\crs\Type\Request\StayDateRange|null $StayDateRange
+     * @param \GurwinderAntal\crs\Type\Request\RateRange|null $RateRange
+     * @param array|null $RatePlanCandidates
      * @param $Profiles
-     * @param array|NULL $RoomStayCandidates
-     * @param array|NULL $HotelSearchCriteria
+     * @param array|null $RoomStayCandidates
+     * @param array|null $HotelSearchCriteria
      * @param $TPA_Extensions
-     * @param string|NULL $ResponseType
-     * @param string|NULL $AvailReqType
-     * @param string|NULL $MoreDataToken
+     * @param null|string $ResponseType
+     * @param null|string $AvailReqType
+     * @param null|string $MoreDataToken
      */
     public function __construct(
-        StayDateRange $StayDateRange = NULL,
-        RateRange $RateRange = NULL,
-        array $RatePlanCandidates = NULL,
-        $Profiles = NULL,
-        array $RoomStayCandidates = NULL,
-        array $HotelSearchCriteria = NULL,
-        $TPA_Extensions = NULL,
-        string $ResponseType = NULL,
-        string $AvailReqType = NULL,
-        string $MoreDataToken = NULL
+        ?StayDateRange $StayDateRange,
+        ?RateRange $RateRange,
+        ?array $RatePlanCandidates,
+        $Profiles,
+        ?array $RoomStayCandidates,
+        ?array $HotelSearchCriteria,
+        $TPA_Extensions,
+        ?string $ResponseType,
+        ?string $AvailReqType,
+        ?string $MoreDataToken
     ) {
         $this->StayDateRange = $StayDateRange;
         $this->RateRange = $RateRange;

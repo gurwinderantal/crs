@@ -13,40 +13,36 @@ class HotelSearchCriterion {
 
     /**
      * Currently unused.
-     * @var
      */
     public $RatePlanCandidates;
 
     /**
      * Currently unused.
-     * @var
      */
     public $Position;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Common\HotelReferenceGroup
+     * @var \GurwinderAntal\crs\Type\Common\HotelReferenceGroup|null
      */
     public $HotelRef;
 
     /**
      * Currently unused.
-     * @var
      */
     public $Radius;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\StayDateRange
+     * @var \GurwinderAntal\crs\Type\Request\StayDateRange|null
      */
     public $StayDateRange;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\RoomStayCandidate[]
+     * @var \GurwinderAntal\crs\Type\Request\RoomStayCandidate[]|null
      */
     public $RoomStayCandidates;
 
     /**
      * Currently unused.
-     * @var
      */
     public $AcceptedPayments;
 
@@ -55,20 +51,20 @@ class HotelSearchCriterion {
      *
      * @param $RatePlanCandidates
      * @param $Position
-     * @param \GurwinderAntal\crs\Type\Common\HotelReferenceGroup $HotelRef
+     * @param \GurwinderAntal\crs\Type\Common\HotelReferenceGroup|null $HotelRef
      * @param $Radius
-     * @param \GurwinderAntal\crs\Type\Request\StayDateRange $StayDateRange
-     * @param \GurwinderAntal\crs\Type\Request\RoomStayCandidate[] $RoomStayCandidates
+     * @param \GurwinderAntal\crs\Type\Request\StayDateRange|null $StayDateRange
+     * @param array|null $RoomStayCandidates
      * @param $AcceptedPayments
      */
     public function __construct(
-        $RatePlanCandidates = NULL,
-        $Position = NULL,
-        HotelReferenceGroup $HotelRef = NULL,
-        $Radius = NULL,
-        StayDateRange $StayDateRange = NULL,
-        array $RoomStayCandidates = NULL,
-        $AcceptedPayments = NULL
+        $RatePlanCandidates,
+        $Position,
+        ?HotelReferenceGroup $HotelRef,
+        $Radius,
+        ?StayDateRange $StayDateRange,
+        ?array $RoomStayCandidates,
+        $AcceptedPayments
     ) {
         $this->RatePlanCandidates = $RatePlanCandidates;
         $this->Position = $Position;

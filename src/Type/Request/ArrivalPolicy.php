@@ -10,31 +10,31 @@ namespace GurwinderAntal\crs\Type\Request;
 class ArrivalPolicy {
 
     /**
-     * @var bool|NULL
+     * @var bool|null
      */
     protected $GuaranteePolicyIndicator;
 
     /**
-     * @var bool|NULL
+     * @var bool|null
      */
     protected $DepositPolicyIndicator;
 
     /**
-     * @var bool|NULL
+     * @var bool|null
      */
     protected $HoldTimePolicyIndicator;
 
     /**
      * ArrivalPolicy constructor.
      *
-     * @param bool|NULL $GuaranteePolicyIndicator
-     * @param bool|NULL $DepositPolicyIndicator
-     * @param bool|NULL $HoldTimePolicyIndicator
+     * @param bool|null $GuaranteePolicyIndicator
+     * @param bool|null $DepositPolicyIndicator
+     * @param bool|null $HoldTimePolicyIndicator
      */
     public function __construct(
-        bool $GuaranteePolicyIndicator = NULL,
-        bool $DepositPolicyIndicator = NULL,
-        bool $HoldTimePolicyIndicator = NULL
+        ?bool $GuaranteePolicyIndicator,
+        ?bool $DepositPolicyIndicator,
+        ?bool $HoldTimePolicyIndicator
     ) {
         $this->GuaranteePolicyIndicator = $GuaranteePolicyIndicator;
         $this->DepositPolicyIndicator = $DepositPolicyIndicator;

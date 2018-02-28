@@ -10,16 +10,16 @@ namespace GurwinderAntal\crs\Type\Common;
 class HtngHeaderTo {
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $systemId;
 
     /**
      * HtngHeaderTo constructor.
      *
-     * @param string|NULL $systemId
+     * @param null|string $systemId
      */
-    public function __construct(string $systemId = NULL) {
+    public function __construct(?string $systemId) {
         $this->systemId = $systemId;
     }
 

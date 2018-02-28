@@ -10,43 +10,43 @@ namespace GurwinderAntal\crs\Type\Request;
 class BookingChannel {
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\CompanyName
+     * @var \GurwinderAntal\crs\Type\Request\CompanyName|null
      */
     protected $CompanyName;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $Primary;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $Type;
 
     /**
-     * @var bool
+     * @var bool|null
      */
     protected $AnyBookingChannelInd;
 
     /**
      * BookingChannel constructor.
      *
-     * @param \GurwinderAntal\crs\Type\Request\CompanyName $CompanyName
-     * @param string $Primary
-     * @param string $Type
-     * @param bool $AnyBookingChannelInd
+     * @param \GurwinderAntal\crs\Type\Request\CompanyName|null $CompanyName
+     * @param null|string $Primary
+     * @param null|string $Type
+     * @param bool|null $AnyBookingChannelInd
      */
     public function __construct(
-        CompanyName $CompanyName = NULL,
-        string $Primary = NULL,
-        string $Type = NULL,
-        bool $AnyBookingChannelInd = NULL
+        ?CompanyName $CompanyName,
+        ?string $Primary,
+        ?string $Type,
+        ?bool $AnyBookingChannelInd
     ) {
         $this->CompanyName = $CompanyName;
         $this->Primary = $Primary;
-        $this->Type;
-        $this->AnyBookingChannelInd;
+        $this->Type = $Type;
+        $this->AnyBookingChannelInd = $AnyBookingChannelInd;
     }
 
 }

@@ -10,73 +10,73 @@ namespace GurwinderAntal\crs\Type\Request;
 class RatePlanCandidate {
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\ArrivalPolicy|NULL
+     * @var \GurwinderAntal\crs\Type\Request\ArrivalPolicy|null
      */
     protected $ArrivalPolicy;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\RatePlanCommission|NULL
+     * @var \GurwinderAntal\crs\Type\Request\RatePlanCommission|null
      */
     protected $RatePlanCommission;
 
     /**
-     * @var string|NULL
+     * @var null|string
      */
     protected $PromotionCode;
 
     /**
-     * @var string|NULL
+     * @var null|string
      */
     protected $RatePlanCode;
 
     /**
-     * @var string|NULL
+     * @var null|string
      */
     protected $RatePlanType;
 
     /**
-     * @var string|NULL
+     * @var null|string
      */
     protected $RatePlanId;
 
     /**
-     * @var string|NULL
+     * @var null|string
      */
     protected $RatePlanQualifier;
 
     /**
-     * @var string|NULL
+     * @var null|string
      */
     protected $RatePlanCategory;
 
     /**
-     * @var string|NULL
+     * @var null|string
      */
     protected $RatePlanFilterCode;
 
     /**
      * RatePlanCandidate constructor.
      *
-     * @param \GurwinderAntal\crs\Type\Request\ArrivalPolicy|NULL $ArrivalPolicy
-     * @param \GurwinderAntal\crs\Type\Request\RatePlanCommission|NULL $RatePlanCommission
-     * @param string|NULL $PromotionCode
-     * @param string|NULL $RatePlanCode
-     * @param string|NULL $RatePlanType
-     * @param string|NULL $RatePlanId
-     * @param string|NULL $RatePlanQualifier
-     * @param string|NULL $RatePlanCategory
-     * @param string|NULL $RatePlanFilterCode
+     * @param \GurwinderAntal\crs\Type\Request\ArrivalPolicy|null $ArrivalPolicy
+     * @param \GurwinderAntal\crs\Type\Request\RatePlanCommission|null $RatePlanCommission
+     * @param null|string $PromotionCode
+     * @param null|string $RatePlanCode
+     * @param null|string $RatePlanType
+     * @param null|string $RatePlanId
+     * @param null|string $RatePlanQualifier
+     * @param null|string $RatePlanCategory
+     * @param null|string $RatePlanFilterCode
      */
     public function __construct(
-        ArrivalPolicy $ArrivalPolicy = NULL,
-        RatePlanCommission $RatePlanCommission = NULL,
-        string $PromotionCode = NULL,
-        string $RatePlanCode = NULL,
-        string $RatePlanType = NULL,
-        string $RatePlanId = NULL,
-        string $RatePlanQualifier = NULL,
-        string $RatePlanCategory = NULL,
-        string $RatePlanFilterCode = NULL
+        ?ArrivalPolicy $ArrivalPolicy,
+        ?RatePlanCommission $RatePlanCommission,
+        ?string $PromotionCode,
+        ?string $RatePlanCode,
+        ?string $RatePlanType,
+        ?string $RatePlanId,
+        ?string $RatePlanQualifier,
+        ?string $RatePlanCategory,
+        ?string $RatePlanFilterCode
     ) {
         $this->ArrivalPolicy = $ArrivalPolicy;
         $this->RatePlanCommission = $RatePlanCommission;

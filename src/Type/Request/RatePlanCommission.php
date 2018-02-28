@@ -10,31 +10,31 @@ namespace GurwinderAntal\crs\Type\Request;
 class RatePlanCommission {
 
     /**
-     * @var bool
+     * @var bool|null
      */
     protected $CommissionableIndicator;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $MinCommissionPercentage;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $MaxCommissionPercentage;
 
     /**
      * RatePlanCommission constructor.
      *
-     * @param bool|NULL $CommissionableIndicator
-     * @param string|NULL $MinCommissionPercentage
-     * @param string|NULL $MaxCommissionPercentage
+     * @param bool|null $CommissionableIndicator
+     * @param null|string $MinCommissionPercentage
+     * @param null|string $MaxCommissionPercentage
      */
     public function __construct(
-        bool $CommissionableIndicator = NULL,
-        string $MinCommissionPercentage = NULL,
-        string $MaxCommissionPercentage = NULL
+        ?bool $CommissionableIndicator,
+        ?string $MinCommissionPercentage,
+        ?string $MaxCommissionPercentage
     ) {
         $this->CommissionableIndicator = $CommissionableIndicator;
         $this->MinCommissionPercentage = $MinCommissionPercentage;

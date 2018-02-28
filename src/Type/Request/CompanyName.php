@@ -10,38 +10,38 @@ namespace GurwinderAntal\crs\Type\Request;
 class CompanyName {
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $CodeContext;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $CompanyShortName;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $TravelSelector;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $Code;
 
     /**
      * CompanyName constructor.
      *
-     * @param string $CodeContext
-     * @param string $CompanyShortName
-     * @param string $TravelSelector
-     * @param string $Code
+     * @param null|string $CodeContext
+     * @param null|string $CompanyShortName
+     * @param null|string $TravelSelector
+     * @param null|string $Code
      */
     public function __construct(
-        string $CodeContext = NULL,
-        string $CompanyShortName = NULL,
-        string $TravelSelector = NULL,
-        string $Code = NULL
+        ?string $CodeContext,
+        ?string $CompanyShortName,
+        ?string $TravelSelector,
+        ?string $Code
     ) {
         $this->CodeContext = $CodeContext;
         $this->CompanyShortName = $CompanyShortName;

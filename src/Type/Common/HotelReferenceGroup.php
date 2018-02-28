@@ -14,73 +14,73 @@ class HotelReferenceGroup {
      */
 
     /**
-     * @var string
+     * @var null|string
      */
     public $HotelCode;
 
     /**
-     * @var string
+     * @var null|string
      */
     public $HotelName;
 
     /**
-     * @var string
+     * @var null|string
      */
     public $AreaID;
 
     /**
-     * @var string
+     * @var null|string
      */
     public $HotelCodeContext;
 
     /**
-     * @var string
+     * @var null|string
      */
     public $ChainCode;
 
     /**
-     * @var string
+     * @var null|string
      */
     public $ChainName;
 
     /**
-     * @var string
+     * @var null|string
      */
     public $BrandCode;
 
     /**
-     * @var string
+     * @var null|string
      */
     public $BrandName;
 
     /**
-     * @var string
+     * @var null|string
      */
     public $HotelCityCode;
 
     /**
      * HotelReferenceGroup constructor.
      *
-     * @param string $HotelCode
-     * @param string $HotelName
-     * @param string $AreaID
-     * @param string $HotelCodeContext
-     * @param string $ChainCode
-     * @param string $ChainName
-     * @param string $BrandCode
-     * @param string $BrandName
-     * @param string $HotelCityCode
+     * @param null|string $HotelCode
+     * @param null|string $HotelName
+     * @param null|string $AreaID
+     * @param null|string $HotelCodeContext
+     * @param null|string $ChainCode
+     * @param null|string $ChainName
+     * @param null|string $BrandCode
+     * @param null|string $BrandName
+     * @param null|string $HotelCityCode
      */
     public function __construct(
-        string $HotelCode = NULL,
-        string $HotelName = NULL,
-        string $AreaID = NULL,
-        string $HotelCodeContext = NULL,
-        string $ChainCode = NULL,
-        string $ChainName = NULL,
-        string $BrandCode = NULL,
-        string $BrandName = NULL,
-        string $HotelCityCode = NULL
+        ?string $HotelCode,
+        ?string $HotelName,
+        ?string $AreaID,
+        ?string $HotelCodeContext,
+        ?string $ChainCode,
+        ?string $ChainName,
+        ?string $BrandCode,
+        ?string $BrandName,
+        ?string $HotelCityCode
     ) {
         $this->HotelCode = $HotelCode;
         $this->HotelName = $HotelName;

@@ -10,24 +10,24 @@ namespace GurwinderAntal\crs\Type\Request;
 class RateRange {
 
     /**
-     * @var string|NULL
+     * @var null|string
      */
     protected $MinRate;
 
     /**
-     * @var string|NULL
+     * @var null|string
      */
     protected $MaxRate;
 
     /**
      * RateRange constructor.
      *
-     * @param string|NULL $MinRate
-     * @param string|NULL $MaxRate
+     * @param null|string $MinRate
+     * @param null|string $MaxRate
      */
     public function __construct(
-        string $MinRate = NULL,
-        string $MaxRate = NULL
+        ?string $MinRate,
+        ?string $MaxRate
     ) {
         $this->MinRate = $MinRate;
         $this->MaxRate = $MaxRate;

@@ -10,31 +10,31 @@ namespace GurwinderAntal\crs\Type\Request;
 class StayDateRange {
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $Start;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $End;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $Duration;
 
     /**
      * StayDateRange constructor.
      *
-     * @param string $Start
-     * @param string $End
-     * @param string $Duration
+     * @param null|string $Start
+     * @param null|string $End
+     * @param null|string $Duration
      */
     public function __construct(
-        string $Start = NULL,
-        string $End = NULL,
-        string $Duration = NULL
+        ?string $Start,
+        ?string $End,
+        ?string $Duration
     ) {
         $this->Start = $Start;
         $this->End = $End;
