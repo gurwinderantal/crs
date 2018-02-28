@@ -1,6 +1,6 @@
 <?php
 
-namespace GurwinderAntal\crs\Type\Request;
+namespace GurwinderAntal\crs\Type\Common;
 
 /**
  * Class GuestCount
@@ -10,31 +10,31 @@ namespace GurwinderAntal\crs\Type\Request;
 class GuestCount {
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $AgeQualifyingCode;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $Count;
 
     /**
-     * @var string
+     * @var null|string
      */
     protected $Age;
 
     /**
      * GuestCount constructor.
      *
-     * @param string $AgeQualifyingCode
-     * @param string $Count
-     * @param string $Age
+     * @param null|string $AgeQualifyingCode
+     * @param null|string $Count
+     * @param null|string $Age
      */
     public function __construct(
-        string $AgeQualifyingCode = NULL,
-        string $Count = NULL,
-        string $Age = NULL
+        ?string $AgeQualifyingCode,
+        ?string $Count,
+        ?string $Age
     ) {
         $this->AgeQualifyingCode = $AgeQualifyingCode;
         $this->Count = $Count;
