@@ -1,44 +1,52 @@
 <?php
 
-namespace GurwinderAntal\crs\Type\Request;
+namespace GurwinderAntal\crs\Type\Common;
 
 /**
- * Class StayDateRange
+ * Class DateTimeSpan
  *
- * @package GurwinderAntal\crs\Type\Request
+ * @package GurwinderAntal\crs\Type\Common
  */
-class StayDateRange {
+class DateTimeSpan {
 
     /**
      * @var null|string
      */
-    protected $Start;
+    public $Start;
 
     /**
      * @var null|string
      */
-    protected $End;
+    public $End;
 
     /**
      * @var null|string
      */
-    protected $Duration;
+    public $Duration;
 
     /**
-     * StayDateRange constructor.
+     * @var null|string
+     */
+    public $Increment;
+
+    /**
+     * DateTimeSpan constructor.
      *
      * @param null|string $Start
      * @param null|string $End
      * @param null|string $Duration
+     * @param null|string $Increment
      */
     public function __construct(
         ?string $Start,
         ?string $End,
-        ?string $Duration
+        ?string $Duration,
+        ?string $Increment
     ) {
         $this->Start = $Start;
         $this->End = $End;
         $this->Duration = $Duration;
+        $this->Increment = $Increment;
     }
 
 }

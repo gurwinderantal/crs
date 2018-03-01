@@ -2,18 +2,35 @@
 
 namespace GurwinderAntal\crs;
 
+use GurwinderAntal\crs\Type\Common\Address;
+use GurwinderAntal\crs\Type\Common\CountryName;
+use GurwinderAntal\crs\Type\Common\Customer;
+use GurwinderAntal\crs\Type\Common\DateTimeSpan;
 use GurwinderAntal\crs\Type\Common\GuestCount;
 use GurwinderAntal\crs\Type\Common\HotelReferenceGroup;
 use GurwinderAntal\crs\Type\Common\HotelSearchCriterion;
+use GurwinderAntal\crs\Type\Common\Paragraph;
+use GurwinderAntal\crs\Type\Common\PersonName;
+use GurwinderAntal\crs\Type\Common\Profile;
+use GurwinderAntal\crs\Type\Common\RoomStay;
+use GurwinderAntal\crs\Type\Common\RoomType;
+use GurwinderAntal\crs\Type\Common\StateProv;
+use GurwinderAntal\crs\Type\Common\Telephone;
+use GurwinderAntal\crs\Type\Common\Total;
 use GurwinderAntal\crs\Type\Request\AvailRequestSegment;
+use GurwinderAntal\crs\Type\Request\Comment;
 use GurwinderAntal\crs\Type\Request\CompanyName;
+use GurwinderAntal\crs\Type\Request\HotelReservation;
 use GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ;
+use GurwinderAntal\crs\Type\Request\OTA_HotelResRQ;
 use GurwinderAntal\crs\Type\Request\POS;
+use GurwinderAntal\crs\Type\Request\ProfileInfo;
 use GurwinderAntal\crs\Type\Request\RatePlanCandidate;
 use GurwinderAntal\crs\Type\Request\RequestorID;
+use GurwinderAntal\crs\Type\Request\ResGlobalInfo;
+use GurwinderAntal\crs\Type\Request\ResGuest;
 use GurwinderAntal\crs\Type\Request\RoomStayCandidate;
 use GurwinderAntal\crs\Type\Request\Source;
-use GurwinderAntal\crs\Type\Request\StayDateRange;
 
 /**
  * Class SynxisConnector
@@ -60,10 +77,11 @@ class SynxisConnector extends CrsConnectorBase {
         $pos = new POS($source);
 
         // Build AvailRequestSegment->StayDateRange
-        $stayDateRange = new StayDateRange(
+        $stayDateRange = new DateTimeSpan(
             $params['Start'] ?? NULL,
             $params['End'] ?? NULL,
-            $params['Duration'] ?? NULL
+            $params['Duration'] ?? NULL,
+            NULL
         );
         // Build AvailRequestSegment->RatePlanCandidates
         $ratePlanCandidates = array_key_exists('PromotionCode', $params) ||
@@ -126,7 +144,8 @@ class SynxisConnector extends CrsConnectorBase {
         }
         // Build AvailRequestSegments
         $availRequestSegments = [
-            new AvailRequestSegment($stayDateRange,
+            new AvailRequestSegment(
+                $stayDateRange,
                 NULL,
                 $ratePlanCandidates,
                 NULL,
@@ -144,7 +163,7 @@ class SynxisConnector extends CrsConnectorBase {
             $params['EchoToken'] ?? NULL,
             $params['PrimaryLangID'] ?? NULL,
             $params['AltLangID'] ?? NULL,
-            $params['TimeStamp'] ?? NULL, // Add timestamp
+            NULL,
             $params['Target'] ?? NULL,
             $params['Version'] ?? NULL,
             $params['MessageContentCode'] ?? NULL,
@@ -154,12 +173,12 @@ class SynxisConnector extends CrsConnectorBase {
             NULL,
             $params['MaxResponses'] ?? NULL,
             $params['RequestedCurrency'] ?? NULL,
-            $params['ExactMatchOnly'] ?? TRUE,
             $params['ExactMatchOnly'] ?? FALSE,
+            $params['BestOnly'] ?? FALSE,
             $params['SummaryOnly'] ?? FALSE,
             $params['HotelStayOnly'] ?? FALSE,
             $params['PricingMethod'] ?? NULL,
-            $params['AvailRatesOnly'] ?? TRUE
+            $params['AvailRatesOnly'] ?? FALSE
         );
 
         return $this->client->CheckAvailability($request);

@@ -2,8 +2,6 @@
 
 namespace GurwinderAntal\crs\Type\Common;
 
-use GurwinderAntal\crs\Type\Request\StayDateRange;
-
 /**
  * Class HotelSearchCriterion
  *
@@ -32,7 +30,7 @@ class HotelSearchCriterion {
     public $Radius;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\StayDateRange|null
+     * @var \GurwinderAntal\crs\Type\Common\DateTimeSpan|null
      */
     public $StayDateRange;
 
@@ -53,7 +51,7 @@ class HotelSearchCriterion {
      * @param $Position
      * @param \GurwinderAntal\crs\Type\Common\HotelReferenceGroup|null $HotelRef
      * @param $Radius
-     * @param \GurwinderAntal\crs\Type\Request\StayDateRange|null $StayDateRange
+     * @param \GurwinderAntal\crs\Type\Common\DateTimeSpan|null $StayDateRange
      * @param array|null $RoomStayCandidates
      * @param $AcceptedPayments
      */
@@ -62,7 +60,7 @@ class HotelSearchCriterion {
         $Position,
         ?HotelReferenceGroup $HotelRef,
         $Radius,
-        ?StayDateRange $StayDateRange,
+        ?DateTimeSpan $StayDateRange,
         ?array $RoomStayCandidates,
         $AcceptedPayments
     ) {

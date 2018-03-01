@@ -2,6 +2,8 @@
 
 namespace GurwinderAntal\crs\Type\Request;
 
+use GurwinderAntal\crs\Type\Common\DateTimeSpan;
+
 /**
  * Class AvailRequestSegment
  *
@@ -10,7 +12,7 @@ namespace GurwinderAntal\crs\Type\Request;
 class AvailRequestSegment {
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\StayDateRange|null
+     * @var \GurwinderAntal\crs\Type\Common\DateTimeSpan|null
      */
     protected $StayDateRange;
 
@@ -62,7 +64,7 @@ class AvailRequestSegment {
     /**
      * AvailRequestSegment constructor.
      *
-     * @param \GurwinderAntal\crs\Type\Request\StayDateRange|null $StayDateRange
+     * @param \GurwinderAntal\crs\Type\Common\DateTimeSpan|null $StayDateRange
      * @param \GurwinderAntal\crs\Type\Request\RateRange|null $RateRange
      * @param array|null $RatePlanCandidates
      * @param $Profiles
@@ -74,7 +76,7 @@ class AvailRequestSegment {
      * @param null|string $MoreDataToken
      */
     public function __construct(
-        ?StayDateRange $StayDateRange,
+        ?DateTimeSpan $StayDateRange,
         ?RateRange $RateRange,
         ?array $RatePlanCandidates,
         $Profiles,

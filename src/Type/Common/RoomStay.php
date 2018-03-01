@@ -25,22 +25,43 @@ class RoomStay {
     public $TPA_Extensions;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Common\Total
+     * @var \GurwinderAntal\crs\Type\Common\Total|null
      */
     public $Total;
 
+    /**
+     * @var \GurwinderAntal\crs\Type\Common\RoomType[]|null
+     */
     public $RoomTypes;
 
+    /**
+     * @var \GurwinderAntal\crs\Type\Common\RatePlan[]|null
+     */
     public $RatePlans;
 
+    /**
+     * @var \GurwinderAntal\crs\Type\Common\RoomRate[]|null
+     */
     public $RoomRates;
 
+    /**
+     * @var \GurwinderAntal\crs\Type\Common\GuestCount[]|null
+     */
     public $GuestCounts;
 
+    /**
+     * @var \GurwinderAntal\crs\Type\Common\DateTimeSpan|null
+     */
     public $TimeSpan;
 
+    /**
+     * Currently unused.
+     */
     public $SpecialRequests;
 
+    /**
+     * @var \GurwinderAntal\crs\Type\Common\HotelReferenceGroup|null
+     */
     public $BasicPropertyInfo;
 
     /**
@@ -83,18 +104,41 @@ class RoomStay {
      */
     public $IndexNumber;
 
+    /**
+     * RoomStay constructor.
+     *
+     * @param $Guarantee
+     * @param $CancelPenalties
+     * @param $TPA_Extensions
+     * @param \GurwinderAntal\crs\Type\Common\Total|null $Total
+     * @param \GurwinderAntal\crs\Type\Common\RoomType[]|null $RoomTypes
+     * @param \GurwinderAntal\crs\Type\Common\RatePlan[]|null $RatePlans
+     * @param \GurwinderAntal\crs\Type\Common\RoomRate[]|null $RoomRates
+     * @param \GurwinderAntal\crs\Type\Common\GuestCount[]|null $GuestCounts
+     * @param \GurwinderAntal\crs\Type\Common\DateTimeSpan|null $TimeSpan
+     * @param $SpecialRequests
+     * @param \GurwinderAntal\crs\Type\Common\HotelReferenceGroup|null $BasicPropertyInfo
+     * @param $Comments
+     * @param $DepositPayments
+     * @param $ResGuestRPHs
+     * @param $ServiceRPHs
+     * @param $Memberships
+     * @param null|string $MarketCode
+     * @param null|string $SourceOfBusiness
+     * @param null|string $IndexNumber
+     */
     public function __construct(
         $Guarantee,
         $CancelPenalties,
         $TPA_Extensions,
-        Total $Total,
-        $RoomTypes,
-        $RatePlans,
-        $RoomRates,
-        $GuestCounts,
-        $TimeSpan,
+        ?Total $Total,
+        ?array $RoomTypes,
+        ?array $RatePlans,
+        ?array $RoomRates,
+        ?array $GuestCounts,
+        ?DateTimeSpan $TimeSpan,
         $SpecialRequests,
-        $BasicPropertyInfo,
+        ?HotelReferenceGroup $BasicPropertyInfo,
         $Comments,
         $DepositPayments,
         $ResGuestRPHs,

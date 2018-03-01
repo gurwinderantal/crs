@@ -46,7 +46,7 @@ class OTA_HotelResRQ extends OtaRequestMessage {
      * @param null|string $MessageContentCode
      * @param $TPA_Extensions
      * @param \GurwinderAntal\crs\Type\Request\POS|null $POS
-     * @param \GurwinderAntal\crs\Type\Request\HotelReservation|null $HotelReservations
+     * @param \GurwinderAntal\crs\Type\Request\HotelReservation[]|null $HotelReservations
      * @param \GurwinderAntal\crs\Type\Request\UniqueID|null $UniqueID
      * @param null|string $ResStatus
      * @param bool|null $RetransmissionIndicator
@@ -61,7 +61,7 @@ class OTA_HotelResRQ extends OtaRequestMessage {
         ?string $MessageContentCode,
         $TPA_Extensions,
         ?POS $POS,
-        ?HotelReservation $HotelReservations,
+        ?array $HotelReservations,
         ?UniqueID $UniqueID,
         ?string $ResStatus,
         ?bool $RetransmissionIndicator
