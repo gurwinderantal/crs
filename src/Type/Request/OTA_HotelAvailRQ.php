@@ -10,7 +10,7 @@ namespace GurwinderAntal\crs\Type\Request;
 class OTA_HotelAvailRQ extends OtaRequestMessage {
 
     /**
-     * @var \GurwinderAntal\crs\Type\Request\POS|null
+     * @var \GurwinderAntal\crs\Type\Request\POS|array|null
      */
     protected $POS;
 
@@ -75,7 +75,7 @@ class OTA_HotelAvailRQ extends OtaRequestMessage {
      * @param null|string $Version
      * @param null|string $MessageContentCode
      * @param $TPA_Extensions
-     * @param \GurwinderAntal\crs\Type\Request\POS|null $POS
+     * @param \GurwinderAntal\crs\Type\Request\POS|array|null $POS
      * @param array|null $AvailRequestSegments
      * @param $HotelReservationIDs
      * @param int|null $MaxResponses
@@ -96,7 +96,7 @@ class OTA_HotelAvailRQ extends OtaRequestMessage {
         ?string $Version,
         ?string $MessageContentCode,
         $TPA_Extensions,
-        ?POS $POS,
+        $POS,
         ?array $AvailRequestSegments,
         $HotelReservationIDs,
         ?int $MaxResponses,

@@ -63,6 +63,7 @@ class SynxisConnector extends CrsConnectorBase {
         // Build POS->Source->RequestorID
         $requestorId = new RequestorID(
             $companyName,
+            NULL,
             $params['ID'] ?? NULL,
             $params['ID_Context'] ?? NULL,
             $params['Instance'] ?? NULL,
@@ -72,7 +73,8 @@ class SynxisConnector extends CrsConnectorBase {
         // Build POS->Source
         $source = new Source(
             NULL,
-            $requestorId);
+            $requestorId
+        );
         // Build OTA_HotelAvailRQ->POS
         $pos = new POS($source);
 
@@ -152,7 +154,7 @@ class SynxisConnector extends CrsConnectorBase {
                 $roomStayCandidates,
                 $hotelSearchCriteria,
                 NULL,
-                NULL,
+                $params['ResponseType'] ?? NULL,
                 $params['AvailReqType'] ?? NULL,
                 NULL
             ),

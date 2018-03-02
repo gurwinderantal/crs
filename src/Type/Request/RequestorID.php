@@ -18,6 +18,7 @@ class RequestorID extends UniqueID {
      * RequestorID constructor.
      *
      * @param \GurwinderAntal\crs\Type\Request\CompanyName|null $CompanyName
+     * @param null|string $Type
      * @param null|string $ID
      * @param null|string $ID_Context
      * @param null|string $Instance
@@ -26,13 +27,14 @@ class RequestorID extends UniqueID {
      */
     public function __construct(
         ?CompanyName $CompanyName,
+        ?string $Type,
         ?string $ID,
         ?string $ID_Context,
         ?string $Instance,
         ?string $PinNumber,
         ?string $MessagePassword
     ) {
-        parent::__construct($CompanyName, $ID, $ID_Context, $Instance, $PinNumber);
+        parent::__construct($CompanyName, $Type, $ID, $ID_Context, $Instance, $PinNumber);
         $this->MessagePassword = $MessagePassword;
     }
 

@@ -17,7 +17,7 @@ class Source {
     /**
      * @var \GurwinderAntal\crs\Type\Request\RequestorID|null
      */
-    protected $RequestorId;
+    protected $RequestorID;
 
     /**
      * Source constructor.
@@ -30,7 +30,7 @@ class Source {
         ?RequestorID $RequestorId
     ) {
         $this->BookingChannel = $BookingChannel;
-        $this->RequestorId = $RequestorId;
+        $this->RequestorID = $RequestorId;
     }
 
 }
