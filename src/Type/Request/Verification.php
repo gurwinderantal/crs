@@ -50,12 +50,12 @@ class Verification {
 
   /**
    * Verification constructor.
-   * @param \GurwinderAntal\crs\Type\Common\PersonName $PersonName
-   * @param \GurwinderAntal\crs\Type\Request\PaymentCard $PaymentCard
-   * @param \GurwinderAntal\crs\Type\Request\DateTimeSpanType $ReservationTimeSpan
-   * @param \GurwinderAntal\crs\Type\Request\TelephoneInfo $TelephoneInfo
-   * @param \GurwinderAntal\crs\Type\Common\AddressInfo $AddressInfo
-   * @param \GurwinderAntal\crs\Type\Common\Email $Email
+   * @param \GurwinderAntal\crs\Type\Common\PersonName|null $PersonName
+   * @param \GurwinderAntal\crs\Type\Request\PaymentCard|null $PaymentCard
+   * @param \GurwinderAntal\crs\Type\Request\DateTimeSpanType|null $ReservationTimeSpan
+   * @param \GurwinderAntal\crs\Type\Request\TelephoneInfo|null $TelephoneInfo
+   * @param \GurwinderAntal\crs\Type\Common\AddressInfo|null $AddressInfo
+   * @param \GurwinderAntal\crs\Type\Common\Email|null $Email
    * @param $TPA_Extensions
    */
   public function __construct(
