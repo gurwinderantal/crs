@@ -2,6 +2,8 @@
 
 namespace GurwinderAntal\crs\Type\Common;
 
+use GurwinderAntal\crs\Type\Common\GuestCounts;
+
 /**
  * Class RoomStay
  *
@@ -45,7 +47,7 @@ class RoomStay {
     public $RoomRates;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Common\GuestCount[]|null
+     * @var \GurwinderAntal\crs\Type\Common\GuestCounts|null
      */
     public $GuestCounts;
 
@@ -75,7 +77,7 @@ class RoomStay {
     public $DepositPayments;
 
     /**
-     * Currently unused.
+     * @var \GurwinderAntal\crs\Type\Common\ResGuestRPH[]|null
      */
     public $ResGuestRPHs;
 
@@ -114,13 +116,13 @@ class RoomStay {
      * @param \GurwinderAntal\crs\Type\Common\RoomType[]|null $RoomTypes
      * @param \GurwinderAntal\crs\Type\Common\RatePlan[]|null $RatePlans
      * @param \GurwinderAntal\crs\Type\Common\RoomRate[]|null $RoomRates
-     * @param \GurwinderAntal\crs\Type\Common\GuestCount[]|null $GuestCounts
+     * @param \GurwinderAntal\crs\Type\Common\GuestCounts|null $GuestCounts
      * @param \GurwinderAntal\crs\Type\Common\DateTimeSpan|null $TimeSpan
      * @param $SpecialRequests
      * @param \GurwinderAntal\crs\Type\Common\HotelReferenceGroup|null $BasicPropertyInfo
      * @param $Comments
      * @param $DepositPayments
-     * @param $ResGuestRPHs
+     * @param \GurwinderAntal\crs\Type\Common\ResGuestRPH[]|null $ResGuestRPHs
      * @param $ServiceRPHs
      * @param $Memberships
      * @param null|string $MarketCode
@@ -135,13 +137,13 @@ class RoomStay {
         ?array $RoomTypes,
         ?array $RatePlans,
         ?array $RoomRates,
-        ?array $GuestCounts,
+        ?GuestCounts $GuestCounts,
         ?DateTimeSpan $TimeSpan,
         $SpecialRequests,
         ?HotelReferenceGroup $BasicPropertyInfo,
         $Comments,
         $DepositPayments,
-        $ResGuestRPHs,
+        ?array $ResGuestRPHs,
         $ServiceRPHs,
         $Memberships,
         ?string $MarketCode,

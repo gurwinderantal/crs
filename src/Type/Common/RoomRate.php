@@ -40,6 +40,11 @@ class RoomRate {
     public $RoomTypeCode;
 
     /**
+     * @var null|string
+     */
+    public $RatePlanCode;
+
+    /**
      * @var int|null
      */
     public $NumberOfUnits;
@@ -58,6 +63,7 @@ class RoomRate {
      * @param null|string $EffectiveDate
      * @param null|string $ExpireDate
      * @param null|string $RoomTypeCode
+     * @param null|string $RatePlanCode
      * @param int|null $NumberOfUnits
      * @param null|string $InvBlockCode
      */
@@ -68,6 +74,7 @@ class RoomRate {
         ?string $EffectiveDate,
         ?string $ExpireDate,
         ?string $RoomTypeCode,
+        ?string $RatePlanCode,
         ?int $NumberOfUnits,
         ?string $InvBlockCode
     ) {
