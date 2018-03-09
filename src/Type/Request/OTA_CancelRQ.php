@@ -75,6 +75,7 @@ class OTA_CancelRQ extends OtaRequestMessage {
   ) {
     parent::__construct($EchoToken, $PrimaryLangID, $AltLangID, $TimeStamp, $Target, $Version, $MessageContentCode, $TPA_Extensions);
     $this->UniqueID = $UniqueID;
+    $this->Verification = $Verification;
     $this->POS = $POS;
     $this->CancellationContactPerson = $CancellationContactPerson;
     $this->Reasons = $Reasons;
