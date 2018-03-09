@@ -2,30 +2,34 @@
 
 namespace GurwinderAntal\crs;
 
+use GurwinderAntal\crs\Type\Common\AddressInfo;
+use GurwinderAntal\crs\Type\Common\CountryName;
 use GurwinderAntal\crs\Type\Common\Customer;
 use GurwinderAntal\crs\Type\Common\DateTimeSpan;
+use GurwinderAntal\crs\Type\Common\Guarantee;
+use GurwinderAntal\crs\Type\Common\GuaranteeAccepted;
 use GurwinderAntal\crs\Type\Common\GuestCount;
 use GurwinderAntal\crs\Type\Common\GuestCounts;
 use GurwinderAntal\crs\Type\Common\HotelReferenceGroup;
 use GurwinderAntal\crs\Type\Common\HotelSearchCriterion;
-use GurwinderAntal\crs\Type\Common\Paragraph;
+use GurwinderAntal\crs\Type\Common\PersonName;
 use GurwinderAntal\crs\Type\Common\Profile;
-use GurwinderAntal\crs\Type\Common\Rate;
-use GurwinderAntal\crs\Type\Common\ResGuestRPH;
-use GurwinderAntal\crs\Type\Common\RoomRate;
+use GurwinderAntal\crs\Type\Common\RatePlan;
 use GurwinderAntal\crs\Type\Common\RoomStay;
 use GurwinderAntal\crs\Type\Common\RoomType;
-use GurwinderAntal\crs\Type\Common\Tax;
-use GurwinderAntal\crs\Type\Common\Total;
+use GurwinderAntal\crs\Type\Common\StateProv;
+use GurwinderAntal\crs\Type\Common\Telephone;
 use GurwinderAntal\crs\Type\Request\AvailRequestSegment;
 use GurwinderAntal\crs\Type\Request\CompanyName;
 use GurwinderAntal\crs\Type\Request\HotelReservation;
 use GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ;
 use GurwinderAntal\crs\Type\Request\OTA_HotelResRQ;
+use GurwinderAntal\crs\Type\Request\PaymentCard;
 use GurwinderAntal\crs\Type\Request\POS;
 use GurwinderAntal\crs\Type\Request\ProfileInfo;
 use GurwinderAntal\crs\Type\Request\RatePlanCandidate;
 use GurwinderAntal\crs\Type\Request\RequestorID;
+use GurwinderAntal\crs\Type\Request\ResGlobalInfo;
 use GurwinderAntal\crs\Type\Request\ResGuest;
 use GurwinderAntal\crs\Type\Request\RoomStayCandidate;
 use GurwinderAntal\crs\Type\Request\Source;
@@ -178,7 +182,8 @@ class SynxisConnector extends CrsConnectorBase {
             $params['SummaryOnly'] ?? FALSE,
             $params['HotelStayOnly'] ?? FALSE,
             $params['PricingMethod'] ?? NULL,
-            $params['AvailRatesOnly'] ?? FALSE
+            $params['AvailRatesOnly'] ?? FALSE,
+            $params['SequenceNmbr'] ?? NULL
         );
 
         return $this->client->CheckAvailability($request);
@@ -193,7 +198,6 @@ class SynxisConnector extends CrsConnectorBase {
             'classmap' => [
                 'OTA_HotelResRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelResRQ',
             ],
-            'trace'    => TRUE,
         ]);
         $this->setHeaders('http://htng.org/1.1/Header/');
 
@@ -222,27 +226,10 @@ class SynxisConnector extends CrsConnectorBase {
         // Build OTA_HotelAvailRQ->POS
         $pos = new POS($source);
 
-        // Build HotelReservation->RoomStay->Total
-        $roomTotal = new Total(
-            NULL,
-            NULL,
-            $params['Total']['TaxInclusive'] ?? NULL,
-            $params['Total']['AmountBeforeTax'] ?? NULL,
-            $params['Total']['AmountAfterTax'] ?? NULL,
-            $params['CurrencyCode'] ?? NULL,
-            $params['DecimalPlaces'] ?? 2,
-            NULL,
-            NULL
-        );
         // Build HotelReservation->RoomStay->RoomTypes
         $roomTypes = [
             new RoomType(
-                new Paragraph(
-                    NULL,
-                    NULL,
-                    NULL,
-                    $params['RoomType']['Name'] ?? NULL
-                ),
+                NULL,
                 NULL,
                 NULL,
                 NULL,
@@ -253,61 +240,32 @@ class SynxisConnector extends CrsConnectorBase {
                 $params['NumberOfUnits'] ?? NULL
             ),
         ];
-        // Build HotelReservation->RoomStay->RoomType->Rate->Base
-        $base = new Total(
-            NULL,
-            NULL,
-            $params['TaxInclusive'] ?? NULL,
-            $params['Rate']['AmountBeforeTax'] ?? NULL,
-            NULL,
-            $params['CurrencyCode'] ?? NULL,
-            $params["DecimalPlaces"] ?? 2,
-            NULL,
-            NULL
-        );
-        // Build HotelReservation->RoomStay->RoomType->Rate->Total
-        $total = new Total(
-            NULL,
-            NULL,
-            $params['TaxInclusive'] ?? NULL,
-            $params['Total']['AmountBeforeTax'] ?? NULL,
-            NULL,
-            $params['CurrencyCode'] ?? NULL,
-            $params["DecimalPlaces"] ?? 2,
-            NULL,
-            NULL
-        );
-        // Build HotelReservation->RoomStay->RoomType->Rates
-        $rates = [
-            new Rate(
-                NULL,
-                NULL,
-                $base,
+        // Build HotelReservation->RoomStay->RatePlans
+        $ratePlans = [
+            new RatePlan(
                 NULL,
                 NULL,
                 NULL,
-                $total,
                 NULL,
                 NULL,
-                $params['RateTypeCode'] ?? NULL,
-                $params['RateTimeUnit'] ?? NULL,
-                $params['UnitMultiplier'] ?? NULL,
-                $params['EffectiveDate'] ?? NULL,
-                $params['ExpireDate'] ?? NULL
-            ),
-        ];
-        // Build HotelReservation->RoomStay->RoomTypes
-        $roomRates = [
-            new RoomRate(
-                $rates,
                 NULL,
                 NULL,
+                $params['MealsIncluded'] ?? NULL,
+                $params['RatePlanCode'] ?? NULL,
+                $params['RatePlanName'] ?? NULL,
+                $params['AccrualIndicator'] ?? NULL,
+                $params['AutoEnrollmentIndicator'] ?? NULL,
+                $params['BookingCode'] ?? NULL,
+                $params['RatePlanType'] ?? NULL,
+                $params['RatePlanID'] ?? NULL,
                 $params['EffectiveDate'] ?? NULL,
                 $params['ExpireDate'] ?? NULL,
-                $params['RoomTypeCode'] ?? NULL,
-                $params['RatePlanCode'] ?? NULL,
-                $params['NumberOfUnits'] ?? NULL,
-                $params['InvBlockCode'] ?? NULL
+                $params['CurrencyCode'] ?? NULL,
+                $params['TaxInclusive'] ?? NULL,
+                $params['PrepaidIndicator'] ?? NULL,
+                $params['RatePlanCategory'] ?? NULL,
+                $params['AvailabilityStatus'] ?? NULL,
+                $params['PriceViewableInd'] ?? NULL
             ),
         ];
         // Build HotelReservation->RoomStay->GuestCounts->GuestCount
@@ -340,27 +298,23 @@ class SynxisConnector extends CrsConnectorBase {
             $params['BrandName'] ?? NULL,
             $params['HotelCityCode'] ?? NULL
         );
-        // Build HotelReservation->RoomStay->ResGuestRPH
-        $resGuestRPHs = [
-            new ResGuestRPH($params['RPH'] ?? NULL),
-        ];
         // Build HotelReservation->RoomStays
         $roomStays = [
             new RoomStay(
                 NULL,
                 NULL,
                 NULL,
-                $roomTotal,
-                $roomTypes,
                 NULL,
-                $roomRates,
+                $roomTypes,
+                $ratePlans,
+                NULL,
                 $guestCounts,
                 $timeSpan,
                 NULL,
                 $basicPropertyInfo,
                 NULL,
                 NULL,
-                $resGuestRPHs,
+                NULL,
                 NULL,
                 NULL,
                 $params['MarketCode'] ?? NULL,
@@ -368,35 +322,76 @@ class SynxisConnector extends CrsConnectorBase {
                 $params['IndexNumber'] ?? NULL
             ),
         ];
-        // Build HotelReservation->ResGuest->Profiles->Profile->Customer
-        //@TODO
-        $customer = new Customer();
-        // Build HotelReservation->ResGuest->Profiles->Profile
-        $profile = new Profile(
-            NULL,
-            NULL,
-            $customer,
-            NULL,
-            NULL,
-            NULL,
-            NULL,
-            $params['ProfileType'] ?? NULL,
-            NULL,
-            NULL,
-            NULL,
-            $params['ShareAllMarketInd'] ?? NULL
-        );
-        // Build HotelReservation->ResGuest->Profiles
-        $profiles = [
-            new ProfileInfo(
+        $resGuests = [];
+        foreach ($params['ResGuests'] as $resGuest) {
+            // Build HotelReservation->ResGuest->Profiles->Profile->Customer
+            $customer = new Customer(
+                new PersonName(
+                    $resGuest['NamePrefix'] ?? NULL,
+                    $resGuest['NameTitle'] ?? NULL,
+                    $resGuest['GivenName'] ?? NULL,
+                    $resGuest['MiddleName'] ?? NULL,
+                    $resGuest['Surname'] ?? NULL,
+                    $resGuest['NameSuffix'] ?? NULL,
+                    $resGuest['NameType'] ?? NULL
+                ),
+                new Telephone(
+                    $resGuest['FormattedInd'] ?? FALSE,
+                    $resGuest['PhoneTechType'] ?? NULL,
+                    $resGuest['PhoneNumber'] ?? NULL,
+                    $resGuest['PhoneUseType'] ?? NULL,
+                    $resGuest['DefaultInd'] ?? FALSE
+                ),
+                $resGuest['Email'] ?? NULL,
+                new AddressInfo(
+                    $resGuest['AddressLine'] ?? NULL,
+                    $resGuest['CityName'] ?? NULL,
+                    $resGuest['PostalCode'] ?? NULL,
+                    new StateProv($resGuest['StateCode'] ?? NULL),
+                    new CountryName($resGuest['Code'] ?? NULL),
+                    $resGuest['Type'] ?? NULL,
+                    $resGuest['Remark'] ?? NULL,
+                    $resGuest['CompanyName'] ?? NULL,
+                    $resGuest['FormattedInd'] ?? FALSE,
+                    $resGuest['DefaultInd'] ?? FALSE
+                ),
                 NULL,
-                $profile,
-                NULL
-            ),
-        ];
-        // Build HotelReservation->ResGuests
-        $resGuests = [
-            new ResGuest(
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $resGuest['BirthDate'] ?? NULL,
+                $resGuest['Gender'] ?? NULL,
+                $resGuest['CustomerValue'] ?? NULL,
+                $resGuest['LockoutType'] ?? NULL,
+                $resGuest['Language'] ?? NULL
+            );
+            // Build HotelReservation->ResGuest->Profiles->Profile
+            $profile = new Profile(
+                NULL,
+                NULL,
+                $customer,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $resGuest['ProfileType'] ?? NULL,
+                NULL,
+                NULL,
+                NULL,
+                $resGuest['ShareAllMarketInd'] ?? NULL
+            );
+            // Build HotelReservation->ResGuest->Profiles
+            $profiles = [
+                new ProfileInfo(
+                    NULL,
+                    $profile,
+                    NULL
+                ),
+            ];
+            // Build HotelReservation->ResGuests
+            $resGuests[] = new ResGuest(
                 NULL,
                 $profiles,
                 NULL,
@@ -404,15 +399,54 @@ class SynxisConnector extends CrsConnectorBase {
                 $params['PrimaryIndicator'] ?? NULL,
                 $params['RPH'] ?? NULL,
                 NULL
+            );
+        }
+        // Build HotelReservations->ResGlobalInfo->Guarantee->GuaranteesAccepted
+        $guaranteesAccepted = [
+            new GuaranteeAccepted(
+                new PaymentCard(
+                    $params['CardHolderName'] ?? NULL,
+                    NULL,
+                    NULL,
+                    $params['CardType'] ?? NULL,
+                    $params['CardCode'] ?? NULL,
+                    $params['CardNumber'] ?? NULL,
+                    $params['SeriesCode'] ?? NULL,
+                    $params['CardExpireDate'] ?? NULL
+                ),
+                NULL,
+                NULL
             ),
         ];
+        // Build HotelReservations->ResGlobalInfo->Guarantee
+        $guarantee = new Guarantee(
+            $guaranteesAccepted,
+            NULL,
+            NULL,
+            NULL,
+            NULL
+        );
+        // Build HotelReservations->ResGlobalInfo
+        $resGlobalInfo = new ResGlobalInfo(
+            NULL,
+            $guarantee,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL
+        );
         // Build OTA_HotelResRQ->HotelReservations
         $hotelReservations = [
             new HotelReservation(
                 NULL,
                 $roomStays,
                 $resGuests,
-                NULL, //@TODO
+                $resGlobalInfo,
                 NULL,
                 NULL,
                 NULL,
@@ -425,7 +459,6 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL
             ),
         ];
-
         // Build request
         $request = new OTA_HotelResRQ(
             $params['EchoToken'] ?? NULL,
@@ -443,9 +476,7 @@ class SynxisConnector extends CrsConnectorBase {
             $params['RetransmissionIndicator'] ?? NULL
         );
 
-        $response = $this->client->CreateReservations($request);
-        ksm($this->client->__getLastRequest());
-        return $response;
+        return $this->client->CreateReservations($request);
     }
 
     /**

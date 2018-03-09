@@ -35,7 +35,6 @@ class WindsurferConnector extends CrsConnectorBase {
                 'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
                 'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
             ],
-            'trace'    => TRUE,
         ]);
         $this->setHeaders('http://htng.org/2009B');
 
@@ -166,7 +165,8 @@ class WindsurferConnector extends CrsConnectorBase {
             $params['SummaryOnly'] ?? FALSE,
             $params['HotelStayOnly'] ?? FALSE,
             $params['PricingMethod'] ?? NULL,
-            $params['AvailRatesOnly'] ?? FALSE
+            $params['AvailRatesOnly'] ?? FALSE,
+            $params['SequenceNmbr'] ?? NULL
         );
         $wrapper = new CheckHotelAvailability($request);
 

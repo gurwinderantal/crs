@@ -25,7 +25,7 @@ class Customer {
     public $Email;
 
     /**
-     * @var \GurwinderAntal\crs\Type\Common\Address|null
+     * @var \GurwinderAntal\crs\Type\Common\AddressInfo|null
      */
     public $Address;
 
@@ -90,7 +90,7 @@ class Customer {
      * @param \GurwinderAntal\crs\Type\Common\PersonName|null $PersonName
      * @param \GurwinderAntal\crs\Type\Common\Telephone|null $Telephone
      * @param null|string $Email
-     * @param \GurwinderAntal\crs\Type\Common\Address|null $Address
+     * @param \GurwinderAntal\crs\Type\Common\AddressInfo|null $Address
      * @param $PaymentForm
      * @param $CustLoyalty
      * @param $TPA_Extensions
@@ -107,7 +107,7 @@ class Customer {
         ?PersonName $PersonName,
         ?Telephone $Telephone,
         ?string $Email,
-        ?Address $Address,
+        ?AddressInfo $Address,
         $PaymentForm,
         $CustLoyalty,
         $TPA_Extensions,

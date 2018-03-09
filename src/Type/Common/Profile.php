@@ -65,7 +65,7 @@ class Profile {
     public $CreatorID;
 
     /**
-     * @var string
+     * @var null|string
      */
     public $ShareAllMarketInd;
 
@@ -83,7 +83,7 @@ class Profile {
      * @param null|string $CreateDateTime
      * @param null|string $LastModifyDateTime
      * @param null|string $CreatorID
-     * @param bool|null $ShareAllMarketInd
+     * @param null|string $ShareAllMarketInd
      */
     public function __construct(
         $Comments,
@@ -97,7 +97,7 @@ class Profile {
         ?string $CreateDateTime,
         ?string $LastModifyDateTime,
         ?string $CreatorID,
-        ?bool $ShareAllMarketInd
+        ?string $ShareAllMarketInd
     ) {
         $this->Comments = $Comments;
         $this->Accesses = $Accesses;
@@ -110,7 +110,7 @@ class Profile {
         $this->CreateDateTime = $CreateDateTime;
         $this->LastModifyDateTime = $LastModifyDateTime;
         $this->CreatorID = $CreatorID;
-        $this->ShareAllMarketInd = $ShareAllMarketInd ? 'Yes' : 'No';
+        $this->ShareAllMarketInd = $ShareAllMarketInd;
     }
 
 }

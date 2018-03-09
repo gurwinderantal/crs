@@ -115,6 +115,7 @@ class HotelReservation {
     ) {
         $this->UniqueID = $UniqueId;
         $this->RoomStays = $RoomStays;
+        $this->ResGuests = $ResGuests;
         $this->ResGlobalInfo = $ResGlobalInfo;
         $this->TPA_Extensions = $TPA_Extensions;
         $this->WrittenConfInst = $WrittenConfInst;
