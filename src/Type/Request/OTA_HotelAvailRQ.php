@@ -60,7 +60,7 @@ class OTA_HotelAvailRQ extends OtaRequestMessage {
     protected $PricingMethod;
 
     /**
-     * @var array|null
+     * @var bool|null
      */
     protected $AvailRatesOnly;
 
@@ -76,8 +76,8 @@ class OTA_HotelAvailRQ extends OtaRequestMessage {
      * @param null|string $MessageContentCode
      * @param $TPA_Extensions
      * @param \GurwinderAntal\crs\Type\Request\POS|array|null $POS
-     * @param array|null $AvailRequestSegments
-     * @param $HotelReservationIDs
+     * @param \GurwinderAntal\crs\Type\Request\AvailRequestSegment[]|null $AvailRequestSegments
+     * @param \GurwinderAntal\crs\Type\Request\HotelReservation[]|null $HotelReservationIDs
      * @param int|null $MaxResponses
      * @param null|string $RequestedCurrency
      * @param bool|null $ExactMatchOnly
@@ -98,7 +98,7 @@ class OTA_HotelAvailRQ extends OtaRequestMessage {
         $TPA_Extensions,
         $POS,
         ?array $AvailRequestSegments,
-        $HotelReservationIDs,
+        ?array $HotelReservationIDs,
         ?int $MaxResponses,
         ?string $RequestedCurrency,
         ?bool $ExactMatchOnly,
