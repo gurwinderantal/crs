@@ -64,6 +64,13 @@ class OTA_HotelAvailRQ extends OtaRequestMessage {
      */
     protected $AvailRatesOnly;
 
+  /**
+   * SequenceNmbr is mandatory for Windsurfer.
+   *
+   * @var int|null
+   */
+    protected $SequenceNmbr;
+
     /**
      * OTA_HotelAvailRQ constructor.
      *
@@ -86,6 +93,7 @@ class OTA_HotelAvailRQ extends OtaRequestMessage {
      * @param bool|null $HotelStayOnly
      * @param null|string $PricingMethod
      * @param bool|null $AvailRatesOnly
+     * @param int|null $SequenceNmbr
      */
     public function __construct(
         ?string $EchoToken,
@@ -106,7 +114,8 @@ class OTA_HotelAvailRQ extends OtaRequestMessage {
         ?bool $SummaryOnly,
         ?bool $HotelStayOnly,
         ?string $PricingMethod,
-        ?bool $AvailRatesOnly) {
+        ?bool $AvailRatesOnly,
+        ?int $SequenceNmbr) {
         parent::__construct($EchoToken, $PrimaryLangID, $AltLangID, $TimeStamp, $Target, $Version, $MessageContentCode, $TPA_Extensions);
         $this->POS = $POS;
         $this->AvailRequestSegments = $AvailRequestSegments;
@@ -119,6 +128,7 @@ class OTA_HotelAvailRQ extends OtaRequestMessage {
         $this->HotelStayOnly = $HotelStayOnly;
         $this->PricingMethod = $PricingMethod;
         $this->AvailRatesOnly = $AvailRequestSegments;
+        $this->SequenceNmbr = $SequenceNmbr;
     }
 
 }
