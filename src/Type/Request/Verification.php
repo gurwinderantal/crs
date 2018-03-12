@@ -5,6 +5,7 @@ namespace GurwinderAntal\crs\Type\Request;
 use GurwinderAntal\crs\Type\Common\AddressInfo;
 use GurwinderAntal\crs\Type\Common\Email;
 use GurwinderAntal\crs\Type\Common\PersonName;
+use GurwinderAntal\crs\Type\Common\TPA_Extensions;
 
 /**
  * Class Verification
@@ -43,9 +44,9 @@ class Verification {
    */
   protected $Email;
 
-  /**
-   * Currently unused
-   */
+    /**
+     * @var \GurwinderAntal\crs\Type\Common\TPA_Extensions|null
+     */
   protected $TPA_Extensions;
 
   /**
@@ -56,7 +57,7 @@ class Verification {
    * @param \GurwinderAntal\crs\Type\Request\TelephoneInfo|null $TelephoneInfo
    * @param \GurwinderAntal\crs\Type\Common\AddressInfo|null $AddressInfo
    * @param \GurwinderAntal\crs\Type\Common\Email|null $Email
-   * @param $TPA_Extensions
+   * @param \GurwinderAntal\crs\Type\Common\TPA_Extensions|null $TPA_Extensions
    */
   public function __construct(
     ?PersonName $PersonName,
@@ -65,7 +66,7 @@ class Verification {
     ?TelephoneInfo $TelephoneInfo,
     ?AddressInfo $AddressInfo,
     ?Email $Email,
-    $TPA_Extensions
+    ?TPA_Extensions $TPA_Extensions
   ) {
     $this->PersonName = $PersonName;
     $this->PaymentCard = $PaymentCard;

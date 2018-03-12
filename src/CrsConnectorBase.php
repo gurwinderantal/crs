@@ -63,7 +63,7 @@ abstract class CrsConnectorBase implements CrsConnectorInterface {
      * @param string $namespace
      * @param array $classmap
      */
-    public function setClient(string $namespace, array $classmap) {
+    public function initializeClient(string $namespace, array $classmap) {
         $this->client = new \SoapClient($this->wsdl, [
             'classmap'   => $classmap,
             'exceptions' => TRUE,

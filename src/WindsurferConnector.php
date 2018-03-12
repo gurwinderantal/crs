@@ -180,6 +180,13 @@ class WindsurferConnector extends CrsConnectorBase {
     public function createReservation($params) {
         // TODO: Implement modifyReservation() method.
     }
+    
+    /**
+     * {@inheritdoc}
+     */
+    public function getReservation($params) {
+        // TODO: Implement getReservation() method.
+    }
 
     /**
      * {@inheritdoc}

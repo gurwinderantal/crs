@@ -58,6 +58,7 @@ class UniqueID {
         ?string $PinNumber
     ) {
         $this->CompanyName = $CompanyName;
+        $this->Type = $Type;
         $this->ID = $ID;
         $this->ID_Context = $ID_Context;
         $this->Instance = $Instance;

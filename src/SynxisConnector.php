@@ -19,20 +19,26 @@ use GurwinderAntal\crs\Type\Common\RoomStay;
 use GurwinderAntal\crs\Type\Common\RoomType;
 use GurwinderAntal\crs\Type\Common\StateProv;
 use GurwinderAntal\crs\Type\Common\Telephone;
+use GurwinderAntal\crs\Type\Common\TPA_Extensions;
 use GurwinderAntal\crs\Type\Request\AvailRequestSegment;
 use GurwinderAntal\crs\Type\Request\CompanyName;
 use GurwinderAntal\crs\Type\Request\HotelReservation;
 use GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ;
 use GurwinderAntal\crs\Type\Request\OTA_HotelResRQ;
+use GurwinderAntal\crs\Type\Request\OTA_ReadRQ;
 use GurwinderAntal\crs\Type\Request\PaymentCard;
 use GurwinderAntal\crs\Type\Request\POS;
 use GurwinderAntal\crs\Type\Request\ProfileInfo;
 use GurwinderAntal\crs\Type\Request\RatePlanCandidate;
+use GurwinderAntal\crs\Type\Request\ReadRequest;
+use GurwinderAntal\crs\Type\Request\ReadRequests;
 use GurwinderAntal\crs\Type\Request\RequestorID;
 use GurwinderAntal\crs\Type\Request\ResGlobalInfo;
 use GurwinderAntal\crs\Type\Request\ResGuest;
 use GurwinderAntal\crs\Type\Request\RoomStayCandidate;
 use GurwinderAntal\crs\Type\Request\Source;
+use GurwinderAntal\crs\Type\Request\UniqueID;
+use GurwinderAntal\crs\Type\Request\Verification;
 
 /**
  * Class SynxisConnector
@@ -47,7 +53,7 @@ class SynxisConnector extends CrsConnectorBase {
      */
     public function checkAvailability($params) {
         // Instantiate SOAP client
-        $this->setClient('http://htng.org/1.1/Header/', [
+        $this->initializeClient('http://htng.org/1.1/Header/', [
             'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
             'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
         ]);
@@ -57,14 +63,14 @@ class SynxisConnector extends CrsConnectorBase {
             $params['CodeContext'] ?? NULL,
             $params['CompanyShortName'] ?? NULL,
             $params['TravelSelector'] ?? NULL,
-            $params['Code'] ?? NULL
+            $params['POS']['Code'] ?? NULL
         );
         // Build POS->Source->RequestorID
         $requestorId = new RequestorID(
             $companyName,
             NULL,
-            $params['ID'] ?? NULL,
-            $params['ID_Context'] ?? NULL,
+            $params['POS']['ID'] ?? NULL,
+            $params['POS']['ID_Context'] ?? NULL,
             $params['Instance'] ?? NULL,
             $params['PinNumber'] ?? NULL,
             $params['MessagePassword'] ?? NULL
@@ -193,7 +199,7 @@ class SynxisConnector extends CrsConnectorBase {
      */
     public function createReservation($params) {
         // Instantiate SOAP client
-        $this->setClient('http://htng.org/1.1/Header/', [
+        $this->initializeClient('http://htng.org/1.1/Header/', [
             'OTA_HotelResRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelResRQ',
             'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
         ]);
@@ -203,14 +209,14 @@ class SynxisConnector extends CrsConnectorBase {
             $params['CodeContext'] ?? NULL,
             $params['CompanyShortName'] ?? NULL,
             $params['TravelSelector'] ?? NULL,
-            $params['Code'] ?? NULL
+            $params['POS']['Code'] ?? NULL
         );
         // Build POS->Source->RequestorID
         $requestorId = new RequestorID(
             $companyName,
             NULL,
-            $params['ID'] ?? NULL,
-            $params['ID_Context'] ?? NULL,
+            $params['POS']['ID'] ?? NULL,
+            $params['POS']['ID_Context'] ?? NULL,
             $params['Instance'] ?? NULL,
             $params['PinNumber'] ?? NULL,
             $params['MessagePassword'] ?? NULL
@@ -220,7 +226,7 @@ class SynxisConnector extends CrsConnectorBase {
             NULL,
             $requestorId
         );
-        // Build OTA_HotelAvailRQ->POS
+        // Build OTA_HotelResRQ->POS
         $pos = new POS($source);
 
         // Build HotelReservation->RoomStay->RoomTypes
@@ -475,6 +481,124 @@ class SynxisConnector extends CrsConnectorBase {
         );
 
         return $this->client->CreateReservations($request);
+    }
+
+    public function getReservation($params) {
+        // Instantiate SOAP client
+        $this->initializeClient('http://htng.org/1.1/Header/', [
+            'OTA_ReadRQ'     => 'GurwinderAntal\crs\Type\Request\OTA_ReadRQ',
+            'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
+        ]);
+
+        // Build POS->Source->RequestorID->CompanyName
+        $companyName = new CompanyName(
+            $params['CodeContext'] ?? NULL,
+            $params['CompanyShortName'] ?? NULL,
+            $params['TravelSelector'] ?? NULL,
+            $params['POS']['Code'] ?? NULL
+        );
+        // Build POS->Source->RequestorID
+        $requestorId = new RequestorID(
+            $companyName,
+            NULL,
+            $params['POS']['ID'] ?? NULL,
+            $params['POS']['ID_Context'] ?? NULL,
+            $params['Instance'] ?? NULL,
+            $params['PinNumber'] ?? NULL,
+            $params['MessagePassword'] ?? NULL
+        );
+        // Build POS->Source
+        $source = new Source(
+            NULL,
+            $requestorId
+        );
+        // Build OTA_ReadRQ->POS
+        $pos = new POS($source);
+
+        // Build ReadRequest->UniqueID
+        $uniqueId = new UniqueID(
+            NULL,
+            self::UIT_RESERVATION,
+            $params['ID'] ?? NULL,
+            'CrsConfirmNumber',
+            NULL,
+            NULL
+        );
+        // Build ReadRequest->Verification
+        $verification = new Verification(
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            new TPA_Extensions(
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                new HotelReferenceGroup(
+                    $params['HotelCode'] ?? NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    $params['ChainCode'] ?? NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL
+                ),
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            )
+        );
+        // Build OTA_ReadRQ->ReadRequests
+        $readRequests = new ReadRequests(
+            new ReadRequest(
+                $uniqueId,
+                $verification,
+                NULL,
+                NULL
+            ),
+            NULL,
+            NULL,
+            NULL
+        );
+        // Build request
+        $request = new OTA_ReadRQ(
+            $params['EchoToken'] ?? NULL,
+            $params['PrimaryLangID'] ?? NULL,
+            $params['AltLangID'] ?? NULL,
+            NULL,
+            $params['Target'] ?? NULL,
+            $params['Version'] ?? NULL,
+            $params['MessageContentCode'] ?? NULL,
+            NULL,
+            $readRequests,
+            NULL,
+            $pos,
+            $params['ReturnListIndicator'] ?? NULL,
+            NULL,
+            $params['MaxResponses'] ?? NULL
+        );
+
+        return $this->client->ReadReservations($request);
     }
 
     /**

@@ -19,6 +19,11 @@ interface CrsConnectorInterface {
     const AQC_SENIOR = 11;
 
     /**
+     * OTA unique ID types (UIT).
+     */
+    const UIT_RESERVATION = 14;
+
+    /**
      * Sets required request headers.
      *
      * @param string $namespace
@@ -58,6 +63,15 @@ interface CrsConnectorInterface {
      * @return mixed
      */
     public function createReservation($params);
+
+    /**
+     * @param $params
+     *    An array containing reservation parameters. Array keys must be the
+     *    the same as the SOAP XML element attributes.
+     *
+     * @return mixed
+     */
+    public function getReservation($params);
 
     /**
      * @param $params
