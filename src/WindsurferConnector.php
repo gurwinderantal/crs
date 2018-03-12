@@ -11,7 +11,9 @@ use GurwinderAntal\crs\Type\Request\BookingChannel;
 use GurwinderAntal\crs\Type\Request\CheckHotelAvailability;
 use GurwinderAntal\crs\Type\Request\CompanyName;
 use GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ;
+use GurwinderAntal\crs\Type\Request\OTA_HotelResRQ;
 use GurwinderAntal\crs\Type\Request\POS;
+use GurwinderAntal\crs\Type\Request\ProcessHotelReservation;
 use GurwinderAntal\crs\Type\Request\RatePlanCandidate;
 use GurwinderAntal\crs\Type\Request\RequestorID;
 use GurwinderAntal\crs\Type\Request\RoomStayCandidate;
@@ -128,9 +130,7 @@ class WindsurferConnector extends CrsConnectorBase {
                 NULL,
                 NULL,
                 NULL,
-                NULL,
-                $params['ChainCode'],
-                $hotelCode
+                NULL
             );
         }
         // Build AvailRequestSegments
@@ -180,8 +180,8 @@ class WindsurferConnector extends CrsConnectorBase {
     /**
      * {@inheritdoc}
      */
-    public function createReservation($params) {
-        // TODO: Implement createReservation() method.
+    public function modifyReservation($params) {
+        // TODO: Implement modifyReservation() method.
     }
 
     /**

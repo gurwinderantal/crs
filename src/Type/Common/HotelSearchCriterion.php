@@ -45,16 +45,6 @@ class HotelSearchCriterion {
     public $AcceptedPayments;
 
     /**
-     * @var string|null
-    */
-    public $ChainCode;
-
-    /**
-     * @var string|null
-    */
-    public $HotelCode;
-
-    /**
      * HotelSearchCriterion constructor.
      *
      * @param $RatePlanCandidates
@@ -64,8 +54,6 @@ class HotelSearchCriterion {
      * @param \GurwinderAntal\crs\Type\Common\DateTimeSpan|null $StayDateRange
      * @param array|null $RoomStayCandidates
      * @param $AcceptedPayments
-     * @param null|string $ChainCode
-     * @param null|string $HotelCode
      */
     public function __construct(
         $RatePlanCandidates,
@@ -74,9 +62,7 @@ class HotelSearchCriterion {
         $Radius,
         ?DateTimeSpan $StayDateRange,
         ?array $RoomStayCandidates,
-        $AcceptedPayments,
-        ?string $ChainCode,
-        ?string $HotelCode
+        $AcceptedPayments
     ) {
         $this->RatePlanCandidates = $RatePlanCandidates;
         $this->Position = $Position;
