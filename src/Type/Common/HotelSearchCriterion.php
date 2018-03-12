@@ -71,8 +71,6 @@ class HotelSearchCriterion {
         $this->StayDateRange = $StayDateRange;
         $this->RoomStayCandidates = $RoomStayCandidates;
         $this->AcceptedPayments = $AcceptedPayments;
-        $this->ChainCode = $ChainCode;
-        $this->HotelCode = $HotelCode;
     }
 
 }

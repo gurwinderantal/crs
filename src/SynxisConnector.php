@@ -47,13 +47,10 @@ class SynxisConnector extends CrsConnectorBase {
      */
     public function checkAvailability($params) {
         // Instantiate SOAP client
-        $this->client = new \SoapClient($this->wsdl, [
-            'classmap' => [
-                'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
-                'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
-            ],
+        $this->setClient('http://htng.org/1.1/Header/', [
+            'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
+            'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
         ]);
-        $this->setHeaders('http://htng.org/1.1/Header/');
 
         // Build POS->Source->RequestorID->CompanyName
         $companyName = new CompanyName(
@@ -196,12 +193,9 @@ class SynxisConnector extends CrsConnectorBase {
      */
     public function createReservation($params) {
         // Instantiate SOAP client
-        $this->client = new \SoapClient($this->wsdl, [
-            'classmap' => [
-                'OTA_HotelResRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelResRQ',
-            ],
+        $this->setClient('http://htng.org/1.1/Header/', [
+            'OTA_HotelResRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelResRQ',
         ]);
-        $this->setHeaders('http://htng.org/1.1/Header/');
 
         // Build POS->Source->RequestorID->CompanyName
         $companyName = new CompanyName(

@@ -32,13 +32,10 @@ class WindsurferConnector extends CrsConnectorBase {
      */
     public function checkAvailability($params) {
         // Instantiate SOAP client
-        $this->client = new \SoapClient($this->wsdl, [
-            'classmap' => [
-                'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
-                'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
-            ],
+        $this->setClient('http://htng.org/2009B', [
+            'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
+            'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
         ]);
-        $this->setHeaders('http://htng.org/2009B');
 
         // Build POS->Source->BookingChannel
         $bookingChannel = new BookingChannel(
@@ -180,7 +177,7 @@ class WindsurferConnector extends CrsConnectorBase {
     /**
      * {@inheritdoc}
      */
-    public function modifyReservation($params) {
+    public function createReservation($params) {
         // TODO: Implement modifyReservation() method.
     }
 
