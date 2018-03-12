@@ -45,6 +45,16 @@ class RoomStayCandidate {
     protected $NonSmoking;
 
     /**
+     * @var null|string
+     */
+    protected $InvBlockCode;
+
+    /**
+     * @var null|string
+     */
+    protected $RoomID;
+
+    /**
      * RoomStayCandidate constructor.
      *
      * @param \GurwinderAntal\crs\Type\Common\GuestCount[]|null $GuestCounts
@@ -54,6 +64,8 @@ class RoomStayCandidate {
      * @param null|string $RoomCategory
      * @param null|string $PromotionCode
      * @param null|string $NonSmoking
+     * @param null|string $InvBlockCode
+     * @param null|string $RoomID
      */
     public function __construct(
         ?array $GuestCounts,
@@ -62,7 +74,9 @@ class RoomStayCandidate {
         ?string $RoomTypeCode,
         ?string $RoomCategory,
         ?string $PromotionCode,
-        ?string $NonSmoking
+        ?string $NonSmoking,
+        ?string $InvBlockCode,
+        ?string $RoomID
     ) {
         $this->GuestCounts = $GuestCounts;
         $this->Quantity = $Quantity;
@@ -71,6 +85,8 @@ class RoomStayCandidate {
         $this->RoomCategory = $RoomCategory;
         $this->PromotionCode = $PromotionCode;
         $this->NonSmoking = $NonSmoking;
+        $this->InvBlockCode = $InvBlockCode;
+        $this->RoomID = $RoomID;
     }
 
 }

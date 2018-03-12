@@ -117,7 +117,9 @@ class SynxisConnector extends CrsConnectorBase {
                 $params['RoomTypeCode'] ?? NULL,
                 $params['RoomCategory'] ?? NULL,
                 $params['PromotionCode'] ?? NULL,
-                $params['NonSmoking'] ?? NULL
+                $params['NonSmoking'] ?? NULL,
+                NULL,
+                NULL
             ),
         ];
         // Build AvailRequestSegment->HotelSearchCriteria
