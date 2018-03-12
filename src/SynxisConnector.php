@@ -143,6 +143,8 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL,
                 NULL,
                 NULL,
+                NULL,
+                NULL,
                 NULL
             );
         }

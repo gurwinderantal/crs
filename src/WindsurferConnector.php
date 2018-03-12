@@ -126,7 +126,9 @@ class WindsurferConnector extends CrsConnectorBase {
                 NULL,
                 NULL,
                 NULL,
-                NULL
+                NULL,
+                $params['ChainCode'],
+                $hotelCode
             );
         }
         // Build AvailRequestSegments
