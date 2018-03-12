@@ -48,7 +48,7 @@ class OTA_HotelAvailRS extends OtaResponseMessage {
    * @param array|null $Services
    * @param array|null $Profiles
    * @param array|null $RoomStays
-   * @param \GurwinderAntal\crs\Type\Response\HotelStay|null $HotelStays
+   * @param \GurwinderAntal\crs\Type\Response\HotelStay[]|null $HotelStays
    * @param array|null $Criteria
    */
   public function __construct(
