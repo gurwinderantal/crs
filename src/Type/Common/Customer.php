@@ -35,7 +35,7 @@ class Customer {
     public $PaymentForm;
 
     /**
-     * Currently unused.
+     * @var \GurwinderAntal\crs\Type\Common\CustLoyalty|null
      */
     public $CustLoyalty;
 
