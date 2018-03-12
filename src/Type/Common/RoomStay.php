@@ -2,8 +2,6 @@
 
 namespace GurwinderAntal\crs\Type\Common;
 
-use GurwinderAntal\crs\Type\Common\GuestCounts;
-
 /**
  * Class RoomStay
  *
