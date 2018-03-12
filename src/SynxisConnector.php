@@ -23,6 +23,7 @@ use GurwinderAntal\crs\Type\Common\TPA_Extensions;
 use GurwinderAntal\crs\Type\Request\AvailRequestSegment;
 use GurwinderAntal\crs\Type\Request\CompanyName;
 use GurwinderAntal\crs\Type\Request\HotelReservation;
+use GurwinderAntal\crs\Type\Request\OTA_CancelRQ;
 use GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ;
 use GurwinderAntal\crs\Type\Request\OTA_HotelResRQ;
 use GurwinderAntal\crs\Type\Request\OTA_ReadRQ;
@@ -612,7 +613,111 @@ class SynxisConnector extends CrsConnectorBase {
      * {@inheritdoc}
      */
     public function cancelReservation($params) {
-        // TODO: Implement cancelReservation() method.
+        // Instantiate SOAP client
+        $this->initializeClient('http://htng.org/1.1/Header/', [
+            'OTA_ReadRQ'     => 'GurwinderAntal\crs\Type\Request\OTA_ReadRQ',
+            'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
+        ]);
+
+        // Build POS->Source->RequestorID->CompanyName
+        $companyName = new CompanyName(
+            $params['CodeContext'] ?? NULL,
+            $params['CompanyShortName'] ?? NULL,
+            $params['TravelSelector'] ?? NULL,
+            $params['POS']['Code'] ?? NULL
+        );
+        // Build POS->Source->RequestorID
+        $requestorId = new RequestorID(
+            $companyName,
+            NULL,
+            $params['POS']['ID'] ?? NULL,
+            $params['POS']['ID_Context'] ?? NULL,
+            $params['Instance'] ?? NULL,
+            $params['PinNumber'] ?? NULL,
+            $params['MessagePassword'] ?? NULL
+        );
+        // Build POS->Source
+        $source = new Source(
+            NULL,
+            $requestorId
+        );
+        // Build OTA_CancelRQ->POS
+        $pos = new POS($source);
+
+        // Build OTA_CancelRQ->UniqueID
+        $uniqueId = new UniqueID(
+            NULL,
+            self::UIT_RESERVATION,
+            $params['ID'] ?? NULL,
+            'CrsConfirmNumber',
+            NULL,
+            NULL
+        );
+
+        // Build OTA_CancelRQ->Verification
+        $verification = new Verification(
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            new TPA_Extensions(
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                new HotelReferenceGroup(
+                    $params['HotelCode'] ?? NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    $params['ChainCode'] ?? NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL
+                ),
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            )
+        );
+
+        // Build request
+        $request = new OTA_CancelRQ(
+            $params['EchoToken'] ?? NULL,
+            $params['PrimaryLangID'] ?? NULL,
+            $params['AltLangID'] ?? NULL,
+            NULL,
+            $params['Target'] ?? NULL,
+            $params['Version'] ?? NULL,
+            $params['MessageContentCode'] ?? NULL,
+            NULL,
+            $uniqueId,
+            $verification,
+            $pos,
+            NULL,
+            NULL,
+            NULL
+        );
+
+        return $this->client->CancelReservations($request);
     }
 
 }
