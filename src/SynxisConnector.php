@@ -195,6 +195,7 @@ class SynxisConnector extends CrsConnectorBase {
         // Instantiate SOAP client
         $this->setClient('http://htng.org/1.1/Header/', [
             'OTA_HotelResRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelResRQ',
+            'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
         ]);
 
         // Build POS->Source->RequestorID->CompanyName
@@ -455,6 +456,7 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL
             ),
         ];
+
         // Build request
         $request = new OTA_HotelResRQ(
             $params['EchoToken'] ?? NULL,
@@ -468,7 +470,7 @@ class SynxisConnector extends CrsConnectorBase {
             $pos,
             $hotelReservations,
             NULL,
-            'Book',
+            'Commit',
             $params['RetransmissionIndicator'] ?? NULL
         );
 
