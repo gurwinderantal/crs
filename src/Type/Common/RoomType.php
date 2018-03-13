@@ -55,6 +55,11 @@ class RoomType {
     public $NumberOfUnits;
 
     /**
+     * @var string|null
+     */
+    public $RoomID;
+
+    /**
      * RoomType constructor.
      *
      * @param \GurwinderAntal\crs\Type\Common\Paragraph|null $RoomDescription
@@ -66,6 +71,7 @@ class RoomType {
      * @param null|string $RoomTypeCode
      * @param null|string $InvBlockCode
      * @param int|null $NumberOfUnits
+     * @param string|null $RoomID
      */
     public function __construct(
         ?Paragraph $RoomDescription,
@@ -76,7 +82,8 @@ class RoomType {
         ?bool $IsRoom,
         ?string $RoomTypeCode,
         ?string $InvBlockCode,
-        ?int $NumberOfUnits
+        ?int $NumberOfUnits,
+        ?string $RoomID
     ) {
         $this->RoomDescription = $RoomDescription;
         $this->Occupancy = $Occupancy;
@@ -87,6 +94,7 @@ class RoomType {
         $this->RoomTypeCode = $RoomTypeCode;
         $this->InvBlockCode = $InvBlockCode;
         $this->NumberOfUnits = $NumberOfUnits;
+        $this->RoomID = $RoomID;
     }
 
 }

@@ -245,7 +245,8 @@ class SynxisConnector extends CrsConnectorBase {
                 $params['IsRoom'] ?? NULL,
                 $params['RoomTypeCode'] ?? NULL,
                 $params['InvBlockCode'] ?? NULL,
-                $params['NumberOfUnits'] ?? NULL
+                $params['NumberOfUnits'] ?? NULL,
+                NULL
             ),
         ];
         // Build HotelReservation->RoomStay->RatePlans
@@ -651,7 +652,8 @@ class SynxisConnector extends CrsConnectorBase {
           $params['IsRoom'] ?? NULL,
           $params['RoomTypeCode'] ?? NULL,
           $params['InvBlockCode'] ?? NULL,
-          $params['NumberOfUnits'] ?? NULL
+          $params['NumberOfUnits'] ?? NULL,
+          NULL
         ),
       ];
       // Build HotelReservation->RoomStay->RatePlans
