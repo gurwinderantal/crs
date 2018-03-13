@@ -190,12 +190,12 @@ class WindsurferConnector extends CrsConnectorBase {
     public function getReservation($params) {
       // Build OTA_HotelGetMsgRQ->Messages.
       $Messages = [];
-      foreach ($params['Messages'] as $message) {
+      foreach ((array) $params['Messages'] as $message) {
         $Messages[] = new MessageType(
-          $params['MessageContent'] ?? NULL,
-          $params['HotelCodeContext'] ?? NULL,
-          $params['ReasonForRequest'] ?? NULL,
-          $params['ConfirmationID'] ?? NULL
+          $message->MessageContent ?? NULL,
+          $message->HotelCodeContext ?? NULL,
+          $message->ReasonForRequest ?? NULL,
+          $message->ConfirmationID ?? NULL
         );
       }
       // Build OTA_HotelGetMsgRQ
