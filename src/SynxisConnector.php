@@ -641,7 +641,7 @@ class SynxisConnector extends CrsConnectorBase {
       );
       // Build OTA_CancelRQ->POS
       $pos = new POS($source);
-      // Build HotelReservation->RoomStay->RoomTypes
+      // Build HotelResModify->RoomStay->RoomTypes
       $roomTypes = [
         new RoomType(
           NULL,
@@ -656,7 +656,7 @@ class SynxisConnector extends CrsConnectorBase {
           NULL
         ),
       ];
-      // Build HotelReservation->RoomStay->RatePlans
+      // Build HotelResModify->RoomStay->RatePlans
       $ratePlans = [
         new RatePlan(
           NULL,
@@ -684,25 +684,25 @@ class SynxisConnector extends CrsConnectorBase {
           $params['PriceViewableInd'] ?? NULL
         ),
       ];
-      // Build HotelReservation->RoomStay->GuestCounts->GuestCount
+      // Build HotelResModify->RoomStay->GuestCounts->GuestCount
       $guestCount = [];
       foreach ($params['Count'] as $aqc => $count) {
         $aqc = 'self::AQC_' . strtoupper($aqc);
         $guestCount[] = new GuestCount(constant($aqc), $count, NULL);
       }
-      // Build HotelReservation->RoomStay->GuestCounts
+      // Build HotelResModify->RoomStay->GuestCounts
       $guestCounts = new GuestCounts(
         $guestCount,
         $params['IsPerRoom'] ?? NULL
       );
-      // Build HotelReservation->RoomStay->TimeSpan
+      // Build HotelResModify->RoomStay->TimeSpan
       $timeSpan = new DateTimeSpan(
         $params['Start'] ?? NULL,
         $params['End'] ?? NULL,
         $params['Duration'] ?? NULL,
         NULL
       );
-      // Build HotelReservation->RoomStay->BasicPropertyInfo
+      // Build HotelResModify->RoomStay->BasicPropertyInfo
       $basicPropertyInfo = new HotelReferenceGroup(
         $params['HotelCode'] ?? NULL,
         $params['HotelName'] ?? NULL,
@@ -714,7 +714,7 @@ class SynxisConnector extends CrsConnectorBase {
         $params['BrandName'] ?? NULL,
         $params['HotelCityCode'] ?? NULL
       );
-      // Build HotelReservation->RoomStays
+      // Build HotelResModify->RoomStays
       $roomStays = [
         new RoomStay(
           NULL,
@@ -740,7 +740,7 @@ class SynxisConnector extends CrsConnectorBase {
       ];
       $resGuests = [];
       foreach ($params['ResGuests'] as $resGuest) {
-        // Build HotelReservation->ResGuest->Profiles->Profile->Customer
+        // Build HotelResModify->ResGuest->Profiles->Profile->Customer
         $customer = new Customer(
           new PersonName(
             $resGuest['NamePrefix'] ?? NULL,
@@ -783,7 +783,7 @@ class SynxisConnector extends CrsConnectorBase {
           $resGuest['LockoutType'] ?? NULL,
           $resGuest['Language'] ?? NULL
         );
-        // Build HotelReservation->ResGuest->Profiles->Profile
+        // Build HotelResModify->ResGuest->Profiles->Profile
         $profile = new Profile(
           NULL,
           NULL,
@@ -798,7 +798,7 @@ class SynxisConnector extends CrsConnectorBase {
           NULL,
           $resGuest['ShareAllMarketInd'] ?? NULL
         );
-        // Build HotelReservation->ResGuest->Profiles
+        // Build HotelResModify->ResGuest->Profiles
         $profiles = [
           new ProfileInfo(
             NULL,
@@ -806,7 +806,7 @@ class SynxisConnector extends CrsConnectorBase {
             NULL
           ),
         ];
-        // Build HotelReservation->ResGuests
+        // Build HotelResModify->ResGuests
         $resGuests[] = new ResGuest(
           NULL,
           $profiles,
@@ -817,7 +817,7 @@ class SynxisConnector extends CrsConnectorBase {
           NULL
         );
       }
-      // Build HotelReservations->ResGlobalInfo->Guarantee->GuaranteesAccepted
+      // Build HotelResModify->ResGlobalInfo->Guarantee->GuaranteesAccepted
       $guaranteesAccepted = [
         new GuaranteeAccepted(
           new PaymentCard(
@@ -834,7 +834,7 @@ class SynxisConnector extends CrsConnectorBase {
           NULL
         ),
       ];
-      // Build HotelReservations->ResGlobalInfo->Guarantee
+      // Build HotelResModify->ResGlobalInfo->Guarantee
       $guarantee = new Guarantee(
         $guaranteesAccepted,
         NULL,
@@ -842,7 +842,7 @@ class SynxisConnector extends CrsConnectorBase {
         NULL,
         NULL
       );
-      // Build HotelReservations->ResGlobalInfo
+      // Build HotelResModify->ResGlobalInfo
       $resGlobalInfo = new ResGlobalInfo(
         NULL,
         $guarantee,
@@ -856,25 +856,6 @@ class SynxisConnector extends CrsConnectorBase {
         NULL,
         NULL
       );
-      // Build OTA_HotelResRQ->HotelReservations
-      $hotelReservations = [
-        new HotelReservation(
-          NULL,
-          $roomStays,
-          $resGuests,
-          $resGlobalInfo,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          TRUE,
-          $params['CreatorID'] ?? NULL,
-          NULL,
-          $params['LastModifierID'] ?? NULL,
-          NULL
-        ),
-      ];
       // Build OTA_HotelResModifyRQ->HotelResModify->Verification
       $Verification = new Verification(
         new PersonName(
@@ -947,7 +928,7 @@ class SynxisConnector extends CrsConnectorBase {
           NULL
         )
       );
-      // Build OTA OTA_HotelResModifyRQ->HotelResModifies
+      // Build OTA_HotelResModifyRQ->HotelResModifies
       $HotelResModifies = [
         new HotelResModify(
           NULL,
