@@ -17,28 +17,40 @@ class HotelResModify extends HotelReservation {
   /**
    * HotelResModify constructor.
    *
-   * @param null|string $EchoToken
-   * @param null|string $PrimaryLangID
-   * @param null|string $AltLangID
-   * @param null|string $TimeStamp
-   * @param null|string $Target
-   * @param null|string $Version
-   * @param null|string $MessageContentCode
+   * @param \GurwinderAntal\crs\Type\Request\UniqueID|null $UniqueId
+   * @param array|null $RoomStays
+   * @param array|null $ResGuests
+   * @param \GurwinderAntal\crs\Type\Request\ResGlobalInfo|null $ResGlobalInfo
    * @param $TPA_Extensions
+   * @param $WrittenConfInst
+   * @param $Services
+   * @param \GurwinderAntal\crs\Type\Request\POS|null $POS
+   * @param null|string $CreateDateTime
+   * @param bool|null $RoomStayReservation
+   * @param null|string $CreatorID
+   * @param null|string $LastModifyDateTime
+   * @param null|string $LastModifierID
+   * @param null|string $ResStatus
    * @param \GurwinderAntal\crs\Type\Request\Verification|null $Verification
    */
   public function __construct(
-    ?string $EchoToken,
-    ?string $PrimaryLangID,
-    ?string $AltLangID,
-    ?string $TimeStamp,
-    ?string $Target,
-    ?string $Version,
-    ?string $MessageContentCode,
+    ?UniqueID $UniqueId,
+    ?array $RoomStays,
+    ?array $ResGuests,
+    ?ResGlobalInfo $ResGlobalInfo,
     $TPA_Extensions,
+    $WrittenConfInst,
+    $Services,
+    ?POS $POS,
+    ?string $CreateDateTime,
+    ?bool $RoomStayReservation,
+    ?string $CreatorID,
+    ?string $LastModifyDateTime,
+    ?string $LastModifierID,
+    ?string $ResStatus,
     ?Verification $Verification
   ) {
-    parent::__construct($EchoToken, $PrimaryLangID, $AltLangID, $TimeStamp, $Target, $Version, $MessageContentCode, $TPA_Extensions);
+    parent::__construct($UniqueId, $RoomStays, $ResGuests, $ResGlobalInfo, $TPA_Extensions, $WrittenConfInst, $Services, $POS, $CreateDateTime, $RoomStayReservation, $CreatorID, $LastModifyDateTime, $LastModifierID, $ResStatus);
     $this->Verification = $Verification;
   }
 
