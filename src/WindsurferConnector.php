@@ -208,6 +208,11 @@ class WindsurferConnector extends CrsConnectorBase {
      * {@inheritdoc}
      */
     public function getReservation($params) {
+        // Instantiate SOAP client
+        $this->initializeClient('http://htng.org/2009B', [
+            'OTA_GetMsgRQ' => 'GurwinderAntal\crs\Type\Request\OTA_GetMsgRQ',
+            'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
+        ]);
         // Build OTA_HotelGetMsgRQ->Messages.
         $Messages = [];
         foreach ((array) $params['Messages'] as $message) {
