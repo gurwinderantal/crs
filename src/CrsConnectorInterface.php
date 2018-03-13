@@ -24,6 +24,19 @@ interface CrsConnectorInterface {
     const UIT_RESERVATION = 14;
 
     /**
+     * OTA profile types (PRT).
+     */
+    const PRT_OTHER = 0;
+    const PRT_CUSTOMER = 1;
+    const PRT_GDS = 2;
+    const PRT_CORPORATION = 3;
+    const PRT_TRAVEL_AGENT = 4;
+    const PRT_WHOLESALER = 5;
+    const PRT_GROUP = 6;
+    const PRT_TOUR_OPERATOR = 7;
+    const PRT_CRO = 8;
+
+    /**
      * Sets required request headers.
      *
      * @param string $namespace
