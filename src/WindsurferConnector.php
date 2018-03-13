@@ -10,7 +10,10 @@ use GurwinderAntal\crs\Type\Request\AvailRequestSegment;
 use GurwinderAntal\crs\Type\Request\BookingChannel;
 use GurwinderAntal\crs\Type\Request\CheckHotelAvailability;
 use GurwinderAntal\crs\Type\Request\CompanyName;
+use GurwinderAntal\crs\Type\Request\GetHotelReservation;
+use GurwinderAntal\crs\Type\Request\MessageType;
 use GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ;
+use GurwinderAntal\crs\Type\Request\OTA_HotelGetMsgRQ;
 use GurwinderAntal\crs\Type\Request\OTA_HotelResRQ;
 use GurwinderAntal\crs\Type\Request\POS;
 use GurwinderAntal\crs\Type\Request\ProcessHotelReservation;
@@ -185,7 +188,31 @@ class WindsurferConnector extends CrsConnectorBase {
      * {@inheritdoc}
      */
     public function getReservation($params) {
-        // TODO: Implement getReservation() method.
+      // Build OTA_HotelGetMsgRQ->Messages.
+      $Messages = [];
+      foreach ($params['Messages'] as $message) {
+        $Messages[] = new MessageType(
+          $params['MessageContent'] ?? NULL,
+          $params['HotelCodeContext'] ?? NULL,
+          $params['ReasonForRequest'] ?? NULL,
+          $params['ConfirmationID'] ?? NULL
+        );
+      }
+      // Build OTA_HotelGetMsgRQ
+      $request = new OTA_HotelGetMsgRQ(
+        $params['EchoToken'] ?? NULL,
+        $params['PrimaryLangID'] ?? NULL,
+        $params['AltLangID'] ?? NULL,
+        NULL,
+        $params['Target'] ?? NULL,
+        $params['Version'] ?? NULL,
+        $params['MessageContentCode'] ?? NULL,
+        NULL,
+         $Messages
+      );
+      $wrapper = new GetHotelReservation($request);
+
+      return $this->client->GetHotelReservation($wrapper);
     }
 
     /**
