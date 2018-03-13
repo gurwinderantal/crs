@@ -2,25 +2,48 @@
 
 namespace GurwinderAntal\crs;
 
+use GurwinderAntal\crs\Type\Common\AddressInfo;
+use GurwinderAntal\crs\Type\Common\CountryName;
+use GurwinderAntal\crs\Type\Common\Customer;
 use GurwinderAntal\crs\Type\Common\DateTimeSpan;
+use GurwinderAntal\crs\Type\Common\Guarantee;
+use GurwinderAntal\crs\Type\Common\GuaranteeAccepted;
 use GurwinderAntal\crs\Type\Common\GuestCount;
+use GurwinderAntal\crs\Type\Common\GuestCounts;
 use GurwinderAntal\crs\Type\Common\HotelReferenceGroup;
 use GurwinderAntal\crs\Type\Common\HotelSearchCriterion;
+use GurwinderAntal\crs\Type\Common\PersonName;
+use GurwinderAntal\crs\Type\Common\Profile;
+use GurwinderAntal\crs\Type\Common\Rate;
+use GurwinderAntal\crs\Type\Common\RatePlan;
+use GurwinderAntal\crs\Type\Common\RoomRate;
+use GurwinderAntal\crs\Type\Common\RoomStay;
+use GurwinderAntal\crs\Type\Common\RoomType;
+use GurwinderAntal\crs\Type\Common\StateProv;
+use GurwinderAntal\crs\Type\Common\Tax;
+use GurwinderAntal\crs\Type\Common\Telephone;
+use GurwinderAntal\crs\Type\Common\Total;
 use GurwinderAntal\crs\Type\Request\AvailRequestSegment;
 use GurwinderAntal\crs\Type\Request\BookingChannel;
 use GurwinderAntal\crs\Type\Request\CheckHotelAvailability;
 use GurwinderAntal\crs\Type\Request\CompanyName;
 use GurwinderAntal\crs\Type\Request\GetHotelReservation;
+use GurwinderAntal\crs\Type\Request\HotelReservation;
 use GurwinderAntal\crs\Type\Request\MessageType;
 use GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ;
 use GurwinderAntal\crs\Type\Request\OTA_HotelGetMsgRQ;
 use GurwinderAntal\crs\Type\Request\OTA_HotelResRQ;
+use GurwinderAntal\crs\Type\Request\PaymentCard;
 use GurwinderAntal\crs\Type\Request\POS;
 use GurwinderAntal\crs\Type\Request\ProcessHotelReservation;
+use GurwinderAntal\crs\Type\Request\ProfileInfo;
 use GurwinderAntal\crs\Type\Request\RatePlanCandidate;
 use GurwinderAntal\crs\Type\Request\RequestorID;
+use GurwinderAntal\crs\Type\Request\ResGlobalInfo;
+use GurwinderAntal\crs\Type\Request\ResGuest;
 use GurwinderAntal\crs\Type\Request\RoomStayCandidate;
 use GurwinderAntal\crs\Type\Request\Source;
+use GurwinderAntal\crs\Type\Request\UniqueID;
 
 /**
  * Class WindsurferConnector
@@ -30,203 +53,613 @@ use GurwinderAntal\crs\Type\Request\Source;
  */
 class WindsurferConnector extends CrsConnectorBase {
 
-    /**
-     * {@inheritdoc}
-     */
-    public function checkAvailability($params) {
-        // Instantiate SOAP client
-        $this->setClient('http://htng.org/2009B', [
-            'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
-            'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
-        ]);
+  /**
+   * {@inheritdoc}
+   */
+  public function checkAvailability($params) {
+    // Instantiate SOAP client
+    $this->setClient('http://htng.org/2009B', [
+      'OTA_HotelAvailRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ',
+      'OTA_HotelAvailRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelAvailRS',
+    ]);
 
-        // Build POS->Source->BookingChannel
-        $bookingChannel = new BookingChannel(
-            NULL,
-            TRUE,
-            $params['BookingChannel']['Type'] ?? NULL,
-            NULL
-        );
-        // Build POS->Source->RequestorID
-        $requestorId = new RequestorID(
-            NULL,
-            $params['RequestorID']['Type'] ?? NULL,
-            $params['ID'] ?? NULL,
-            $params['ID_Context'] ?? NULL,
-            NULL,
-            NULL,
-            NULL
-        );
-        // Build POS->Source
-        $source = [
-            new Source(
-                $bookingChannel,
-                $requestorId
-            ),
-        ];
+    // Build POS->Source->BookingChannel
+    $bookingChannel = new BookingChannel(
+      NULL,
+      TRUE,
+      $params['BookingChannel']['Type'] ?? NULL,
+      NULL
+    );
+    // Build POS->Source->RequestorID
+    $requestorId = new RequestorID(
+      NULL,
+      $params['RequestorID']['Type'] ?? NULL,
+      $params['ID'] ?? NULL,
+      $params['ID_Context'] ?? NULL,
+      NULL,
+      NULL,
+      NULL
+    );
+    // Build POS->Source
+    $source = [
+      new Source(
+        $bookingChannel,
+        $requestorId
+      ),
+    ];
 
-        // Build AvailRequestSegment->StayDateRange
-        $stayDateRange = new DateTimeSpan(
-            $params['Start'] ?? NULL,
-            $params['End'] ?? NULL,
-            $params['Duration'] ?? NULL,
-            NULL
-        );
-        // Build AvailRequestSegment->RatePlanCandidates
-        $ratePlanCandidates = array_key_exists('PromotionCode', $params) ||
-        array_key_exists('RatePlanCode', $params) ? [
-            new RatePlanCandidate(
-                NULL,
-                NULL,
-                $params['PromotionCode'] ?? NULL,
-                $params['RatePlanCode'] ?? NULL,
-                $params['RatePlanType'] ?? NULL,
-                $params['RatePlanId'] ?? NULL,
-                $params['RatePlanQualifier'] ?? NULL,
-                $params['RatePlanCategory'] ?? NULL,
-                $params['RatePlanFilterCode'] ?? NULL
-            ),
-        ] : NULL;
-        // Build AvailRequestSegment->RoomStayCandidate->GuestCounts
-        $guestCounts = [];
-        foreach ($params['Count'] as $aqc => $count) {
-            $aqc = 'self::AQC_' . strtoupper($aqc);
-            $guestCounts[] = new GuestCount(constant($aqc), $count, NULL);
-        }
-        // Build AvailRequestSegment->RoomStayCandidates
-        $roomStayCandidates = [
-            new RoomStayCandidate(
-                $guestCounts,
-                $params['Quantity'] ?? NULL,
-                $params['RoomType'] ?? NULL,
-                $params['RoomTypeCode'] ?? NULL,
-                $params['RoomCategory'] ?? NULL,
-                $params['PromotionCode'] ?? NULL,
-                $params['NonSmoking'] ?? NULL,
-                $params['InvBlockCode'] ?? NULL,
-                $params['RoomID'] ?? NULL
-            ),
-        ];
-        // Build AvailRequestSegment->HotelSearchCriteria
-        $hotelSearchCriteria = [];
-        foreach ((array) $params['HotelCode'] as $hotelCode) {
-            // Build AvailRequestSegment->HotelSearchCriteria->Criterion->HotelRef
-            $hotelRef = new HotelReferenceGroup(
-                $hotelCode,
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                NULL,
-                NULL
-            );
-            // Build AvailRequestSegment->HotelSearchCriteria->Criterion
-            $hotelSearchCriteria[] = new HotelSearchCriterion(
-                NULL,
-                NULL,
-                $hotelRef,
-                NULL,
-                NULL,
-                NULL,
-                NULL
-            );
-        }
-        // Build AvailRequestSegments
-        $availRequestSegments = [
-            new AvailRequestSegment(
-                $stayDateRange,
-                NULL,
-                $ratePlanCandidates,
-                NULL,
-                $roomStayCandidates,
-                $hotelSearchCriteria,
-                NULL,
-                $params['ResponseType'] ?? NULL,
-                $params['AvailReqType'] ?? NULL,
-                NULL
-            ),
-        ];
-
-        // Build OTA_HotelAvailRQ
-        $request = new OTA_HotelAvailRQ(
-            $params['EchoToken'] ?? NULL,
-            $params['PrimaryLangID'] ?? NULL,
-            $params['AltLangID'] ?? NULL,
-            NULL,
-            $params['Target'] ?? NULL,
-            $params['Version'] ?? NULL,
-            $params['MessageContentCode'] ?? NULL,
-            NULL,
-            $source,
-            $availRequestSegments,
-            NULL,
-            $params['MaxResponses'] ?? NULL,
-            $params['RequestedCurrency'] ?? NULL,
-            $params['ExactMatchOnly'] ?? FALSE,
-            $params['BestOnly'] ?? FALSE,
-            $params['SummaryOnly'] ?? FALSE,
-            $params['HotelStayOnly'] ?? FALSE,
-            $params['PricingMethod'] ?? NULL,
-            $params['AvailRatesOnly'] ?? FALSE,
-            $params['SequenceNmbr'] ?? NULL
-        );
-        $wrapper = new CheckHotelAvailability($request);
-
-        return $this->client->CheckHotelAvailability($wrapper);
+    // Build AvailRequestSegment->StayDateRange
+    $stayDateRange = new DateTimeSpan(
+      $params['Start'] ?? NULL,
+      $params['End'] ?? NULL,
+      $params['Duration'] ?? NULL,
+      NULL
+    );
+    // Build AvailRequestSegment->RatePlanCandidates
+    $ratePlanCandidates = array_key_exists('PromotionCode', $params) ||
+    array_key_exists('RatePlanCode', $params) ? [
+      new RatePlanCandidate(
+        NULL,
+        NULL,
+        $params['PromotionCode'] ?? NULL,
+        $params['RatePlanCode'] ?? NULL,
+        $params['RatePlanType'] ?? NULL,
+        $params['RatePlanId'] ?? NULL,
+        $params['RatePlanQualifier'] ?? NULL,
+        $params['RatePlanCategory'] ?? NULL,
+        $params['RatePlanFilterCode'] ?? NULL
+      ),
+    ] : NULL;
+    // Build AvailRequestSegment->RoomStayCandidate->GuestCounts
+    $guestCounts = [];
+    foreach ($params['Count'] as $aqc => $count) {
+      $aqc = 'self::AQC_' . strtoupper($aqc);
+      $guestCounts[] = new GuestCount(constant($aqc), $count, NULL);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function createReservation($params) {
-        // TODO: Implement modifyReservation() method.
+    // Build AvailRequestSegment->RoomStayCandidates
+    $roomStayCandidates = [
+      new RoomStayCandidate(
+        $guestCounts,
+        $params['Quantity'] ?? NULL,
+        $params['RoomType'] ?? NULL,
+        $params['RoomTypeCode'] ?? NULL,
+        $params['RoomCategory'] ?? NULL,
+        $params['PromotionCode'] ?? NULL,
+        $params['NonSmoking'] ?? NULL,
+        $params['InvBlockCode'] ?? NULL,
+        $params['RoomID'] ?? NULL
+      ),
+    ];
+    // Build AvailRequestSegment->HotelSearchCriteria
+    $hotelSearchCriteria = [];
+    foreach ((array) $params['HotelCode'] as $hotelCode) {
+      // Build AvailRequestSegment->HotelSearchCriteria->Criterion->HotelRef
+      $hotelRef = new HotelReferenceGroup(
+        $hotelCode,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+      );
+      // Build AvailRequestSegment->HotelSearchCriteria->Criterion
+      $hotelSearchCriteria[] = new HotelSearchCriterion(
+        NULL,
+        NULL,
+        $hotelRef,
+        NULL,
+        NULL,
+        NULL,
+        NULL
+      );
     }
-    
-    /**
-     * {@inheritdoc}
-     */
-    public function getReservation($params) {
-      // Build OTA_HotelGetMsgRQ->Messages.
-      $Messages = [];
-      foreach ((array) $params['Messages'] as $message) {
-        $Messages[] = new MessageType(
-          $message->MessageContent ?? NULL,
-          $message->HotelCodeContext ?? NULL,
-          $message->ReasonForRequest ?? NULL,
-          $message->ConfirmationID ?? NULL
+    // Build AvailRequestSegments
+    $availRequestSegments = [
+      new AvailRequestSegment(
+        $stayDateRange,
+        NULL,
+        $ratePlanCandidates,
+        NULL,
+        $roomStayCandidates,
+        $hotelSearchCriteria,
+        NULL,
+        $params['ResponseType'] ?? NULL,
+        $params['AvailReqType'] ?? NULL,
+        NULL
+      ),
+    ];
+
+    // Build OTA_HotelAvailRQ
+    $request = new OTA_HotelAvailRQ(
+      $params['EchoToken'] ?? NULL,
+      $params['PrimaryLangID'] ?? NULL,
+      $params['AltLangID'] ?? NULL,
+      NULL,
+      $params['Target'] ?? NULL,
+      $params['Version'] ?? NULL,
+      $params['MessageContentCode'] ?? NULL,
+      NULL,
+      $source,
+      $availRequestSegments,
+      NULL,
+      $params['MaxResponses'] ?? NULL,
+      $params['RequestedCurrency'] ?? NULL,
+      $params['ExactMatchOnly'] ?? FALSE,
+      $params['BestOnly'] ?? FALSE,
+      $params['SummaryOnly'] ?? FALSE,
+      $params['HotelStayOnly'] ?? FALSE,
+      $params['PricingMethod'] ?? NULL,
+      $params['AvailRatesOnly'] ?? FALSE,
+      $params['SequenceNmbr'] ?? NULL
+    );
+    $wrapper = new CheckHotelAvailability($request);
+
+    return $this->client->CheckHotelAvailability($wrapper);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function createReservation($params) {
+    $params['ResStatus'] = 'Book';
+    $this->processReservation($params);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getReservation($params) {
+    // Build OTA_HotelGetMsgRQ->Messages.
+    $Messages = [];
+    foreach ((array) $params['Messages'] as $message) {
+      $Messages[] = new MessageType(
+        $message['MessageContent'] ?? NULL,
+        $message['HotelCodeContext'] ?? NULL,
+        $message['ReasonForRequest'] ?? NULL,
+        $message['ConfirmationID'] ?? NULL
+      );
+    }
+    // Build OTA_HotelGetMsgRQ
+    $request = new OTA_HotelGetMsgRQ(
+      $params['EchoToken'] ?? NULL,
+      $params['PrimaryLangID'] ?? NULL,
+      $params['AltLangID'] ?? NULL,
+      NULL,
+      $params['Target'] ?? NULL,
+      $params['Version'] ?? NULL,
+      $params['MessageContentCode'] ?? NULL,
+      NULL,
+      $Messages
+    );
+    $wrapper = new GetHotelReservation($request);
+
+    return $this->client->GetHotelReservation($wrapper);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function modifyReservation($params) {
+    $params['ResStatus'] = 'Modify';
+    $this->processReservation($params);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function cancelReservation($params) {
+    $params['ResStatus'] = 'Cancel';
+    $this->processReservation($params);
+  }
+
+  /**
+   * Executes operation on reservation.
+   *
+   * @param $params
+   *
+   * @return mixed
+   */
+  public function processReservation($params) {
+    // Instantiate SOAP client
+    $this->setClient('http://htng.org/2009B', [
+      'OTA_HotelResRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelResRQ',
+      'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
+    ]);
+
+    // Build POS->Source->BookingChannel
+    $bookingChannel = new BookingChannel(
+      NULL,
+      TRUE,
+      $params['BookingChannel']['Type'] ?? NULL,
+      NULL
+    );
+    // Build POS->Source->RequestorID
+    $requestorId = new RequestorID(
+      NULL,
+      $params['RequestorID']['Type'] ?? NULL,
+      $params['ID'] ?? NULL,
+      $params['ID_Context'] ?? NULL,
+      NULL,
+      NULL,
+      NULL
+    );
+    // Build POS->Source
+    $source = [
+      new Source(
+        $bookingChannel,
+        $requestorId
+      ),
+    ];
+
+    // Build OTA_HotelResRQ->UniqueID
+    $uniqueId = new UniqueID(
+      NULL,
+      self::UIT_RESERVATION,
+      $params['ID'] ?? NULL,
+      'CrsConfirmNumber',
+      NULL,
+      NULL
+    );
+
+    // Build HotelReservation->RoomStay->RoomTypes
+    $roomTypes = [
+      new RoomType(
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        $params['IsRoom'] ?? NULL,
+        $params['RoomTypeCode'] ?? NULL,
+        $params['InvBlockCode'] ?? NULL,
+        $params['NumberOfUnits'] ?? NULL,
+        $params['RoomID']
+      ),
+    ];
+    // Build HotelReservation->RoomStay->RatePlans
+    $ratePlans = [
+      new RatePlan(
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        $params['MealsIncluded'] ?? NULL,
+        $params['RatePlanCode'] ?? NULL,
+        $params['RatePlanName'] ?? NULL,
+        $params['AccrualIndicator'] ?? NULL,
+        $params['AutoEnrollmentIndicator'] ?? NULL,
+        $params['BookingCode'] ?? NULL,
+        $params['RatePlanType'] ?? NULL,
+        $params['RatePlanID'] ?? NULL,
+        $params['EffectiveDate'] ?? NULL,
+        $params['ExpireDate'] ?? NULL,
+        $params['CurrencyCode'] ?? NULL,
+        $params['TaxInclusive'] ?? NULL,
+        $params['PrepaidIndicator'] ?? NULL,
+        $params['RatePlanCategory'] ?? NULL,
+        $params['AvailabilityStatus'] ?? NULL,
+        $params['PriceViewableInd'] ?? NULL
+      ),
+    ];
+    // Build HotelReservation->RoomStay->GuestCounts->GuestCount
+    $guestCount = [];
+    foreach ($params['Count'] as $aqc => $count) {
+      $aqc = 'self::AQC_' . strtoupper($aqc);
+      $guestCount[] = new GuestCount(constant($aqc), $count, NULL);
+    }
+    // Build HotelReservation->RoomStay->GuestCounts
+    $guestCounts = new GuestCounts(
+      $guestCount,
+      $params['IsPerRoom'] ?? NULL
+    );
+    // Build HotelReservation->RoomStay->TimeSpan
+    $timeSpan = new DateTimeSpan(
+      $params['Start'] ?? NULL,
+      $params['End'] ?? NULL,
+      $params['Duration'] ?? NULL,
+      NULL
+    );
+    // Build HotelReservation->RoomStay->BasicPropertyInfo
+    $basicPropertyInfo = new HotelReferenceGroup(
+      $params['HotelCode'] ?? NULL,
+      $params['HotelName'] ?? NULL,
+      $params['AreaID'] ?? NULL,
+      $params['HotelCodeContext'] ?? NULL,
+      $params['ChainCode'] ?? NULL,
+      $params['ChainName'] ?? NULL,
+      $params['BrandCode'] ?? NULL,
+      $params['BrandName'] ?? NULL,
+      $params['HotelCityCode'] ?? NULL
+    );
+    // Build HotelReservation->RoomStay->RoomRates
+    $roomRates = [];
+    foreach ($params['RoomRates'] as $roomRate) {
+      $rates = [];
+      if (!empty($roomRate['Rates'])) {
+        foreach($roomRate['Rates'] as $rate) {
+          if (!empty($rate['Base'])) {
+            $taxes = [];
+            if (!empty($rate['Base']['Taxes'])) {
+              foreach ($rate['Base']['Taxes'] as $tax) {
+                $taxes[] = new Tax(
+                  NULL,
+                  $tax['amount'] ?? NULL,
+                  NULL,
+                  NULL,
+                  NULL,
+                  NULL,
+                  NULL,
+                  NULL,
+                  NULL,
+                  NULL
+                );
+
+              }
+            }
+            $base = new Total(
+              $taxes,
+              NULL,
+              NULL,
+              $rate['Base']['AmountBeforeTax'] ?? NULL,
+              $rate->$rate['Base']['AmountAfterTax'] ?? NULL,
+              $rate['Base']['CurrencyCode'] ?? NULL,
+              NULL,
+              NULL,
+              NULL
+            );
+          }
+          // Build HotelReservation->RoomStays->RoomStay->RoomRates->RoomRate->Rates->Rate
+          $rates[] = new Rate(
+            NULL,
+            NULL,
+            $base ?? NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            $rate->EffectiveDate ?? NULL,
+            $rate->EffectiveDate ?? NULL
+          );
+        }
+      }
+      // Build HotelReservation->RoomStays->RoomStay->RoomRates->RoomRate->Total
+      $total = NULL;
+      if (!empty($RoomRate['Total'])) {
+        $totalTaxes = [];
+        if (!empty($RoomRate['Total']['Taxes'])) {
+          foreach ($RoomRate['Total']['Taxes'] as $tax) {
+            $totalTaxes[] = new Tax(
+              NULL,
+              $tax['Amount'] ?? NULL,
+              NULL,
+              NULL,
+              NULL,
+              NULL,
+              NULL,
+              NULL,
+              NULL,
+              NULL
+            );
+          }
+        }
+        $total = new Total(
+          $totalTaxes,
+          NULL,
+          NULL,
+          $RoomRate['Total']['AmountBeforeTax'] ?? NULL,
+          $RoomRate['Total']['AmountAfterTax'] ?? NULL,
+          $RoomRate['Total']['CurrencyCode'] ?? NULL,
+          NULL,
+          NULL,
+          NULL
         );
       }
-      // Build OTA_HotelGetMsgRQ
-      $request = new OTA_HotelGetMsgRQ(
-        $params['EchoToken'] ?? NULL,
-        $params['PrimaryLangID'] ?? NULL,
-        $params['AltLangID'] ?? NULL,
+      // Build HotelReservation->RoomStays->RoomStay->RoomRates->RoomRate
+      $roomRates[] = new RoomRate(
+        $rates,
+        $total,
         NULL,
-        $params['Target'] ?? NULL,
-        $params['Version'] ?? NULL,
-        $params['MessageContentCode'] ?? NULL,
+        $roomRate['EffectiveDate'] ?? NULL,
+        $roomRate['ExpireDate'] ?? NULL,
         NULL,
-         $Messages
+        NULL,
+        NULL,
+        NULL
       );
-      $wrapper = new GetHotelReservation($request);
-
-      return $this->client->GetHotelReservation($wrapper);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function modifyReservation($params) {
-        // TODO: Implement modifyReservation() method.
+    // Build HotelReservation->RoomStays
+    $roomStays = [
+      new RoomStay(
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        $roomTypes,
+        $ratePlans,
+        $roomRates,
+        $guestCounts,
+        $timeSpan,
+        NULL,
+        $basicPropertyInfo,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        $params['MarketCode'] ?? NULL,
+        $params['SourceOfBusiness'] ?? NULL,
+        $params['IndexNumber'] ?? NULL
+      ),
+    ];
+    $resGuests = [];
+    foreach ($params['ResGuests'] as $resGuest) {
+      // Build HotelReservation->ResGuest->Profiles->Profile->Customer
+      $customer = new Customer(
+        new PersonName(
+          $resGuest['NamePrefix'] ?? NULL,
+          $resGuest['NameTitle'] ?? NULL,
+          $resGuest['GivenName'] ?? NULL,
+          $resGuest['MiddleName'] ?? NULL,
+          $resGuest['Surname'] ?? NULL,
+          $resGuest['NameSuffix'] ?? NULL,
+          $resGuest['NameType'] ?? NULL
+        ),
+        new Telephone(
+          $resGuest['FormattedInd'] ?? FALSE,
+          $resGuest['PhoneTechType'] ?? NULL,
+          $resGuest['PhoneNumber'] ?? NULL,
+          $resGuest['PhoneUseType'] ?? NULL,
+          $resGuest['DefaultInd'] ?? FALSE
+        ),
+        $resGuest['Email'] ?? NULL,
+        new AddressInfo(
+          $resGuest['AddressLine'] ?? NULL,
+          $resGuest['CityName'] ?? NULL,
+          $resGuest['PostalCode'] ?? NULL,
+          new StateProv($resGuest['StateCode'] ?? NULL),
+          new CountryName($resGuest['Code'] ?? NULL),
+          $resGuest['Type'] ?? NULL,
+          $resGuest['Remark'] ?? NULL,
+          $resGuest['CompanyName'] ?? NULL,
+          $resGuest['FormattedInd'] ?? FALSE,
+          $resGuest['DefaultInd'] ?? FALSE
+        ),
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        $resGuest['BirthDate'] ?? NULL,
+        $resGuest['Gender'] ?? NULL,
+        $resGuest['CustomerValue'] ?? NULL,
+        $resGuest['LockoutType'] ?? NULL,
+        $resGuest['Language'] ?? NULL
+      );
+      // Build HotelReservation->ResGuest->Profiles->Profile
+      $profile = new Profile(
+        NULL,
+        NULL,
+        $customer,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        $resGuest['ProfileType'] ?? NULL,
+        NULL,
+        NULL,
+        NULL,
+        $resGuest['ShareAllMarketInd'] ?? NULL
+      );
+      // Build HotelReservation->ResGuest->Profiles
+      $profiles = [
+        new ProfileInfo(
+          NULL,
+          $profile,
+          NULL
+        ),
+      ];
+      // Build HotelReservation->ResGuests
+      $resGuests[] = new ResGuest(
+        NULL,
+        $profiles,
+        NULL,
+        NULL,
+        $params['PrimaryIndicator'] ?? NULL,
+        $params['RPH'] ?? NULL,
+        NULL
+      );
     }
+    // Build HotelReservations->ResGlobalInfo->Guarantee->GuaranteesAccepted
+    $guaranteesAccepted = [
+      new GuaranteeAccepted(
+        new PaymentCard(
+          $params['CardHolderName'] ?? NULL,
+          NULL,
+          NULL,
+          $params['CardType'] ?? NULL,
+          $params['CardCode'] ?? NULL,
+          $params['CardNumber'] ?? NULL,
+          $params['SeriesCode'] ?? NULL,
+          $params['CardExpireDate'] ?? NULL
+        ),
+        NULL,
+        NULL
+      ),
+    ];
+    // Build HotelReservations->ResGlobalInfo->Guarantee
+    $guarantee = new Guarantee(
+      $guaranteesAccepted,
+      NULL,
+      NULL,
+      NULL,
+      NULL
+    );
+    // Build HotelReservations->ResGlobalInfo
+    $resGlobalInfo = new ResGlobalInfo(
+      NULL,
+      $guarantee,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      NULL
+    );
 
-    /**
-     * {@inheritdoc}
-     */
-    public function cancelReservation($params) {
-        // TODO: Implement cancelReservation() method.
-    }
+    // Build OTA_HotelResRQ->HotelReservations
+    $hotelReservations = [
+      new HotelReservation(
+        $uniqueId,
+        $roomStays,
+        $resGuests,
+        $resGlobalInfo,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        TRUE,
+        $params['CreatorID'] ?? NULL,
+        NULL,
+        $params['LastModifierID'] ?? NULL,
+        NULL
+      ),
+    ];
+
+    // Build OTA_HotelResRQ
+    $request = new OTA_HotelResRQ(
+      $params['EchoToken'] ?? NULL,
+      $params['PrimaryLangID'] ?? NULL,
+      $params['AltLangID'] ?? NULL,
+      NULL,
+      $params['Target'] ?? NULL,
+      $params['Version'] ?? NULL,
+      $params['MessageContentCode'] ?? NULL,
+      NULL,
+      $source,
+      $hotelReservations,
+      $uniqueId,
+      $params['ResStatus'] ?? NULL,
+      $params['RetransmissionIndicator'] ?? NULL
+    );
+    $wrapper = new ProcessHotelReservation($request);
+
+    return $this->client->ProcessHotelReservation($wrapper);
+  }
 
 }
