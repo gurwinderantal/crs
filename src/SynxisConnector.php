@@ -925,13 +925,23 @@ class SynxisConnector extends CrsConnectorBase {
           NULL,
           NULL,
           NULL,
+          NULL,
           NULL
         )
+      );
+      // Build OTA_HotelResModifyRQ->HotelResModifies->HotelResModify->UniqueID
+      $uniqueId = new UniqueID(
+        NULL,
+        self::UIT_RESERVATION,
+        $params['ID'] ?? NULL,
+        'CrsConfirmNumber',
+        NULL,
+        NULL
       );
       // Build OTA_HotelResModifyRQ->HotelResModifies
       $HotelResModifies = [
         new HotelResModify(
-          NULL,
+          $uniqueId,
           $roomStays,
           $resGuests,
           $resGlobalInfo,
