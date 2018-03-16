@@ -84,6 +84,7 @@ class RoomRate {
         $this->EffectiveDate = $EffectiveDate;
         $this->ExpireDate = $ExpireDate;
         $this->RoomTypeCode = $RoomTypeCode;
+        $this->RatePlanCode = $RatePlanCode;
         $this->NumberOfUnits = $NumberOfUnits;
         $this->InvBlockCode = $InvBlockCode;
     }
