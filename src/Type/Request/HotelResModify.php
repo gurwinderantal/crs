@@ -22,7 +22,7 @@ class HotelResModify extends HotelReservation {
    * @param array|null $ResGuests
    * @param \GurwinderAntal\crs\Type\Request\ResGlobalInfo|null $ResGlobalInfo
    * @param $TPA_Extensions
-   * @param $WrittenConfInst
+   * @param \GurwinderAntal\crs\Type\Request\WrittenConfInst|null $WrittenConfInst
    * @param $Services
    * @param \GurwinderAntal\crs\Type\Request\POS|null $POS
    * @param null|string $CreateDateTime
@@ -39,7 +39,7 @@ class HotelResModify extends HotelReservation {
     ?array $ResGuests,
     ?ResGlobalInfo $ResGlobalInfo,
     $TPA_Extensions,
-    $WrittenConfInst,
+    ?WrittenConfInst $WrittenConfInst,
     $Services,
     ?POS $POS,
     ?string $CreateDateTime,

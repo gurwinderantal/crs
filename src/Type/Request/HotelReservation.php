@@ -35,7 +35,7 @@ class HotelReservation {
     protected $TPA_Extensions;
 
     /**
-     * Currently unused.
+     * @var \GurwinderAntal\crs\Type\Request\WrittenConfInst|null
      */
     protected $WrittenConfInst;
 
@@ -87,7 +87,7 @@ class HotelReservation {
      * @param array|null $ResGuests
      * @param \GurwinderAntal\crs\Type\Request\ResGlobalInfo|null $ResGlobalInfo
      * @param $TPA_Extensions
-     * @param $WrittenConfInst
+     * @param \GurwinderAntal\crs\Type\Request\WrittenConfInst|null $WrittenConfInst
      * @param $Services
      * @param \GurwinderAntal\crs\Type\Request\POS|null $POS
      * @param null|string $CreateDateTime
@@ -103,7 +103,7 @@ class HotelReservation {
         ?array $ResGuests,
         ?ResGlobalInfo $ResGlobalInfo,
         $TPA_Extensions,
-        $WrittenConfInst,
+        ?WrittenConfInst $WrittenConfInst,
         $Services,
         ?POS $POS,
         ?string $CreateDateTime,

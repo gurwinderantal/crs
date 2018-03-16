@@ -41,9 +41,11 @@ use GurwinderAntal\crs\Type\Request\ResGlobalInfo;
 use GurwinderAntal\crs\Type\Request\ResGuest;
 use GurwinderAntal\crs\Type\Request\RoomStayCandidate;
 use GurwinderAntal\crs\Type\Request\Source;
+use GurwinderAntal\crs\Type\Request\SupplementalData;
 use GurwinderAntal\crs\Type\Request\TelephoneInfo;
 use GurwinderAntal\crs\Type\Request\UniqueID;
 use GurwinderAntal\crs\Type\Request\Verification;
+use GurwinderAntal\crs\Type\Request\WrittenConfInst;
 
 /**
  * Class SynxisConnector
@@ -449,6 +451,23 @@ class SynxisConnector extends CrsConnectorBase {
             NULL,
             NULL
         );
+        // Build OTA_HotelResRQ->WrittenConfInst
+        $writtenConfInst = array_key_exists('EmailTemplate', $params) ?
+            new WrittenConfInst(
+                new SupplementalData(
+                    NULL,
+                    $params['EmailTemplate'],
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL),
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            ) : NULL;
         // Build OTA_HotelResRQ->HotelReservations
         $hotelReservations = [
             new HotelReservation(
@@ -457,7 +476,7 @@ class SynxisConnector extends CrsConnectorBase {
                 $resGuests,
                 $resGlobalInfo,
                 NULL,
-                NULL,
+                $writtenConfInst,
                 NULL,
                 NULL,
                 NULL,
@@ -938,6 +957,23 @@ class SynxisConnector extends CrsConnectorBase {
         NULL,
         NULL
       );
+        // Build OTA_HotelResModifyRQ->WrittenConfInst
+        $writtenConfInst = array_key_exists('EmailTemplate', $params) ?
+            new WrittenConfInst(
+                new SupplementalData(
+                    NULL,
+                    $params['EmailTemplate'],
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL),
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            ) : NULL;
       // Build OTA_HotelResModifyRQ->HotelResModifies
       $HotelResModifies = [
         new HotelResModify(
@@ -946,7 +982,7 @@ class SynxisConnector extends CrsConnectorBase {
           $resGuests,
           $resGlobalInfo,
           NULL,
-          NULL,
+          $writtenConfInst,
           NULL,
           NULL,
           NULL,
@@ -1064,7 +1100,52 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL
             )
         );
-
+        // Build OTA_CancelRQ->TPA_Extensions
+        if (array_key_exists('EmailTemplate', $params)) {
+            $writtenConfInst = new WrittenConfInst(
+                new SupplementalData(
+                    NULL,
+                    $params['EmailTemplate'],
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL),
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            );
+            $tpaExtension = new TPA_Extensions(
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $writtenConfInst,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            );
+        }
+        else {
+            $tpaExtension = NULL;
+        }
         // Build request
         $request = new OTA_CancelRQ(
             $params['EchoToken'] ?? NULL,
@@ -1074,7 +1155,7 @@ class SynxisConnector extends CrsConnectorBase {
             $params['Target'] ?? NULL,
             $params['Version'] ?? NULL,
             $params['MessageContentCode'] ?? NULL,
-            NULL,
+            $tpaExtension,
             $uniqueId,
             $verification,
             $pos,
