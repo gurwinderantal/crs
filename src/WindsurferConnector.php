@@ -221,13 +221,15 @@ class WindsurferConnector extends CrsConnectorBase {
         ]);
         // Build OTA_HotelGetMsgRQ->Messages.
         $Messages = [];
-        foreach ((array) $params['Messages'] as $message) {
+        if (!empty($params['Messages'])) {
+          foreach ((array) $params['Messages'] as $message) {
             $Messages[] = new MessageType(
-                $message['MessageContent'] ?? NULL,
-                $message['HotelCodeContext'] ?? NULL,
-                $message['ReasonForRequest'] ?? NULL,
-                $message['ConfirmationID'] ?? NULL
+              $message['MessageContent'] ?? NULL,
+              $message['HotelCodeContext'] ?? NULL,
+              $message['ReasonForRequest'] ?? NULL,
+              $message['ConfirmationID'] ?? NULL
             );
+          }
         }
         // Build OTA_HotelGetMsgRQ
         $request = new OTA_HotelGetMsgRQ(
