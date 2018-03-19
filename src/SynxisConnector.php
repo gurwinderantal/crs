@@ -198,7 +198,12 @@ class SynxisConnector extends CrsConnectorBase {
             $params['SequenceNmbr'] ?? NULL
         );
 
-        return $this->client->CheckAvailability($request);
+        try {
+          return $this->client->CheckAvailability($request);
+        } catch (\Exception $exception) {
+          // Handle error.
+          return NULL;
+        }
     }
 
     /**
@@ -505,7 +510,13 @@ class SynxisConnector extends CrsConnectorBase {
             $params['RetransmissionIndicator'] ?? NULL
         );
 
-        return $this->client->CreateReservations($request);
+        try{
+          return $this->client->CreateReservations($request);
+        }
+        catch (\Exception $exception) {
+          // Handle error.
+          return NULL;
+        }
     }
 
     public function getReservation($params) {
@@ -623,7 +634,13 @@ class SynxisConnector extends CrsConnectorBase {
             $params['MaxResponses'] ?? NULL
         );
 
-        return $this->client->ReadReservations($request);
+        try {
+          return $this->client->ReadReservations($request);
+        }
+        catch (\Exception $exception) {
+          // Handle error.
+          return NULL;
+        }
     }
 
     /**
@@ -1008,7 +1025,13 @@ class SynxisConnector extends CrsConnectorBase {
         $HotelResModifies
       );
 
-      return $this->client->ModifyReservations($request);
+      try{
+        return $this->client->ModifyReservations($request);
+      }
+      catch (\Exception $exception) {
+        // Handle error.
+        return NULL;
+      }
     }
 
     /**
@@ -1164,7 +1187,13 @@ class SynxisConnector extends CrsConnectorBase {
             NULL
         );
 
-        return $this->client->CancelReservations($request);
+        try {
+          return $this->client->CancelReservations($request);
+        }
+        catch (\Exception $exception) {
+          // Handle error.
+          return NULL;
+        }
     }
 
 }
