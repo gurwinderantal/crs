@@ -194,7 +194,7 @@ class WindsurferConnector extends CrsConnectorBase {
         $wrapper = new CheckHotelAvailability($request);
 
         try {
-          return $this->client->CheckHotelAvailability($wrapper);
+          return current($this->client->CheckHotelAvailability($wrapper));
         }
         catch (\Exception $exception) {
           // Handle error.
@@ -246,7 +246,7 @@ class WindsurferConnector extends CrsConnectorBase {
         $wrapper = new GetHotelReservation($request);
 
         try {
-          return $this->client->GetHotelReservation($wrapper);
+          return current($this->client->GetHotelReservation($wrapper));
         }
         catch (\Exception $exception) {
           // Handle error.
@@ -607,7 +607,7 @@ class WindsurferConnector extends CrsConnectorBase {
         $wrapper = new ProcessHotelReservation($request);
 
         try {
-          return $this->client->ProcessHotelReservation($wrapper);
+          return current($this->client->ProcessHotelReservation($wrapper));
         }
         catch (\Exception $exception) {
           // Handle error.
