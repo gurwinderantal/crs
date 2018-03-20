@@ -554,7 +554,7 @@ class SynxisConnector extends CrsConnectorBase {
         // Build ReadRequest->UniqueID
         $uniqueId = new UniqueID(
             NULL,
-            self::UIT_RESERVATION,
+            $params['Type'] ?? self::UIT_RESERVATION,
             $params['ID'] ?? NULL,
             'CrsConfirmNumber',
             NULL,
