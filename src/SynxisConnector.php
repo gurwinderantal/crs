@@ -179,7 +179,7 @@ class SynxisConnector extends CrsConnectorBase {
             $params['EchoToken'] ?? NULL,
             $params['PrimaryLangID'] ?? NULL,
             $params['AltLangID'] ?? NULL,
-            NULL,
+          $this->timestamp(),
             $params['Target'] ?? NULL,
             $params['Version'] ?? NULL,
             $params['MessageContentCode'] ?? NULL,
@@ -498,7 +498,7 @@ class SynxisConnector extends CrsConnectorBase {
             $params['EchoToken'] ?? NULL,
             $params['PrimaryLangID'] ?? NULL,
             $params['AltLangID'] ?? NULL,
-            NULL,
+          $this->timestamp(),
             $params['Target'] ?? NULL,
             $params['Version'] ?? NULL,
             $params['MessageContentCode'] ?? NULL,
@@ -621,7 +621,7 @@ class SynxisConnector extends CrsConnectorBase {
             $params['EchoToken'] ?? NULL,
             $params['PrimaryLangID'] ?? NULL,
             $params['AltLangID'] ?? NULL,
-            NULL,
+            $this->timestamp(),
             $params['Target'] ?? NULL,
             $params['Version'] ?? NULL,
             $params['MessageContentCode'] ?? NULL,
@@ -1016,7 +1016,7 @@ class SynxisConnector extends CrsConnectorBase {
         $params['EchoToken'] ?? NULL,
         $params['PrimaryLangID'] ?? NULL,
         $params['AltLangID'] ?? NULL,
-        NULL,
+        $this->timestamp(),
         $params['Target'] ?? NULL,
         $params['Version'] ?? NULL,
         $params['MessageContentCode'] ?? NULL,
@@ -1174,7 +1174,7 @@ class SynxisConnector extends CrsConnectorBase {
             $params['EchoToken'] ?? NULL,
             $params['PrimaryLangID'] ?? NULL,
             $params['AltLangID'] ?? NULL,
-            NULL,
+            $this->timestamp(),
             $params['Target'] ?? NULL,
             $params['Version'] ?? NULL,
             $params['MessageContentCode'] ?? NULL,
@@ -1194,6 +1194,17 @@ class SynxisConnector extends CrsConnectorBase {
           // Handle error.
           return NULL;
         }
+    }
+
+    /**
+     * Returns formatted timestamp.
+     *
+     * @return false|string
+     */
+    public function timestamp() {
+      date_default_timezone_set(self::TIMESTAMP_ZONE);
+
+      return date(self::TIMESTAMP_FORMAT);
     }
 
 }

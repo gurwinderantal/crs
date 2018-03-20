@@ -37,6 +37,12 @@ interface CrsConnectorInterface {
     const PRT_CRO = 8;
 
     /**
+     * OTA timestamp format.
+     */
+    const TIMESTAMP_ZONE = 'Europe/London';
+    const TIMESTAMP_FORMAT = "Y-m-d\TH:i:s+00:00";
+
+    /**
      * Sets required request headers.
      *
      * @param string $namespace
