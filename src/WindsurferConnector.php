@@ -50,6 +50,12 @@ use GurwinderAntal\crs\Type\Request\UniqueID;
 class WindsurferConnector extends CrsConnectorBase {
 
     /**
+     * Timestamp format.
+     */
+    const TIMESTAMP_ZONE = 'US/Mountain';
+    const TIMESTAMP_FORMAT = "Y-m-d\TH:i:s+00:00";
+
+    /**
      * {@inheritdoc}
      */
     public function checkAvailability($params) {
@@ -173,7 +179,7 @@ class WindsurferConnector extends CrsConnectorBase {
             $params['EchoToken'] ?? NULL,
             $params['PrimaryLangID'] ?? NULL,
             $params['AltLangID'] ?? NULL,
-            NULL,
+          $this->timestamp(),
             $params['Target'] ?? NULL,
             $params['Version'] ?? NULL,
             $params['MessageContentCode'] ?? NULL,
@@ -236,7 +242,7 @@ class WindsurferConnector extends CrsConnectorBase {
             $params['EchoToken'] ?? NULL,
             $params['PrimaryLangID'] ?? NULL,
             $params['AltLangID'] ?? NULL,
-            NULL,
+          $this->timestamp(),
             $params['Target'] ?? NULL,
             $params['Version'] ?? NULL,
             $params['MessageContentCode'] ?? NULL,
@@ -593,7 +599,7 @@ class WindsurferConnector extends CrsConnectorBase {
             $params['EchoToken'] ?? NULL,
             $params['PrimaryLangID'] ?? NULL,
             $params['AltLangID'] ?? NULL,
-            NULL,
+            $this->timestamp(),
             $params['Target'] ?? NULL,
             $params['Version'] ?? NULL,
             $params['MessageContentCode'] ?? NULL,
@@ -615,4 +621,13 @@ class WindsurferConnector extends CrsConnectorBase {
         }
     }
 
+    /**
+     * Returns formatted timestamp.
+     *
+     * @return false|string
+     */
+    public function timestamp() {
+      date_default_timezone_set(self::TIMESTAMP_ZONE);
+      return date(self::TIMESTAMP_FORMAT);
+    }
 }

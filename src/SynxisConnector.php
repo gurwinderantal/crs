@@ -56,6 +56,12 @@ use GurwinderAntal\crs\Type\Request\WrittenConfInst;
 class SynxisConnector extends CrsConnectorBase {
 
     /**
+     * Timestamp format.
+     */
+    const TIMESTAMP_ZONE = 'Europe/London';
+    const TIMESTAMP_FORMAT = "Y-m-d\TH:i:s+00:00";
+
+    /**
      * {@inheritdoc}
      */
     public function checkAvailability($params) {
