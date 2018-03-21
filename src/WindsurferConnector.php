@@ -40,6 +40,7 @@ use GurwinderAntal\crs\Type\Request\ResGuest;
 use GurwinderAntal\crs\Type\Request\RoomStayCandidate;
 use GurwinderAntal\crs\Type\Request\Source;
 use GurwinderAntal\crs\Type\Request\UniqueID;
+use GurwinderAntal\crs\Type\Response\Service;
 
 /**
  * Class WindsurferConnector
@@ -574,6 +575,25 @@ class WindsurferConnector extends CrsConnectorBase {
                 NULL
             );
         }
+
+        // Build OTA_HotelResRQ->HotelReservations->HotelReservation->Services
+        if (!empty($params['Services']) && is_array($params['Services'])) {
+          foreach ($params['Services'] as $service) {
+            $services[] = new Service(
+              $service['ServiceDetails'] ?? NULL,
+              $service['Price'] ?? NULL,
+              $service['DescriptiveText'] ?? NULL,
+              $service['Descriptions'] ?? NULL,
+              $service['Feature'] ?? NULL,
+              $service['Quantity'] ?? NULL,
+              $service['Inclusive'] ?? NULL,
+              $service['ServiceInventoryCode'] ?? NULL,
+              $service['ServicePricingType'] ?? NULL,
+              $service['ServiceRPH'] ?? NULL
+            );
+          }
+        }
+
         // Build OTA_HotelResRQ->HotelReservations
         $hotelReservations = [
             new HotelReservation(
@@ -583,7 +603,7 @@ class WindsurferConnector extends CrsConnectorBase {
                 NULL,
                 NULL,
                 NULL,
-                NULL,
+              $services ?? NULL,
                 NULL,
                 NULL,
                 TRUE,
