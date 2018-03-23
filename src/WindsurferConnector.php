@@ -27,6 +27,7 @@ use GurwinderAntal\crs\Type\Request\BookingChannel;
 use GurwinderAntal\crs\Type\Request\CheckHotelAvailability;
 use GurwinderAntal\crs\Type\Request\GetHotelReservation;
 use GurwinderAntal\crs\Type\Request\HotelReservation;
+use GurwinderAntal\crs\Type\Request\HotelReservationID;
 use GurwinderAntal\crs\Type\Request\MessageType;
 use GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ;
 use GurwinderAntal\crs\Type\Request\OTA_HotelGetMsgRQ;
@@ -36,6 +37,7 @@ use GurwinderAntal\crs\Type\Request\ProcessHotelReservation;
 use GurwinderAntal\crs\Type\Request\ProfileInfo;
 use GurwinderAntal\crs\Type\Request\RatePlanCandidate;
 use GurwinderAntal\crs\Type\Request\RequestorID;
+use GurwinderAntal\crs\Type\Request\ResGlobalInfo;
 use GurwinderAntal\crs\Type\Request\ResGuest;
 use GurwinderAntal\crs\Type\Request\RoomStayCandidate;
 use GurwinderAntal\crs\Type\Request\Source;
@@ -316,21 +318,6 @@ class WindsurferConnector extends CrsConnectorBase {
             ),
         ];
 
-        if ($params['ResStatus'] != 'Book') {
-            // Build OTA_HotelResRQ->UniqueID
-            $uniqueId = new UniqueID(
-                NULL,
-                self::UIT_RESERVATION,
-                $params['ID'] ?? NULL,
-                'CrsConfirmNumber',
-                NULL,
-                NULL
-            );
-        }
-        else {
-            $uniqueId = NULL;
-        }
-
         // Build HotelReservation->RoomStay->RoomTypes
         $roomTypes = [
             new RoomType(
@@ -575,6 +562,33 @@ class WindsurferConnector extends CrsConnectorBase {
                 NULL
             );
         }
+        // Build HotelReservation->ResGlobalInfo
+        if ($params['ResStatus'] != 'Book') {
+            $resGlobalInfo = new ResGlobalInfo(
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                [
+                    new HotelReservationID(
+                        self::UIT_RESERVATION,
+                        $params['ID'] ?? NULL,
+                        NULL,
+                        NULL,
+                        NULL
+                    ),
+                ],
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            );
+        }
+        else {
+            $resGlobalInfo = NULL;
+        }
 
         // Build OTA_HotelResRQ->HotelReservations->HotelReservation->Services
         if (!empty($params['Services']) && is_array($params['Services'])) {
@@ -597,13 +611,13 @@ class WindsurferConnector extends CrsConnectorBase {
         // Build OTA_HotelResRQ->HotelReservations
         $hotelReservations = [
             new HotelReservation(
-                $uniqueId,
+                NULL,
                 $roomStays,
                 $resGuests,
+                $resGlobalInfo,
                 NULL,
                 NULL,
-                NULL,
-              $services ?? NULL,
+                $services ?? NULL,
                 NULL,
                 NULL,
                 TRUE,
@@ -626,14 +640,17 @@ class WindsurferConnector extends CrsConnectorBase {
             NULL,
             $source,
             $hotelReservations,
-            $uniqueId,
+            NULL,
             $params['ResStatus'] ?? NULL,
             $params['RetransmissionIndicator'] ?? NULL
         );
         $wrapper = new ProcessHotelReservation($request);
 
         try {
-          return current($this->client->ProcessHotelReservation($wrapper));
+          $response = current($this->client->ProcessHotelReservation($wrapper));
+          ksm($this->client->__getLastRequest());
+          ksm($this->client->__getLastResponse());
+          return $response;
         }
         catch (\Exception $exception) {
           // Handle error.
