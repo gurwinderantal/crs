@@ -56,6 +56,7 @@ class WindsurferConnector extends CrsConnectorBase {
      * Timestamp format.
      */
     const TIMESTAMP_ZONE = 'US/Mountain';
+
     const TIMESTAMP_FORMAT = "Y-m-d\TH:i:s+00:00";
 
     /**
@@ -182,7 +183,7 @@ class WindsurferConnector extends CrsConnectorBase {
             $params['EchoToken'] ?? NULL,
             $params['PrimaryLangID'] ?? NULL,
             $params['AltLangID'] ?? NULL,
-          $this->timestamp(),
+            $this->timestamp(),
             $params['Target'] ?? NULL,
             $params['Version'] ?? NULL,
             $params['MessageContentCode'] ?? NULL,
@@ -203,12 +204,21 @@ class WindsurferConnector extends CrsConnectorBase {
         $wrapper = new CheckHotelAvailability($request);
 
         try {
-          return current($this->client->CheckHotelAvailability($wrapper));
+            return current($this->client->CheckHotelAvailability($wrapper));
+        } catch (\Exception $exception) {
+            // Handle error.
+            return NULL;
         }
-        catch (\Exception $exception) {
-          // Handle error.
-          return NULL;
-        }
+    }
+
+    /**
+     * Returns formatted timestamp.
+     *
+     * @return false|string
+     */
+    public function timestamp() {
+        date_default_timezone_set(self::TIMESTAMP_ZONE);
+        return date(self::TIMESTAMP_FORMAT);
     }
 
     /**
@@ -216,66 +226,6 @@ class WindsurferConnector extends CrsConnectorBase {
      */
     public function createReservation($params) {
         $params['ResStatus'] = 'Book';
-        return $this->processReservation($params);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getReservation($params) {
-        // Instantiate SOAP client
-        $this->initializeClient('http://htng.org/2009B', [
-            'OTA_GetMsgRQ' => 'GurwinderAntal\crs\Type\Request\OTA_GetMsgRQ',
-            'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
-        ]);
-        // Build OTA_HotelGetMsgRQ->Messages.
-        $Messages = [];
-        if (!empty($params['Messages'])) {
-          foreach ((array) $params['Messages'] as $message) {
-            $Messages[] = new MessageType(
-              $message['MessageContent'] ?? NULL,
-              $message['HotelCodeContext'] ?? NULL,
-              $message['ReasonForRequest'] ?? NULL,
-              $message['ConfirmationID'] ?? NULL
-            );
-          }
-        }
-        // Build OTA_HotelGetMsgRQ
-        $request = new OTA_HotelGetMsgRQ(
-            $params['EchoToken'] ?? NULL,
-            $params['PrimaryLangID'] ?? NULL,
-            $params['AltLangID'] ?? NULL,
-          $this->timestamp(),
-            $params['Target'] ?? NULL,
-            $params['Version'] ?? NULL,
-            $params['MessageContentCode'] ?? NULL,
-            NULL,
-            $Messages
-        );
-        $wrapper = new GetHotelReservation($request);
-
-        try {
-          return current($this->client->GetHotelReservation($wrapper));
-        }
-        catch (\Exception $exception) {
-          // Handle error.
-          return NULL;
-        }
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function modifyReservation($params) {
-        $params['ResStatus'] = 'Modify';
-        return $this->processReservation($params);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function cancelReservation($params) {
-        $params['ResStatus'] = 'Cancel';
         return $this->processReservation($params);
     }
 
@@ -592,20 +542,20 @@ class WindsurferConnector extends CrsConnectorBase {
 
         // Build OTA_HotelResRQ->HotelReservations->HotelReservation->Services
         if (!empty($params['Services']) && is_array($params['Services'])) {
-          foreach ($params['Services'] as $service) {
-            $services[] = new Service(
-              $service['ServiceDetails'] ?? NULL,
-              $service['Price'] ?? NULL,
-              $service['DescriptiveText'] ?? NULL,
-              $service['Descriptions'] ?? NULL,
-              $service['Feature'] ?? NULL,
-              $service['Quantity'] ?? NULL,
-              $service['Inclusive'] ?? NULL,
-              $service['ServiceInventoryCode'] ?? NULL,
-              $service['ServicePricingType'] ?? NULL,
-              $service['ServiceRPH'] ?? NULL
-            );
-          }
+            foreach ($params['Services'] as $service) {
+                $services[] = new Service(
+                    $service['ServiceDetails'] ?? NULL,
+                    $service['Price'] ?? NULL,
+                    $service['DescriptiveText'] ?? NULL,
+                    $service['Descriptions'] ?? NULL,
+                    $service['Feature'] ?? NULL,
+                    $service['Quantity'] ?? NULL,
+                    $service['Inclusive'] ?? NULL,
+                    $service['ServiceInventoryCode'] ?? NULL,
+                    $service['ServicePricingType'] ?? NULL,
+                    $service['ServiceRPH'] ?? NULL
+                );
+            }
         }
 
         // Build OTA_HotelResRQ->HotelReservations
@@ -647,24 +597,200 @@ class WindsurferConnector extends CrsConnectorBase {
         $wrapper = new ProcessHotelReservation($request);
 
         try {
-          $response = current($this->client->ProcessHotelReservation($wrapper));
-          ksm($this->client->__getLastRequest());
-          ksm($this->client->__getLastResponse());
-          return $response;
-        }
-        catch (\Exception $exception) {
-          // Handle error.
-          return NULL;
+            return current($this->client->ProcessHotelReservation($wrapper));
+        } catch (\Exception $exception) {
+            // Handle error.
+            return NULL;
         }
     }
 
     /**
-     * Returns formatted timestamp.
-     *
-     * @return false|string
+     * {@inheritdoc}
      */
-    public function timestamp() {
-      date_default_timezone_set(self::TIMESTAMP_ZONE);
-      return date(self::TIMESTAMP_FORMAT);
+    public function getReservation($params) {
+        // Instantiate SOAP client
+        $this->initializeClient('http://htng.org/2009B', [
+            'OTA_GetMsgRQ'   => 'GurwinderAntal\crs\Type\Request\OTA_GetMsgRQ',
+            'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
+        ]);
+        // Build OTA_HotelGetMsgRQ->Messages.
+        $Messages = [];
+        if (!empty($params['Messages'])) {
+            foreach ((array) $params['Messages'] as $message) {
+                $Messages[] = new MessageType(
+                    $message['MessageContent'] ?? NULL,
+                    $message['HotelCodeContext'] ?? NULL,
+                    $message['ReasonForRequest'] ?? NULL,
+                    $message['ConfirmationID'] ?? NULL
+                );
+            }
+        }
+        // Build OTA_HotelGetMsgRQ
+        $request = new OTA_HotelGetMsgRQ(
+            $params['EchoToken'] ?? NULL,
+            $params['PrimaryLangID'] ?? NULL,
+            $params['AltLangID'] ?? NULL,
+            $this->timestamp(),
+            $params['Target'] ?? NULL,
+            $params['Version'] ?? NULL,
+            $params['MessageContentCode'] ?? NULL,
+            NULL,
+            $Messages
+        );
+        $wrapper = new GetHotelReservation($request);
+
+        try {
+            return current($this->client->GetHotelReservation($wrapper));
+        } catch (\Exception $exception) {
+            // Handle error.
+            return NULL;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function modifyReservation($params) {
+        $params['ResStatus'] = 'Modify';
+        return $this->processReservation($params);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function cancelReservation($params) {
+        // Instantiate SOAP client
+        $this->initializeClient('http://htng.org/2009B', [
+            'OTA_HotelResRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelResRQ',
+            'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
+        ]);
+
+        // Build POS->Source->BookingChannel
+        $bookingChannel = new BookingChannel(
+            NULL,
+            TRUE,
+            $params['POS']['BookingChannel']['Type'] ?? NULL,
+            NULL
+        );
+        // Build POS->Source->RequestorID
+        $requestorId = new RequestorID(
+            NULL,
+            $params['POS']['RequestorID']['Type'] ?? NULL,
+            $params['POS']['ID'] ?? NULL,
+            $params['POS']['ID_Context'] ?? NULL,
+            NULL,
+            NULL,
+            NULL
+        );
+        // Build POS->Source
+        $source = [
+            new Source(
+                $bookingChannel,
+                $requestorId
+            ),
+        ];
+
+        // Build HotelReservation->RoomStays->BasicPropertyInfo
+        $basicPropertyInfo = new HotelReferenceGroup(
+            $params['HotelCode'] ?? NULL,
+            $params['HotelName'] ?? NULL,
+            $params['AreaID'] ?? NULL,
+            $params['HotelCodeContext'] ?? NULL,
+            $params['ChainCode'] ?? NULL,
+            $params['ChainName'] ?? NULL,
+            $params['BrandCode'] ?? NULL,
+            $params['BrandName'] ?? NULL,
+            $params['HotelCityCode'] ?? NULL
+        );
+        // Build HotelReservation->RoomStays
+        $roomStays = [
+            new RoomStay(
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $basicPropertyInfo,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            ),
+        ];
+        // Build HotelReservation->ResGlobalInfo
+        $resGlobalInfo = new ResGlobalInfo(
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            [
+                new HotelReservationID(
+                    self::UIT_RESERVATION,
+                    $params['ID'] ?? NULL,
+                    NULL,
+                    NULL,
+                    NULL
+                ),
+            ],
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            NULL
+        );
+        // Build OTA_HotelResRQ->HotelReservations
+        $hotelReservations = [
+            new HotelReservation(
+                NULL,
+                $roomStays,
+                NULL,
+                $resGlobalInfo,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            ),
+        ];
+
+        // Build OTA_HotelResRQ
+        $request = new OTA_HotelResRQ(
+            $params['EchoToken'] ?? NULL,
+            $params['PrimaryLangID'] ?? NULL,
+            $params['AltLangID'] ?? NULL,
+            $this->timestamp(),
+            $params['Target'] ?? NULL,
+            $params['Version'] ?? NULL,
+            $params['MessageContentCode'] ?? NULL,
+            NULL,
+            $source,
+            $hotelReservations,
+            NULL,
+            'Cancel',
+            $params['RetransmissionIndicator'] ?? NULL
+        );
+        $wrapper = new ProcessHotelReservation($request);
+
+        try {
+            return current($this->client->ProcessHotelReservation($wrapper));
+        } catch (\Exception $exception) {
+            // Handle error.
+            return NULL;
+        }
     }
 }
