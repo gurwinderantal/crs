@@ -40,7 +40,7 @@ class Verification {
   protected $AddressInfo;
 
   /**
-   * @var \GurwinderAntal\crs\Type\Common\Email
+   * @var null|string
    */
   protected $Email;
 
@@ -51,12 +51,13 @@ class Verification {
 
   /**
    * Verification constructor.
+   *
    * @param \GurwinderAntal\crs\Type\Common\PersonName|null $PersonName
    * @param \GurwinderAntal\crs\Type\Request\PaymentCard|null $PaymentCard
    * @param \GurwinderAntal\crs\Type\Request\DateTimeSpanType|null $ReservationTimeSpan
    * @param \GurwinderAntal\crs\Type\Request\TelephoneInfo|null $TelephoneInfo
    * @param \GurwinderAntal\crs\Type\Common\AddressInfo|null $AddressInfo
-   * @param \GurwinderAntal\crs\Type\Common\Email|null $Email
+   * @param null|string $Email
    * @param \GurwinderAntal\crs\Type\Common\TPA_Extensions|null $TPA_Extensions
    */
   public function __construct(
@@ -65,7 +66,7 @@ class Verification {
     ?DateTimeSpanType $ReservationTimeSpan,
     ?TelephoneInfo $TelephoneInfo,
     ?AddressInfo $AddressInfo,
-    ?Email $Email,
+    ?string $Email,
     ?TPA_Extensions $TPA_Extensions
   ) {
     $this->PersonName = $PersonName;
