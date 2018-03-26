@@ -1007,8 +1007,8 @@ class SynxisConnector extends CrsConnectorBase {
     public function cancelReservation($params) {
         // Instantiate SOAP client
         $this->initializeClient('http://htng.org/1.1/Header/', [
-            'OTA_ReadRQ'     => 'GurwinderAntal\crs\Type\Request\OTA_ReadRQ',
-            'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
+          'OTA_CancelRQ' => 'GurwinderAntal\crs\Type\Request\OTA_CancelRQ',
+          'OTA_CancelRS' => 'GurwinderAntal\crs\Type\Response\OTA_CancelRS',
         ]);
 
         // Build POS->Source->RequestorID->CompanyName
@@ -1170,7 +1170,6 @@ class SynxisConnector extends CrsConnectorBase {
      */
     public function timestamp() {
       date_default_timezone_set(self::TIMESTAMP_ZONE);
-
       return date(self::TIMESTAMP_FORMAT);
     }
 

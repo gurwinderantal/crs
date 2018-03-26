@@ -14,17 +14,17 @@ class OTA_CancelRS extends OtaResponseMessage {
   /**
    * @var \GurwinderAntal\crs\Type\Request\UniqueID|null
    */
-  protected $UniqueID;
+  public $UniqueID;
 
   /**
    * @var CancelInfoRS|null
    */
-  protected $CancelInfoRS;
+  public $CancelInfoRS;
 
   /**
    * @var string|null
    */
-  protected $ResResponseType;
+  public $ResResponseType;
 
   /**
    * OTA_CancelRS constructor.
