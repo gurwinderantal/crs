@@ -655,8 +655,8 @@ class SynxisConnector extends CrsConnectorBase {
     public function modifyReservation($params) {
       // Instantiate SOAP client
       $this->initializeClient('http://htng.org/1.1/Header/', [
-        'OTA_ReadRQ'     => 'GurwinderAntal\crs\Type\Request\OTA_ReadRQ',
-        'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
+        'OTA_HotelResModifyRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelResModifyRQ',
+        'OTA_HotelResModifyRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResModifyRS',
       ]);
 
       // Build POS->Source->RequestorID->CompanyName
@@ -900,51 +900,12 @@ class SynxisConnector extends CrsConnectorBase {
       );
       // Build OTA_HotelResModifyRQ->HotelResModify->Verification
       $Verification = new Verification(
-        new PersonName(
-          $resGuest['NamePrefix'] ?? NULL,
-          $resGuest['NameTitle'] ?? NULL,
-          $resGuest['GivenName'] ?? NULL,
-          $resGuest['MiddleName'] ?? NULL,
-          $resGuest['Surname'] ?? NULL,
-          $resGuest['NameSuffix'] ?? NULL,
-          $resGuest['NameType'] ?? NULL
-        ),
-        new PaymentCard(
-          $params['CardHolderName'] ?? NULL,
-          NULL,
-          NULL,
-          $params['CardType'] ?? NULL,
-          $params['CardCode'] ?? NULL,
-          $params['CardNumber'] ?? NULL,
-          $params['SeriesCode'] ?? NULL,
-          $params['CardExpireDate'] ?? NULL
-        ),
-        new DateTimeSpanType(
-          $params['Start'] ?? NULL,
-          $params['End'] ?? NULL,
-          $params['Duration'] ?? NULL,
-          NULL
-        ),
-        new TelephoneInfo(
-          $resGuest['FormattedInd'] ?? FALSE,
-          $resGuest['PhoneTechType'] ?? NULL,
-          $resGuest['PhoneNumber'] ?? NULL,
-          $resGuest['PhoneUseType'] ?? NULL,
-          $resGuest['DefaultInd'] ?? FALSE
-        ),
-        new AddressInfo(
-          $resGuest['AddressLine'] ?? NULL,
-          $resGuest['CityName'] ?? NULL,
-          $resGuest['PostalCode'] ?? NULL,
-          new StateProv($resGuest['StateCode'] ?? NULL),
-          new CountryName($resGuest['Code'] ?? NULL),
-          $resGuest['Type'] ?? NULL,
-          $resGuest['Remark'] ?? NULL,
-          $resGuest['CompanyName'] ?? NULL,
-          $resGuest['FormattedInd'] ?? FALSE,
-          $resGuest['DefaultInd'] ?? FALSE
-        ),
-        $resGuest['Email'] ?? NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
+        NULL,
         new TPA_Extensions(
           NULL,
           NULL,
