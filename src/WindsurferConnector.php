@@ -384,31 +384,42 @@ class WindsurferConnector extends CrsConnectorBase {
                 $roomRate['InvBlockCode'] ?? NULL
             );
         }
-        // Build HotelReservations->ResGlobalInfo->Guarantee->GuaranteesAccepted
-        $guaranteesAccepted = [
-            new GuaranteeAccepted(
-                new PaymentCard(
-                    $params['CardHolderName'] ?? NULL,
+        // Build HotelReservations->RoomStay->Guarantee->GuaranteesAccepted
+        if ($this->array_keys_exist([
+            'CardHolderName',
+            'CardCode',
+            'CardNumber',
+            'CardExpireDate',
+            'SeriesCode',
+        ], $params)) {
+            $guaranteesAccepted = [
+                new GuaranteeAccepted(
+                    new PaymentCard(
+                        $params['CardHolderName'] ?? NULL,
+                        NULL,
+                        NULL,
+                        $params['CardType'] ?? NULL,
+                        $params['CardCode'] ?? NULL,
+                        $params['CardNumber'] ?? NULL,
+                        $params['SeriesCode'] ?? NULL,
+                        $params['CardExpireDate'] ?? NULL
+                    ),
                     NULL,
-                    NULL,
-                    $params['CardType'] ?? NULL,
-                    $params['CardCode'] ?? NULL,
-                    $params['CardNumber'] ?? NULL,
-                    $params['SeriesCode'] ?? NULL,
-                    $params['CardExpireDate'] ?? NULL
+                    NULL
                 ),
+            ];
+            // Build HotelReservations->RoomStay->Guarantee
+            $guarantee = new Guarantee(
+                $guaranteesAccepted,
+                NULL,
+                NULL,
                 NULL,
                 NULL
-            ),
-        ];
-        // Build HotelReservations->ResGlobalInfo->Guarantee
-        $guarantee = new Guarantee(
-            $guaranteesAccepted,
-            NULL,
-            NULL,
-            NULL,
-            NULL
-        );
+            );
+        }
+        else {
+            $guarantee = NULL;
+        }
         // Build HotelReservation->RoomStays
         $roomStays = [
             new RoomStay(
@@ -605,6 +616,18 @@ class WindsurferConnector extends CrsConnectorBase {
     }
 
     /**
+     * @param array $keys
+     *   Keys to check presence for.
+     * @param array $array
+     *   The array to check presence in.
+     *
+     * @return bool
+     */
+    public function array_keys_exist(array $keys, array $array) {
+        return !array_diff_key(array_flip($keys), $array);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getReservation($params) {
@@ -793,4 +816,5 @@ class WindsurferConnector extends CrsConnectorBase {
             return NULL;
         }
     }
+
 }

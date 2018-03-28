@@ -59,6 +59,7 @@ class SynxisConnector extends CrsConnectorBase {
      * Timestamp format.
      */
     const TIMESTAMP_ZONE = 'Europe/London';
+
     const TIMESTAMP_FORMAT = "Y-m-d\TH:i:s+00:00";
 
     /**
@@ -185,7 +186,7 @@ class SynxisConnector extends CrsConnectorBase {
             $params['EchoToken'] ?? NULL,
             $params['PrimaryLangID'] ?? NULL,
             $params['AltLangID'] ?? NULL,
-          $this->timestamp(),
+            $this->timestamp(),
             $params['Target'] ?? NULL,
             $params['Version'] ?? NULL,
             $params['MessageContentCode'] ?? NULL,
@@ -205,11 +206,21 @@ class SynxisConnector extends CrsConnectorBase {
         );
 
         try {
-          return $this->client->CheckAvailability($request);
+            return $this->client->CheckAvailability($request);
         } catch (\Exception $exception) {
-          // Handle error.
-          return NULL;
+            // Handle error.
+            return NULL;
         }
+    }
+
+    /**
+     * Returns formatted timestamp.
+     *
+     * @return false|string
+     */
+    public function timestamp() {
+        date_default_timezone_set(self::TIMESTAMP_ZONE);
+        return date(self::TIMESTAMP_FORMAT);
     }
 
     /**
@@ -423,45 +434,55 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL
             );
         }
-        // Build HotelReservations->ResGlobalInfo->Guarantee->GuaranteesAccepted
-        $guaranteesAccepted = [
-            new GuaranteeAccepted(
-                new PaymentCard(
-                    $params['CardHolderName'] ?? NULL,
+        if ($this->array_keys_exist([
+            'CardCode',
+            'CardNumber',
+            'CardExpireDate',
+            'SeriesCode',
+        ], $params)) {
+            // Build HotelReservations->ResGlobalInfo->Guarantee->GuaranteesAccepted
+            $guaranteesAccepted = [
+                new GuaranteeAccepted(
+                    new PaymentCard(
+                        $params['CardHolderName'] ?? NULL,
+                        NULL,
+                        NULL,
+                        $params['CardType'] ?? NULL,
+                        $params['CardCode'] ?? NULL,
+                        $params['CardNumber'] ?? NULL,
+                        $params['SeriesCode'] ?? NULL,
+                        $params['CardExpireDate'] ?? NULL
+                    ),
                     NULL,
-                    NULL,
-                    $params['CardType'] ?? NULL,
-                    $params['CardCode'] ?? NULL,
-                    $params['CardNumber'] ?? NULL,
-                    $params['SeriesCode'] ?? NULL,
-                    $params['CardExpireDate'] ?? NULL
+                    NULL
                 ),
+            ];
+            // Build HotelReservations->ResGlobalInfo->Guarantee
+            $guarantee = new Guarantee(
+                $guaranteesAccepted,
+                NULL,
+                NULL,
                 NULL,
                 NULL
-            ),
-        ];
-        // Build HotelReservations->ResGlobalInfo->Guarantee
-        $guarantee = new Guarantee(
-            $guaranteesAccepted,
-            NULL,
-            NULL,
-            NULL,
-            NULL
-        );
-        // Build HotelReservations->ResGlobalInfo
-        $resGlobalInfo = new ResGlobalInfo(
-            NULL,
-            $guarantee,
-            NULL,
-            NULL,
-            NULL,
-            NULL,
-            NULL,
-            NULL,
-            NULL,
-            NULL,
-            NULL
-        );
+            );
+            // Build HotelReservations->ResGlobalInfo
+            $resGlobalInfo = new ResGlobalInfo(
+                NULL,
+                $guarantee,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            );
+        }
+        else {
+            $resGlobalInfo = NULL;
+        }
         // Build OTA_HotelResRQ->WrittenConfInst
         $writtenConfInst = array_key_exists('EmailTemplate', $params) ?
             new WrittenConfInst(
@@ -504,7 +525,7 @@ class SynxisConnector extends CrsConnectorBase {
             $params['EchoToken'] ?? NULL,
             $params['PrimaryLangID'] ?? NULL,
             $params['AltLangID'] ?? NULL,
-          $this->timestamp(),
+            $this->timestamp(),
             $params['Target'] ?? NULL,
             $params['Version'] ?? NULL,
             $params['MessageContentCode'] ?? NULL,
@@ -516,13 +537,24 @@ class SynxisConnector extends CrsConnectorBase {
             $params['RetransmissionIndicator'] ?? NULL
         );
 
-        try{
-          return $this->client->CreateReservations($request);
+        try {
+            return $this->client->CreateReservations($request);
+        } catch (\Exception $exception) {
+            // Handle error.
+            return NULL;
         }
-        catch (\Exception $exception) {
-          // Handle error.
-          return NULL;
-        }
+    }
+
+    /**
+     * @param array $keys
+     *   Keys to check presence for.
+     * @param array $array
+     *   The array to check presence in.
+     *
+     * @return bool
+     */
+    public function array_keys_exist(array $keys, array $array) {
+        return !array_diff_key(array_flip($keys), $array);
     }
 
     public function getReservation($params) {
@@ -641,11 +673,10 @@ class SynxisConnector extends CrsConnectorBase {
         );
 
         try {
-          return $this->client->ReadReservations($request);
-        }
-        catch (\Exception $exception) {
-          // Handle error.
-          return NULL;
+            return $this->client->ReadReservations($request);
+        } catch (\Exception $exception) {
+            // Handle error.
+            return NULL;
         }
     }
 
@@ -653,294 +684,304 @@ class SynxisConnector extends CrsConnectorBase {
      * {@inheritdoc}
      */
     public function modifyReservation($params) {
-      // Instantiate SOAP client
-      $this->initializeClient('http://htng.org/1.1/Header/', [
-        'OTA_HotelResModifyRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelResModifyRQ',
-        'OTA_HotelResModifyRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResModifyRS',
-      ]);
+        // Instantiate SOAP client
+        $this->initializeClient('http://htng.org/1.1/Header/', [
+            'OTA_HotelResModifyRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelResModifyRQ',
+            'OTA_HotelResModifyRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResModifyRS',
+        ]);
 
-      // Build POS->Source->RequestorID->CompanyName
-      $companyName = new CompanyName(
-        $params['CodeContext'] ?? NULL,
-        $params['CompanyShortName'] ?? NULL,
-        $params['TravelSelector'] ?? NULL,
-        $params['POS']['Code'] ?? NULL
-      );
-      // Build POS->Source->RequestorID
-      $requestorId = new RequestorID(
-        $companyName,
-        NULL,
-        $params['POS']['ID'] ?? NULL,
-        $params['POS']['ID_Context'] ?? NULL,
-        $params['Instance'] ?? NULL,
-        $params['PinNumber'] ?? NULL,
-        $params['MessagePassword'] ?? NULL
-      );
-      // Build POS->Source
-      $source = new Source(
-        NULL,
-        $requestorId
-      );
-      // Build OTA_CancelRQ->POS
-      $pos = new POS($source);
-      // Build HotelResModify->RoomStay->RoomTypes
-      $roomTypes = [
-        new RoomType(
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          $params['IsRoom'] ?? NULL,
-          $params['RoomTypeCode'] ?? NULL,
-          $params['InvBlockCode'] ?? NULL,
-          $params['NumberOfUnits'] ?? NULL,
-          NULL
-        ),
-      ];
-      // Build HotelResModify->RoomStay->RatePlans
-      $ratePlans = [
-        new RatePlan(
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          $params['MealsIncluded'] ?? NULL,
-          $params['RatePlanCode'] ?? NULL,
-          $params['RatePlanName'] ?? NULL,
-          $params['AccrualIndicator'] ?? NULL,
-          $params['AutoEnrollmentIndicator'] ?? NULL,
-          $params['BookingCode'] ?? NULL,
-          $params['RatePlanType'] ?? NULL,
-          $params['RatePlanID'] ?? NULL,
-          $params['EffectiveDate'] ?? NULL,
-          $params['ExpireDate'] ?? NULL,
-          $params['CurrencyCode'] ?? NULL,
-          $params['TaxInclusive'] ?? NULL,
-          $params['PrepaidIndicator'] ?? NULL,
-          $params['RatePlanCategory'] ?? NULL,
-          $params['AvailabilityStatus'] ?? NULL,
-          $params['PriceViewableInd'] ?? NULL
-        ),
-      ];
-      // Build HotelResModify->RoomStay->GuestCounts->GuestCount
-      $guestCount = [];
-      foreach ($params['Count'] as $aqc => $count) {
-        $aqc = 'self::AQC_' . strtoupper($aqc);
-        $guestCount[] = new GuestCount(constant($aqc), $count, NULL);
-      }
-      // Build HotelResModify->RoomStay->GuestCounts
-      $guestCounts = new GuestCounts(
-        $guestCount,
-        $params['IsPerRoom'] ?? NULL
-      );
-      // Build HotelResModify->RoomStay->TimeSpan
-      $timeSpan = new DateTimeSpan(
-        $params['Start'] ?? NULL,
-        $params['End'] ?? NULL,
-        $params['Duration'] ?? NULL,
-        NULL
-      );
-      // Build HotelResModify->RoomStay->BasicPropertyInfo
-      $basicPropertyInfo = new HotelReferenceGroup(
-        $params['HotelCode'] ?? NULL,
-        $params['HotelName'] ?? NULL,
-        $params['AreaID'] ?? NULL,
-        $params['HotelCodeContext'] ?? NULL,
-        $params['ChainCode'] ?? NULL,
-        $params['ChainName'] ?? NULL,
-        $params['BrandCode'] ?? NULL,
-        $params['BrandName'] ?? NULL,
-        $params['HotelCityCode'] ?? NULL
-      );
-      // Build HotelResModify->RoomStays
-      $roomStays = [
-        new RoomStay(
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          $roomTypes,
-          $ratePlans,
-          NULL,
-          $guestCounts,
-          $timeSpan,
-          NULL,
-          $basicPropertyInfo,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          $params['MarketCode'] ?? NULL,
-          $params['SourceOfBusiness'] ?? NULL,
-          $params['IndexNumber'] ?? NULL
-        ),
-      ];
-      $resGuests = [];
-      foreach ($params['ResGuests'] as $resGuest) {
-        // Build HotelResModify->ResGuest->Profiles->Profile->Customer
-        $customer = new Customer(
-          new PersonName(
-            $resGuest['NamePrefix'] ?? NULL,
-            $resGuest['NameTitle'] ?? NULL,
-            $resGuest['GivenName'] ?? NULL,
-            $resGuest['MiddleName'] ?? NULL,
-            $resGuest['Surname'] ?? NULL,
-            $resGuest['NameSuffix'] ?? NULL,
-            $resGuest['NameType'] ?? NULL
-          ),
-          new Telephone(
-            $resGuest['FormattedInd'] ?? FALSE,
-            $resGuest['PhoneTechType'] ?? NULL,
-            $resGuest['PhoneNumber'] ?? NULL,
-            $resGuest['PhoneUseType'] ?? NULL,
-            $resGuest['DefaultInd'] ?? FALSE
-          ),
-          $resGuest['Email'] ?? NULL,
-          new AddressInfo(
-            $resGuest['AddressLine'] ?? NULL,
-            $resGuest['CityName'] ?? NULL,
-            $resGuest['PostalCode'] ?? NULL,
-            new StateProv($resGuest['StateCode'] ?? NULL),
-            new CountryName($resGuest['Code'] ?? NULL),
-            $resGuest['Type'] ?? NULL,
-            $resGuest['Remark'] ?? NULL,
-            $resGuest['CompanyName'] ?? NULL,
-            $resGuest['FormattedInd'] ?? FALSE,
-            $resGuest['DefaultInd'] ?? FALSE
-          ),
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          $resGuest['BirthDate'] ?? NULL,
-          $resGuest['Gender'] ?? NULL,
-          $resGuest['CustomerValue'] ?? NULL,
-          $resGuest['LockoutType'] ?? NULL,
-          $resGuest['Language'] ?? NULL
+        // Build POS->Source->RequestorID->CompanyName
+        $companyName = new CompanyName(
+            $params['CodeContext'] ?? NULL,
+            $params['CompanyShortName'] ?? NULL,
+            $params['TravelSelector'] ?? NULL,
+            $params['POS']['Code'] ?? NULL
         );
-        // Build HotelResModify->ResGuest->Profiles->Profile
-        $profile = new Profile(
-          NULL,
-          NULL,
-          $customer,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          $resGuest['ProfileType'] ?? NULL,
-          NULL,
-          NULL,
-          NULL,
-          $resGuest['ShareAllMarketInd'] ?? NULL
-        );
-        // Build HotelResModify->ResGuest->Profiles
-        $profiles = [
-          new ProfileInfo(
+        // Build POS->Source->RequestorID
+        $requestorId = new RequestorID(
+            $companyName,
             NULL,
-            $profile,
-            NULL
-          ),
+            $params['POS']['ID'] ?? NULL,
+            $params['POS']['ID_Context'] ?? NULL,
+            $params['Instance'] ?? NULL,
+            $params['PinNumber'] ?? NULL,
+            $params['MessagePassword'] ?? NULL
+        );
+        // Build POS->Source
+        $source = new Source(
+            NULL,
+            $requestorId
+        );
+        // Build OTA_CancelRQ->POS
+        $pos = new POS($source);
+        // Build HotelResModify->RoomStay->RoomTypes
+        $roomTypes = [
+            new RoomType(
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $params['IsRoom'] ?? NULL,
+                $params['RoomTypeCode'] ?? NULL,
+                $params['InvBlockCode'] ?? NULL,
+                $params['NumberOfUnits'] ?? NULL,
+                NULL
+            ),
         ];
-        // Build HotelResModify->ResGuests
-        $resGuests[] = new ResGuest(
-          NULL,
-          $profiles,
-          NULL,
-          NULL,
-          $params['PrimaryIndicator'] ?? NULL,
-          $params['RPH'] ?? NULL,
-          NULL
+        // Build HotelResModify->RoomStay->RatePlans
+        $ratePlans = [
+            new RatePlan(
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $params['MealsIncluded'] ?? NULL,
+                $params['RatePlanCode'] ?? NULL,
+                $params['RatePlanName'] ?? NULL,
+                $params['AccrualIndicator'] ?? NULL,
+                $params['AutoEnrollmentIndicator'] ?? NULL,
+                $params['BookingCode'] ?? NULL,
+                $params['RatePlanType'] ?? NULL,
+                $params['RatePlanID'] ?? NULL,
+                $params['EffectiveDate'] ?? NULL,
+                $params['ExpireDate'] ?? NULL,
+                $params['CurrencyCode'] ?? NULL,
+                $params['TaxInclusive'] ?? NULL,
+                $params['PrepaidIndicator'] ?? NULL,
+                $params['RatePlanCategory'] ?? NULL,
+                $params['AvailabilityStatus'] ?? NULL,
+                $params['PriceViewableInd'] ?? NULL
+            ),
+        ];
+        // Build HotelResModify->RoomStay->GuestCounts->GuestCount
+        $guestCount = [];
+        foreach ($params['Count'] as $aqc => $count) {
+            $aqc = 'self::AQC_' . strtoupper($aqc);
+            $guestCount[] = new GuestCount(constant($aqc), $count, NULL);
+        }
+        // Build HotelResModify->RoomStay->GuestCounts
+        $guestCounts = new GuestCounts(
+            $guestCount,
+            $params['IsPerRoom'] ?? NULL
         );
-      }
-      // Build HotelResModify->ResGlobalInfo->Guarantee->GuaranteesAccepted
-      $guaranteesAccepted = [
-        new GuaranteeAccepted(
-          new PaymentCard(
-            $params['CardHolderName'] ?? NULL,
+        // Build HotelResModify->RoomStay->TimeSpan
+        $timeSpan = new DateTimeSpan(
+            $params['Start'] ?? NULL,
+            $params['End'] ?? NULL,
+            $params['Duration'] ?? NULL,
+            NULL
+        );
+        // Build HotelResModify->RoomStay->BasicPropertyInfo
+        $basicPropertyInfo = new HotelReferenceGroup(
+            $params['HotelCode'] ?? NULL,
+            $params['HotelName'] ?? NULL,
+            $params['AreaID'] ?? NULL,
+            $params['HotelCodeContext'] ?? NULL,
+            $params['ChainCode'] ?? NULL,
+            $params['ChainName'] ?? NULL,
+            $params['BrandCode'] ?? NULL,
+            $params['BrandName'] ?? NULL,
+            $params['HotelCityCode'] ?? NULL
+        );
+        // Build HotelResModify->RoomStays
+        $roomStays = [
+            new RoomStay(
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $roomTypes,
+                $ratePlans,
+                NULL,
+                $guestCounts,
+                $timeSpan,
+                NULL,
+                $basicPropertyInfo,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $params['MarketCode'] ?? NULL,
+                $params['SourceOfBusiness'] ?? NULL,
+                $params['IndexNumber'] ?? NULL
+            ),
+        ];
+        $resGuests = [];
+        foreach ($params['ResGuests'] as $resGuest) {
+            // Build HotelResModify->ResGuest->Profiles->Profile->Customer
+            $customer = new Customer(
+                new PersonName(
+                    $resGuest['NamePrefix'] ?? NULL,
+                    $resGuest['NameTitle'] ?? NULL,
+                    $resGuest['GivenName'] ?? NULL,
+                    $resGuest['MiddleName'] ?? NULL,
+                    $resGuest['Surname'] ?? NULL,
+                    $resGuest['NameSuffix'] ?? NULL,
+                    $resGuest['NameType'] ?? NULL
+                ),
+                new Telephone(
+                    $resGuest['FormattedInd'] ?? FALSE,
+                    $resGuest['PhoneTechType'] ?? NULL,
+                    $resGuest['PhoneNumber'] ?? NULL,
+                    $resGuest['PhoneUseType'] ?? NULL,
+                    $resGuest['DefaultInd'] ?? FALSE
+                ),
+                $resGuest['Email'] ?? NULL,
+                new AddressInfo(
+                    $resGuest['AddressLine'] ?? NULL,
+                    $resGuest['CityName'] ?? NULL,
+                    $resGuest['PostalCode'] ?? NULL,
+                    new StateProv($resGuest['StateCode'] ?? NULL),
+                    new CountryName($resGuest['Code'] ?? NULL),
+                    $resGuest['Type'] ?? NULL,
+                    $resGuest['Remark'] ?? NULL,
+                    $resGuest['CompanyName'] ?? NULL,
+                    $resGuest['FormattedInd'] ?? FALSE,
+                    $resGuest['DefaultInd'] ?? FALSE
+                ),
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $resGuest['BirthDate'] ?? NULL,
+                $resGuest['Gender'] ?? NULL,
+                $resGuest['CustomerValue'] ?? NULL,
+                $resGuest['LockoutType'] ?? NULL,
+                $resGuest['Language'] ?? NULL
+            );
+            // Build HotelResModify->ResGuest->Profiles->Profile
+            $profile = new Profile(
+                NULL,
+                NULL,
+                $customer,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $resGuest['ProfileType'] ?? NULL,
+                NULL,
+                NULL,
+                NULL,
+                $resGuest['ShareAllMarketInd'] ?? NULL
+            );
+            // Build HotelResModify->ResGuest->Profiles
+            $profiles = [
+                new ProfileInfo(
+                    NULL,
+                    $profile,
+                    NULL
+                ),
+            ];
+            // Build HotelResModify->ResGuests
+            $resGuests[] = new ResGuest(
+                NULL,
+                $profiles,
+                NULL,
+                NULL,
+                $params['PrimaryIndicator'] ?? NULL,
+                $params['RPH'] ?? NULL,
+                NULL
+            );
+        }
+        if ($this->array_keys_exist([
+            'CardCode',
+            'CardNumber',
+            'CardExpireDate',
+            'SeriesCode',
+        ], $params)) {
+            // Build HotelResModify->ResGlobalInfo->Guarantee->GuaranteesAccepted
+            $guaranteesAccepted = [
+                new GuaranteeAccepted(
+                    new PaymentCard(
+                        $params['CardHolderName'] ?? NULL,
+                        NULL,
+                        NULL,
+                        $params['CardType'] ?? NULL,
+                        $params['CardCode'] ?? NULL,
+                        $params['CardNumber'] ?? NULL,
+                        $params['SeriesCode'] ?? NULL,
+                        $params['CardExpireDate'] ?? NULL
+                    ),
+                    NULL,
+                    NULL
+                ),
+            ];
+            // Build HotelResModify->ResGlobalInfo->Guarantee
+            $guarantee = new Guarantee(
+                $guaranteesAccepted,
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            );
+            // Build HotelResModify->ResGlobalInfo
+            $resGlobalInfo = new ResGlobalInfo(
+                NULL,
+                $guarantee,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            );
+        }
+        else {
+            $resGlobalInfo = NULL;
+        }
+        // Build OTA_HotelResModifyRQ->HotelResModify->Verification
+        $Verification = new Verification(
             NULL,
             NULL,
-            $params['CardType'] ?? NULL,
-            $params['CardCode'] ?? NULL,
-            $params['CardNumber'] ?? NULL,
-            $params['SeriesCode'] ?? NULL,
-            $params['CardExpireDate'] ?? NULL
-          ),
-          NULL,
-          NULL
-        ),
-      ];
-      // Build HotelResModify->ResGlobalInfo->Guarantee
-      $guarantee = new Guarantee(
-        $guaranteesAccepted,
-        NULL,
-        NULL,
-        NULL,
-        NULL
-      );
-      // Build HotelResModify->ResGlobalInfo
-      $resGlobalInfo = new ResGlobalInfo(
-        NULL,
-        $guarantee,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL
-      );
-      // Build OTA_HotelResModifyRQ->HotelResModify->Verification
-      $Verification = new Verification(
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        new TPA_Extensions(
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          $basicPropertyInfo,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL,
-          NULL
-        )
-      );
-      // Build OTA_HotelResModifyRQ->HotelResModifies->HotelResModify->UniqueID
-      $uniqueId = new UniqueID(
-        NULL,
-        self::UIT_RESERVATION,
-        $params['ID'] ?? NULL,
-        'CrsConfirmNumber',
-        NULL,
-        NULL
-      );
+            NULL,
+            NULL,
+            NULL,
+            NULL,
+            new TPA_Extensions(
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $basicPropertyInfo,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                NULL
+            )
+        );
+        // Build OTA_HotelResModifyRQ->HotelResModifies->HotelResModify->UniqueID
+        $uniqueId = new UniqueID(
+            NULL,
+            self::UIT_RESERVATION,
+            $params['ID'] ?? NULL,
+            'CrsConfirmNumber',
+            NULL,
+            NULL
+        );
         // Build OTA_HotelResModifyRQ->WrittenConfInst
         $writtenConfInst = array_key_exists('EmailTemplate', $params) ?
             new WrittenConfInst(
@@ -958,47 +999,46 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL,
                 NULL
             ) : NULL;
-      // Build OTA_HotelResModifyRQ->HotelResModifies
-      $HotelResModifies = [
-        new HotelResModify(
-          $uniqueId,
-          $roomStays,
-          $resGuests,
-          $resGlobalInfo,
-          NULL,
-          $writtenConfInst,
-          NULL,
-          NULL,
-          NULL,
-          TRUE,
-          $params['CreatorID'] ?? NULL,
-          NULL,
-          $params['LastModifierID'] ?? NULL,
-          NULL,
-          $Verification
-        )
-      ];
-      // Build request
-      $request = new OTA_HotelResModifyRQ(
-        $params['EchoToken'] ?? NULL,
-        $params['PrimaryLangID'] ?? NULL,
-        $params['AltLangID'] ?? NULL,
-        $this->timestamp(),
-        $params['Target'] ?? NULL,
-        $params['Version'] ?? NULL,
-        $params['MessageContentCode'] ?? NULL,
-        NULL,
-        $pos,
-        $HotelResModifies
-      );
+        // Build OTA_HotelResModifyRQ->HotelResModifies
+        $HotelResModifies = [
+            new HotelResModify(
+                $uniqueId,
+                $roomStays,
+                $resGuests,
+                $resGlobalInfo,
+                NULL,
+                $writtenConfInst,
+                NULL,
+                NULL,
+                NULL,
+                TRUE,
+                $params['CreatorID'] ?? NULL,
+                NULL,
+                $params['LastModifierID'] ?? NULL,
+                NULL,
+                $Verification
+            ),
+        ];
+        // Build request
+        $request = new OTA_HotelResModifyRQ(
+            $params['EchoToken'] ?? NULL,
+            $params['PrimaryLangID'] ?? NULL,
+            $params['AltLangID'] ?? NULL,
+            $this->timestamp(),
+            $params['Target'] ?? NULL,
+            $params['Version'] ?? NULL,
+            $params['MessageContentCode'] ?? NULL,
+            NULL,
+            $pos,
+            $HotelResModifies
+        );
 
-      try{
-        return $this->client->ModifyReservations($request);
-      }
-      catch (\Exception $exception) {
-        // Handle error.
-        return NULL;
-      }
+        try {
+            return $this->client->ModifyReservations($request);
+        } catch (\Exception $exception) {
+            // Handle error.
+            return NULL;
+        }
     }
 
     /**
@@ -1007,8 +1047,8 @@ class SynxisConnector extends CrsConnectorBase {
     public function cancelReservation($params) {
         // Instantiate SOAP client
         $this->initializeClient('http://htng.org/1.1/Header/', [
-          'OTA_CancelRQ' => 'GurwinderAntal\crs\Type\Request\OTA_CancelRQ',
-          'OTA_CancelRS' => 'GurwinderAntal\crs\Type\Response\OTA_CancelRS',
+            'OTA_CancelRQ' => 'GurwinderAntal\crs\Type\Request\OTA_CancelRQ',
+            'OTA_CancelRS' => 'GurwinderAntal\crs\Type\Response\OTA_CancelRS',
         ]);
 
         // Build POS->Source->RequestorID->CompanyName
@@ -1155,22 +1195,11 @@ class SynxisConnector extends CrsConnectorBase {
         );
 
         try {
-          return $this->client->CancelReservations($request);
+            return $this->client->CancelReservations($request);
+        } catch (\Exception $exception) {
+            // Handle error.
+            return NULL;
         }
-        catch (\Exception $exception) {
-          // Handle error.
-          return NULL;
-        }
-    }
-
-    /**
-     * Returns formatted timestamp.
-     *
-     * @return false|string
-     */
-    public function timestamp() {
-      date_default_timezone_set(self::TIMESTAMP_ZONE);
-      return date(self::TIMESTAMP_FORMAT);
     }
 
 }
