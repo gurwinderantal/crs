@@ -41,7 +41,6 @@ use GurwinderAntal\crs\Type\Request\ResGlobalInfo;
 use GurwinderAntal\crs\Type\Request\ResGuest;
 use GurwinderAntal\crs\Type\Request\RoomStayCandidate;
 use GurwinderAntal\crs\Type\Request\Source;
-use GurwinderAntal\crs\Type\Request\UniqueID;
 use GurwinderAntal\crs\Type\Response\Service;
 
 /**
@@ -125,7 +124,10 @@ class WindsurferConnector extends CrsConnectorBase {
         // Build AvailRequestSegment->RoomStayCandidates
         $roomStayCandidates = [
             new RoomStayCandidate(
-                $guestCounts,
+                new GuestCounts(
+                  $guestCounts,
+                  $params['IsPerRoom'] ?? NULL
+                ),
                 $params['Quantity'] ?? NULL,
                 $params['RoomType'] ?? NULL,
                 $params['RoomTypeCode'] ?? NULL,

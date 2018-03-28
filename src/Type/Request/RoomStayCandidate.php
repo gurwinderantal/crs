@@ -10,7 +10,7 @@ namespace GurwinderAntal\crs\Type\Request;
 class RoomStayCandidate {
 
     /**
-     * @var array|\GurwinderAntal\crs\Type\Common\GuestCount[]|null
+     * @var \GurwinderAntal\crs\Type\Common\GuestCount[]|\GurwinderAntal\crs\Type\Common\GuestCounts|null
      */
     protected $GuestCounts;
 
@@ -57,7 +57,7 @@ class RoomStayCandidate {
     /**
      * RoomStayCandidate constructor.
      *
-     * @param \GurwinderAntal\crs\Type\Common\GuestCount[]|null $GuestCounts
+     * @param \GurwinderAntal\crs\Type\Common\GuestCount[]|\GurwinderAntal\crs\Type\Common\GuestCounts|null $GuestCounts
      * @param null|string $Quantity
      * @param null|string $RoomType
      * @param null|string $RoomTypeCode
@@ -68,7 +68,7 @@ class RoomStayCandidate {
      * @param null|string $RoomID
      */
     public function __construct(
-        ?array $GuestCounts,
+        $GuestCounts,
         ?string $Quantity,
         ?string $RoomType,
         ?string $RoomTypeCode,
