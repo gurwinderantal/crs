@@ -44,6 +44,7 @@ use GurwinderAntal\crs\Type\Request\SupplementalData;
 use GurwinderAntal\crs\Type\Request\UniqueID;
 use GurwinderAntal\crs\Type\Request\Verification;
 use GurwinderAntal\crs\Type\Request\WrittenConfInst;
+use GurwinderAntal\crs\Type\Response\Service;
 
 /**
  * Class SynxisConnector
@@ -481,7 +482,7 @@ class SynxisConnector extends CrsConnectorBase {
         else {
             $resGlobalInfo = NULL;
         }
-        // Build OTA_HotelResRQ->WrittenConfInst
+        // Build OTA_HotelResRQ->HotelReservations->WrittenConfInst
         $writtenConfInst = array_key_exists('EmailTemplate', $params) ?
             new WrittenConfInst(
                 new SupplementalData(
@@ -498,6 +499,27 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL,
                 NULL
             ) : NULL;
+        // Build OTA_HotelResRQ->HotelReservations->Services
+        if (array_key_exists('Services', $params)) {
+            $services = [];
+            foreach ($params['Services'] as $service) {
+                $services[] = new Service(
+                    $service['ServiceDetails'] ?? NULL,
+                    $service['Price'] ?? NULL,
+                    $service['DescriptiveText'] ?? NULL,
+                    $service['Descriptions'] ?? NULL,
+                    $service['Feature'] ?? NULL,
+                    $service['Quantity'] ?? NULL,
+                    $service['Inclusive'] ?? NULL,
+                    $service['ServiceInventoryCode'] ?? NULL,
+                    $service['ServicePricingType'] ?? NULL,
+                    $service['ServiceRPH'] ?? NULL
+                );
+            }
+        }
+        else {
+            $services = NULL;
+        }
         // Build OTA_HotelResRQ->HotelReservations
         $hotelReservations = [
             new HotelReservation(
@@ -507,7 +529,7 @@ class SynxisConnector extends CrsConnectorBase {
                 $resGlobalInfo,
                 NULL,
                 $writtenConfInst,
-                NULL,
+                $services,
                 NULL,
                 NULL,
                 TRUE,
@@ -997,6 +1019,27 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL,
                 NULL
             ) : NULL;
+        // Build OTA_HotelResRQ->HotelReservations->Services
+        if (array_key_exists('Services', $params)) {
+            $services = [];
+            foreach ($params['Services'] as $service) {
+                $services[] = new Service(
+                    $service['ServiceDetails'] ?? NULL,
+                    $service['Price'] ?? NULL,
+                    $service['DescriptiveText'] ?? NULL,
+                    $service['Descriptions'] ?? NULL,
+                    $service['Feature'] ?? NULL,
+                    $service['Quantity'] ?? NULL,
+                    $service['Inclusive'] ?? NULL,
+                    $service['ServiceInventoryCode'] ?? NULL,
+                    $service['ServicePricingType'] ?? NULL,
+                    $service['ServiceRPH'] ?? NULL
+                );
+            }
+        }
+        else {
+            $services = NULL;
+        }
         // Build OTA_HotelResModifyRQ->HotelResModifies
         $HotelResModifies = [
             new HotelResModify(
@@ -1006,7 +1049,7 @@ class SynxisConnector extends CrsConnectorBase {
                 $resGlobalInfo,
                 NULL,
                 $writtenConfInst,
-                NULL,
+                $services,
                 NULL,
                 NULL,
                 TRUE,
