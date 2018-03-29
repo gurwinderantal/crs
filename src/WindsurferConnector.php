@@ -557,16 +557,16 @@ class WindsurferConnector extends CrsConnectorBase {
         if (!empty($params['Services']) && is_array($params['Services'])) {
             foreach ($params['Services'] as $service) {
                 $services[] = new Service(
-                    $service['ServiceDetails'] ?? NULL,
-                    $service['Price'] ?? NULL,
-                    $service['DescriptiveText'] ?? NULL,
-                    $service['Descriptions'] ?? NULL,
-                    $service['Feature'] ?? NULL,
-                    $service['Quantity'] ?? NULL,
-                    $service['Inclusive'] ?? NULL,
-                    $service['ServiceInventoryCode'] ?? NULL,
-                    $service['ServicePricingType'] ?? NULL,
-                    $service['ServiceRPH'] ?? NULL
+                  NULL,
+                  NULL,
+                  NULL,
+                  NULL,
+                  NULL,
+                  $service['Quantity'] ?? NULL,
+                  $service['Inclusive'] ?? NULL,
+                  $service['ServiceInventoryCode'] ?? NULL,
+                  $service['ServicePricingType'] ?? NULL,
+                  $service['ServiceRPH'] ?? NULL
                 );
             }
         }

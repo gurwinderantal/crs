@@ -504,11 +504,11 @@ class SynxisConnector extends CrsConnectorBase {
             $services = [];
             foreach ($params['Services'] as $service) {
                 $services[] = new Service(
-                    $service['ServiceDetails'] ?? NULL,
-                    $service['Price'] ?? NULL,
-                    $service['DescriptiveText'] ?? NULL,
-                    $service['Descriptions'] ?? NULL,
-                    $service['Feature'] ?? NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL,
                     $service['Quantity'] ?? NULL,
                     $service['Inclusive'] ?? NULL,
                     $service['ServiceInventoryCode'] ?? NULL,
@@ -1024,16 +1024,16 @@ class SynxisConnector extends CrsConnectorBase {
             $services = [];
             foreach ($params['Services'] as $service) {
                 $services[] = new Service(
-                    $service['ServiceDetails'] ?? NULL,
-                    $service['Price'] ?? NULL,
-                    $service['DescriptiveText'] ?? NULL,
-                    $service['Descriptions'] ?? NULL,
-                    $service['Feature'] ?? NULL,
-                    $service['Quantity'] ?? NULL,
-                    $service['Inclusive'] ?? NULL,
-                    $service['ServiceInventoryCode'] ?? NULL,
-                    $service['ServicePricingType'] ?? NULL,
-                    $service['ServiceRPH'] ?? NULL
+                  NULL,
+                  NULL,
+                  NULL,
+                  NULL,
+                  NULL,
+                  $service['Quantity'] ?? NULL,
+                  $service['Inclusive'] ?? NULL,
+                  $service['ServiceInventoryCode'] ?? NULL,
+                  $service['ServicePricingType'] ?? NULL,
+                  $service['ServiceRPH'] ?? NULL
                 );
             }
         }
