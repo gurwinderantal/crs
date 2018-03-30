@@ -2,6 +2,8 @@
 
 namespace GurwinderAntal\crs\Type\Common;
 
+use GurwinderAntal\crs\Type\Request\SpecialRequest;
+
 /**
  * Class RoomStay
  *
@@ -55,7 +57,7 @@ class RoomStay {
     public $TimeSpan;
 
     /**
-     * Currently unused.
+     * @var array|\GurwinderAntal\crs\Type\Request\SpecialRequest[]|null
      */
     public $SpecialRequests;
 
@@ -116,7 +118,7 @@ class RoomStay {
      * @param \GurwinderAntal\crs\Type\Common\RoomRate[]|null $RoomRates
      * @param \GurwinderAntal\crs\Type\Common\GuestCounts|null $GuestCounts
      * @param \GurwinderAntal\crs\Type\Common\DateTimeSpan|null $TimeSpan
-     * @param $SpecialRequests
+     * @param \GurwinderAntal\crs\Type\Request\SpecialRequest[]|null $SpecialRequests
      * @param \GurwinderAntal\crs\Type\Common\HotelReferenceGroup|null $BasicPropertyInfo
      * @param $Comments
      * @param $DepositPayments
@@ -137,7 +139,7 @@ class RoomStay {
         ?array $RoomRates,
         ?GuestCounts $GuestCounts,
         ?DateTimeSpan $TimeSpan,
-        $SpecialRequests,
+        ?array $SpecialRequests,
         ?HotelReferenceGroup $BasicPropertyInfo,
         $Comments,
         $DepositPayments,

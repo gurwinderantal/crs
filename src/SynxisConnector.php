@@ -40,6 +40,7 @@ use GurwinderAntal\crs\Type\Request\ResGlobalInfo;
 use GurwinderAntal\crs\Type\Request\ResGuest;
 use GurwinderAntal\crs\Type\Request\RoomStayCandidate;
 use GurwinderAntal\crs\Type\Request\Source;
+use GurwinderAntal\crs\Type\Request\SpecialRequest;
 use GurwinderAntal\crs\Type\Request\SupplementalData;
 use GurwinderAntal\crs\Type\Request\UniqueID;
 use GurwinderAntal\crs\Type\Request\Verification;
@@ -330,6 +331,21 @@ class SynxisConnector extends CrsConnectorBase {
             $params['BrandName'] ?? NULL,
             $params['HotelCityCode'] ?? NULL
         );
+        // Build HotelReservation->RoomStay->SpecialRequests
+        if (array_key_exists('SpecialRequests', $params)) {
+            $specialRequests = [];
+            foreach ($params['SpecialRequests'] as $specialRequest) {
+                $specialRequests[] = new SpecialRequest(
+                    $specialRequest['Text'] ?? NULL,
+                    $specialRequest['Name'] ?? NULL,
+                    $specialRequest['RequestCode'] ?? NULL,
+                    $specialRequest['Description'] ?? NULL
+                );
+            }
+        }
+        else {
+            $specialRequests = NULL;
+        }
         // Build HotelReservation->RoomStays
         $roomStays = [
             new RoomStay(
@@ -342,7 +358,7 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL,
                 $guestCounts,
                 $timeSpan,
-                NULL,
+                $specialRequests,
                 $basicPropertyInfo,
                 NULL,
                 NULL,
@@ -807,6 +823,21 @@ class SynxisConnector extends CrsConnectorBase {
             $params['BrandName'] ?? NULL,
             $params['HotelCityCode'] ?? NULL
         );
+        // Build HotelReservation->RoomStay->SpecialRequests
+        if (array_key_exists('SpecialRequests', $params)) {
+            $specialRequests = [];
+            foreach ($params['SpecialRequests'] as $specialRequest) {
+                $specialRequests[] = new SpecialRequest(
+                    $specialRequest['Text'] ?? NULL,
+                    $specialRequest['Name'] ?? NULL,
+                    $specialRequest['RequestCode'] ?? NULL,
+                    $specialRequest['Description'] ?? NULL
+                );
+            }
+        }
+        else {
+            $specialRequests = NULL;
+        }
         // Build HotelResModify->RoomStays
         $roomStays = [
             new RoomStay(
@@ -819,7 +850,7 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL,
                 $guestCounts,
                 $timeSpan,
-                NULL,
+                $specialRequests,
                 $basicPropertyInfo,
                 NULL,
                 NULL,
@@ -1024,16 +1055,16 @@ class SynxisConnector extends CrsConnectorBase {
             $services = [];
             foreach ($params['Services'] as $service) {
                 $services[] = new Service(
-                  NULL,
-                  NULL,
-                  NULL,
-                  NULL,
-                  NULL,
-                  $service['Quantity'] ?? NULL,
-                  $service['Inclusive'] ?? NULL,
-                  $service['ServiceInventoryCode'] ?? NULL,
-                  $service['ServicePricingType'] ?? NULL,
-                  $service['ServiceRPH'] ?? NULL
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    NULL,
+                    $service['Quantity'] ?? NULL,
+                    $service['Inclusive'] ?? NULL,
+                    $service['ServiceInventoryCode'] ?? NULL,
+                    $service['ServicePricingType'] ?? NULL,
+                    $service['ServiceRPH'] ?? NULL
                 );
             }
         }
