@@ -13,6 +13,7 @@ use GurwinderAntal\crs\Type\Common\GuestCounts;
 use GurwinderAntal\crs\Type\Common\HotelReferenceGroup;
 use GurwinderAntal\crs\Type\Common\HotelSearchCriterion;
 use GurwinderAntal\crs\Type\Common\PersonName;
+use GurwinderAntal\crs\Type\Common\Policies;
 use GurwinderAntal\crs\Type\Common\Profile;
 use GurwinderAntal\crs\Type\Common\RatePlan;
 use GurwinderAntal\crs\Type\Common\RoomStay;
@@ -22,10 +23,12 @@ use GurwinderAntal\crs\Type\Common\Telephone;
 use GurwinderAntal\crs\Type\Common\TPA_Extensions;
 use GurwinderAntal\crs\Type\Request\AvailRequestSegment;
 use GurwinderAntal\crs\Type\Request\CompanyName;
+use GurwinderAntal\crs\Type\Request\HotelDescriptiveInfo;
 use GurwinderAntal\crs\Type\Request\HotelReservation;
 use GurwinderAntal\crs\Type\Request\HotelResModify;
 use GurwinderAntal\crs\Type\Request\OTA_CancelRQ;
 use GurwinderAntal\crs\Type\Request\OTA_HotelAvailRQ;
+use GurwinderAntal\crs\Type\Request\OTA_HotelDescriptiveInfoRQ;
 use GurwinderAntal\crs\Type\Request\OTA_HotelResModifyRQ;
 use GurwinderAntal\crs\Type\Request\OTA_HotelResRQ;
 use GurwinderAntal\crs\Type\Request\OTA_ReadRQ;
@@ -1268,6 +1271,83 @@ class SynxisConnector extends CrsConnectorBase {
 
         try {
             return $this->client->CancelReservations($request);
+        } catch (\Exception $exception) {
+            // Handle error.
+            return NULL;
+        }
+    }
+
+    public function getHotelDetails($params) {
+        // Instantiate SOAP client
+        $this->initializeClient('http://htng.org/1.1/Header/', [
+            'OTA_HotelDescriptiveInfoRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelDescriptiveInfoRQ',
+            'OTA_HotelDescriptiveInfoRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelDescriptiveInfoRS',
+        ]);
+
+        // Build POS->Source->RequestorID->CompanyName
+        $companyName = new CompanyName(
+            $params['CodeContext'] ?? NULL,
+            $params['CompanyShortName'] ?? NULL,
+            $params['TravelSelector'] ?? NULL,
+            $params['POS']['Code'] ?? NULL
+        );
+        // Build POS->Source->RequestorID
+        $requestorId = new RequestorID(
+            $companyName,
+            NULL,
+            $params['POS']['ID'] ?? NULL,
+            $params['POS']['ID_Context'] ?? NULL,
+            $params['Instance'] ?? NULL,
+            $params['PinNumber'] ?? NULL,
+            $params['MessagePassword'] ?? NULL
+        );
+        // Build POS->Source
+        $source = new Source(
+            NULL,
+            $requestorId
+        );
+        // Build OTA_HotelDescriptoveInfoRQ->POS
+        $pos = new POS($source);
+
+        // Build HotelDescriptiveInfos->Policies
+        $policies = new Policies(
+            NULL,
+            $params['SendPolicies'] ?? NULL
+        );
+        // Build OTA_HotelDescriptoveInfoRQ->HotelDescriptiveInfos
+        $hotelDescriptiveInfos = [
+            new HotelDescriptiveInfo(
+                NULL,
+                NULL,
+                $policies,
+                NULL,
+                NULL,
+                NULL,
+                NULL,
+                $params['ChainCode'] ?? NULL,
+                $params['BrandCode'] ?? NULL,
+                $params['HotelCode'] ?? NULL,
+                $params['HotelCityCode'] ?? NULL,
+                $params['HotelName'] ?? NULL,
+                $params['HotelCodeContext'] ?? NULL
+            ),
+        ];
+
+        // Build request
+        $request = new OTA_HotelDescriptiveInfoRQ(
+            $params['EchoToken'] ?? NULL,
+            $params['PrimaryLangID'] ?? NULL,
+            $params['AltLangID'] ?? NULL,
+            $this->timestamp(),
+            $params['Target'] ?? NULL,
+            $params['Version'] ?? NULL,
+            $params['MessageContentCode'] ?? NULL,
+            NULL,
+            $hotelDescriptiveInfos,
+            $pos
+        );
+        try {
+            return $this->client->GetHotelDetails($request);
         } catch (\Exception $exception) {
             // Handle error.
             return NULL;
