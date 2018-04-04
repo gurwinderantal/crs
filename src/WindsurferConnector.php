@@ -626,10 +626,7 @@ class WindsurferConnector extends CrsConnectorBase {
         $wrapper = new ProcessHotelReservation($request);
 
         try {
-            $response = current($this->client->ProcessHotelReservation($wrapper));
-            ksm($this->client->__getLastRequest());
-            ksm($this->client->__getLastResponse());
-            return $response;
+            return current($this->client->ProcessHotelReservation($wrapper));
         } catch (\Exception $exception) {
             // Handle error.
             return NULL;
