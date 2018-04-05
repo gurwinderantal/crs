@@ -209,7 +209,9 @@ class SynxisConnector extends CrsConnectorBase {
         );
 
         try {
-            return $this->client->CheckAvailability($request);
+            $response = $this->client->CheckAvailability($request);
+            $this->logMessage(__FUNCTION__);
+            return $response;
         } catch (\Exception $exception) {
             // Handle error.
             return NULL;
@@ -577,7 +579,9 @@ class SynxisConnector extends CrsConnectorBase {
         );
 
         try {
-            return $this->client->CreateReservations($request);
+            $response = $this->client->CreateReservations($request);
+            $this->logMessage(__FUNCTION__);
+            return $response;
         } catch (\Exception $exception) {
             // Handle error.
             return NULL;
@@ -712,7 +716,9 @@ class SynxisConnector extends CrsConnectorBase {
         );
 
         try {
-            return $this->client->ReadReservations($request);
+            $response = $this->client->ReadReservations($request);
+            $this->logMessage(__FUNCTION__);
+            return $response;
         } catch (\Exception $exception) {
             // Handle error.
             return NULL;
@@ -1109,7 +1115,9 @@ class SynxisConnector extends CrsConnectorBase {
         );
 
         try {
-            return $this->client->ModifyReservations($request);
+            $response = $this->client->ModifyReservations($request);
+            $this->logMessage(__FUNCTION__);
+            return $response;
         } catch (\Exception $exception) {
             // Handle error.
             return NULL;
@@ -1270,13 +1278,20 @@ class SynxisConnector extends CrsConnectorBase {
         );
 
         try {
-            return $this->client->CancelReservations($request);
+            $response = $this->client->CancelReservations($request);
+            $this->logMessage(__FUNCTION__);
+            return $response;
         } catch (\Exception $exception) {
             // Handle error.
             return NULL;
         }
     }
 
+  /**
+   * @param $params
+   *
+   * @return \GurwinderAntal\crs\Type\Response\OTA_HotelDescriptiveInfoRS|null
+   */
     public function getHotelDetails($params) {
         // Instantiate SOAP client
         $this->initializeClient('http://htng.org/1.1/Header/', [
@@ -1347,11 +1362,32 @@ class SynxisConnector extends CrsConnectorBase {
             $pos
         );
         try {
-            return $this->client->GetHotelDetails($request);
+            $response = $this->client->GetHotelDetails($request);
+            $this->logMessage(__FUNCTION__);
+            return $response;
         } catch (\Exception $exception) {
             // Handle error.
             return NULL;
         }
+    }
+
+    /**
+     * Logs request and response messages in XML format in the files directory.
+     *
+     * @param $operation
+     *    The operation being performed, eg. createReservation.
+     */
+    public function logMessage($operation) {
+        $dir = $_SERVER['DOCUMENT_ROOT']. '/sites/default/files/messages';
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, TRUE);
+        }
+        $reqFile = fopen($dir . '/synxis_' . $operation . '_request_' . time() . '.xml', 'w');
+        fwrite($reqFile, $this->client->__getLastRequest());
+        fclose($reqFile);
+        $resFile = fopen($dir . '/synxis_' . $operation . '_response_' . time() . '.xml', 'w');
+        fwrite($resFile, $this->client->__getLastResponse());
+        fclose($resFile);
     }
 
 }

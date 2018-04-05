@@ -207,7 +207,9 @@ class WindsurferConnector extends CrsConnectorBase {
         $wrapper = new CheckHotelAvailability($request);
 
         try {
-            return current($this->client->CheckHotelAvailability($wrapper));
+            $response = current($this->client->CheckHotelAvailability($wrapper));
+            $this->logMessage(__FUNCTION__);
+            return $response;
         } catch (\Exception $exception) {
             // Handle error.
             return NULL;
@@ -626,7 +628,9 @@ class WindsurferConnector extends CrsConnectorBase {
         $wrapper = new ProcessHotelReservation($request);
 
         try {
-            return current($this->client->ProcessHotelReservation($wrapper));
+            $response = current($this->client->ProcessHotelReservation($wrapper));
+            $this->logMessage(__FUNCTION__);
+            return $response;
         } catch (\Exception $exception) {
             // Handle error.
             return NULL;
@@ -681,7 +685,9 @@ class WindsurferConnector extends CrsConnectorBase {
         $wrapper = new GetHotelReservation($request);
 
         try {
-            return current($this->client->GetHotelReservation($wrapper));
+            $response = current($this->client->GetHotelReservation($wrapper));
+            $this->logMessage(__FUNCTION__);
+            return $response;
         } catch (\Exception $exception) {
             // Handle error.
             return NULL;
@@ -828,11 +834,32 @@ class WindsurferConnector extends CrsConnectorBase {
         $wrapper = new ProcessHotelReservation($request);
 
         try {
-            return current($this->client->ProcessHotelReservation($wrapper));
+            $response = current($this->client->ProcessHotelReservation($wrapper));
+            $this->logMessage(__FUNCTION__);
+            return $response;
         } catch (\Exception $exception) {
             // Handle error.
             return NULL;
         }
+    }
+
+    /**
+     * Logs request and response messages in XML format in the files directory.
+     *
+     * @param $operation
+     *    The operation being performed, eg. createReservation.
+     */
+    public function logMessage($operation) {
+        $dir = $_SERVER['DOCUMENT_ROOT']. '/sites/default/files/messages';
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, TRUE);
+        }
+        $reqFile = fopen($dir . '/windsurfer_' . $operation . '_request_' . time() . '.xml', 'w');
+        fwrite($reqFile, $this->client->__getLastRequest());
+        fclose($reqFile);
+        $resFile = fopen($dir . '/windsurfer_' . $operation . '_response_' . time() . '.xml', 'w');
+        fwrite($resFile, $this->client->__getLastResponse());
+        fclose($resFile);
     }
 
 }
