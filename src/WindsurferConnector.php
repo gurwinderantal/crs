@@ -120,8 +120,15 @@ class WindsurferConnector extends CrsConnectorBase {
         $guestCounts = [];
         foreach ($params['Count'] as $aqc => $count) {
           if (!is_null($count)) {
-            $aqc = 'self::AQC_' . strtoupper($aqc);
-            $guestCounts[] = new GuestCount(constant($aqc), $count, NULL);
+            $aqc = constant('self::AQC_' . strtoupper($aqc));
+            if (is_array($count)) {
+              foreach ($count as $age => $value) {
+                $guestCount[] = new GuestCount($aqc, $value, $age);
+              }
+            }
+            else {
+              $guestCount[] = new GuestCount($aqc, $count, NULL);
+            }
           }
         }
         // Build AvailRequestSegment->RoomStayCandidates
