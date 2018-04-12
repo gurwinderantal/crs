@@ -42,6 +42,11 @@ class RatePlanCandidate {
     /**
      * @var null|string
      */
+    protected $RatePlanID;
+
+    /**
+     * @var null|string
+     */
     protected $RatePlanQualifier;
 
     /**
@@ -63,6 +68,7 @@ class RatePlanCandidate {
      * @param null|string $RatePlanCode
      * @param null|string $RatePlanType
      * @param null|string $RatePlanId
+     * @param null|string $RatePlanID
      * @param null|string $RatePlanQualifier
      * @param null|string $RatePlanCategory
      * @param null|string $RatePlanFilterCode
@@ -74,6 +80,7 @@ class RatePlanCandidate {
         ?string $RatePlanCode,
         ?string $RatePlanType,
         ?string $RatePlanId,
+        ?string $RatePlanID,
         ?string $RatePlanQualifier,
         ?string $RatePlanCategory,
         ?string $RatePlanFilterCode
@@ -84,6 +91,7 @@ class RatePlanCandidate {
         $this->RatePlanCode = $RatePlanCode;
         $this->RatePlanType = $RatePlanType;
         $this->RatePlanId = $RatePlanId;
+        $this->RatePlanID = $RatePlanID;
         $this->RatePlanQualifier = $RatePlanQualifier;
         $this->RatePlanCategory = $RatePlanCategory;
         $this->RatePlanFilterCode = $RatePlanFilterCode;

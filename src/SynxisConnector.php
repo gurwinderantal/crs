@@ -117,6 +117,7 @@ class SynxisConnector extends CrsConnectorBase {
                 $params['RatePlanCode'] ?? NULL,
                 $params['RatePlanType'] ?? NULL,
                 $params['RatePlanId'] ?? NULL,
+                NULL,
                 $params['RatePlanQualifier'] ?? NULL,
                 $params['RatePlanCategory'] ?? NULL,
                 $params['RatePlanFilterCode'] ?? NULL

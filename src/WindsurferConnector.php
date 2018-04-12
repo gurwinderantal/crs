@@ -110,7 +110,8 @@ class WindsurferConnector extends CrsConnectorBase {
                 $params['PromotionCode'] ?? NULL,
                 $params['RatePlanCode'] ?? NULL,
                 $params['RatePlanType'] ?? NULL,
-                $params['RatePlanId'] ?? NULL,
+                NULL,
+                $params['RatePlanID'] ?? NULL,
                 $params['RatePlanQualifier'] ?? NULL,
                 $params['RatePlanCategory'] ?? NULL,
                 $params['RatePlanFilterCode'] ?? NULL
