@@ -25,6 +25,7 @@ use GurwinderAntal\crs\Type\Common\Total;
 use GurwinderAntal\crs\Type\Request\AvailRequestSegment;
 use GurwinderAntal\crs\Type\Request\BookingChannel;
 use GurwinderAntal\crs\Type\Request\CheckHotelAvailability;
+use GurwinderAntal\crs\Type\Request\Comment;
 use GurwinderAntal\crs\Type\Request\GetHotelReservation;
 use GurwinderAntal\crs\Type\Request\HotelReservation;
 use GurwinderAntal\crs\Type\Request\HotelReservationID;
@@ -443,6 +444,13 @@ class WindsurferConnector extends CrsConnectorBase {
         else {
             $specialRequests = NULL;
         }
+        // Add any comments
+        if (array_key_exists('Comments', $params)) {
+            $comments = [];
+            foreach ($params['Comments'] as $comment) {
+                $comments[] = new Comment($comment['Text']);
+            }
+        }
         // Build HotelReservation->RoomStays
         $roomStays = [
             new RoomStay(
@@ -457,7 +465,7 @@ class WindsurferConnector extends CrsConnectorBase {
                 $timeSpan,
                 $specialRequests,
                 $basicPropertyInfo,
-                NULL,
+                $comments,
                 NULL,
                 NULL,
                 NULL,
