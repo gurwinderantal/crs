@@ -22,6 +22,7 @@ use GurwinderAntal\crs\Type\Common\StateProv;
 use GurwinderAntal\crs\Type\Common\Telephone;
 use GurwinderAntal\crs\Type\Common\TPA_Extensions;
 use GurwinderAntal\crs\Type\Request\AvailRequestSegment;
+use GurwinderAntal\crs\Type\Request\Comment;
 use GurwinderAntal\crs\Type\Request\CompanyName;
 use GurwinderAntal\crs\Type\Request\HotelDescriptiveInfo;
 use GurwinderAntal\crs\Type\Request\HotelReservation;
@@ -137,7 +138,7 @@ class SynxisConnector extends CrsConnectorBase {
                 $params['RoomType'] ?? NULL,
                 $params['RoomTypeCode'] ?? NULL,
                 $params['RoomCategory'] ?? NULL,
-                $params['PromotionCode'] ?? NULL,
+                NULL,
                 $params['NonSmoking'] ?? NULL,
                 NULL,
                 NULL
@@ -352,6 +353,13 @@ class SynxisConnector extends CrsConnectorBase {
         else {
             $specialRequests = NULL;
         }
+        // Add any comments
+        if (array_key_exists('Comments', $params)) {
+            $comments = [];
+            foreach ($params['Comments'] as $comment) {
+                $comments[] = new Comment($comment['Text']);
+            }
+        }
         // Build HotelReservation->RoomStays
         $roomStays = [
             new RoomStay(
@@ -366,7 +374,7 @@ class SynxisConnector extends CrsConnectorBase {
                 $timeSpan,
                 $specialRequests,
                 $basicPropertyInfo,
-                NULL,
+                $comments,
                 NULL,
                 NULL,
                 NULL,
@@ -459,7 +467,6 @@ class SynxisConnector extends CrsConnectorBase {
             'CardCode',
             'CardNumber',
             'CardExpireDate',
-            'SeriesCode',
         ], $params)) {
             // Build HotelReservations->ResGlobalInfo->Guarantee->GuaranteesAccepted
             $guaranteesAccepted = [
