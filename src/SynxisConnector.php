@@ -353,13 +353,6 @@ class SynxisConnector extends CrsConnectorBase {
         else {
             $specialRequests = NULL;
         }
-        // Add any comments
-        if (array_key_exists('Comments', $params)) {
-            $comments = [];
-            foreach ($params['Comments'] as $comment) {
-                $comments[] = new Comment($comment['Text']);
-            }
-        }
         // Build HotelReservation->RoomStays
         $roomStays = [
             new RoomStay(
@@ -463,6 +456,16 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL
             );
         }
+        // Add any comments
+        if (array_key_exists('Comments', $params)) {
+            $comments = [];
+            foreach ($params['Comments'] as $comment) {
+                $comments[] = new Comment($comment['Text']);
+            }
+        }
+        else {
+            $comments = NULL;
+        }
         if ($this->array_keys_exist([
             'CardCode',
             'CardNumber',
@@ -493,9 +496,14 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL,
                 NULL
             );
+        }
+        else {
+            $guarantee = NULL;
+        }
+        if ($comments != NULL || $guarantee != NULL) {
             // Build HotelReservations->ResGlobalInfo
             $resGlobalInfo = new ResGlobalInfo(
-                NULL,
+                $comments,
                 $guarantee,
                 NULL,
                 NULL,
