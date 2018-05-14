@@ -24,6 +24,7 @@ use GurwinderAntal\crs\Type\Common\TPA_Extensions;
 use GurwinderAntal\crs\Type\Request\AvailRequestSegment;
 use GurwinderAntal\crs\Type\Request\Comment;
 use GurwinderAntal\crs\Type\Request\CompanyName;
+use GurwinderAntal\crs\Type\Request\DateTimeSpanType;
 use GurwinderAntal\crs\Type\Request\HotelDescriptiveInfo;
 use GurwinderAntal\crs\Type\Request\HotelReservation;
 use GurwinderAntal\crs\Type\Request\HotelResModify;
@@ -49,6 +50,7 @@ use GurwinderAntal\crs\Type\Request\SupplementalData;
 use GurwinderAntal\crs\Type\Request\UniqueID;
 use GurwinderAntal\crs\Type\Request\Verification;
 use GurwinderAntal\crs\Type\Request\WrittenConfInst;
+use GurwinderAntal\crs\Type\Response\ResCommonDetailType;
 use GurwinderAntal\crs\Type\Response\Service;
 
 /**
@@ -540,8 +542,31 @@ class SynxisConnector extends CrsConnectorBase {
         if (array_key_exists('Services', $params)) {
             $services = [];
             foreach ($params['Services'] as $service) {
-                $services[] = new Service(
+                // @TODO: Safe to derive GuestCounts from Quantity?
+                // @TODO: TimeSpan needs to be flexible
+                $serviceDetails = new ResCommonDetailType(
+                    new GuestCounts(
+                        [
+                            new GuestCount(
+                                self::AQC_ADULT,
+                                $service['Quantity'] ?? NULL,
+                                NULL
+                            ),
+                        ],
+                        $params['IsPerRoom'] ?? NULL
+                    ),
                     NULL,
+                    new DateTimeSpanType(
+                        $params['Start'] ?? NULL,
+                        $params['End'] ?? NULL,
+                        NULL,
+                        NULL
+                    ),
+                    NULL,
+                    NULL
+                );
+                $services[] = new Service(
+                    $serviceDetails,
                     NULL,
                     NULL,
                     NULL,
