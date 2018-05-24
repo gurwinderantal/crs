@@ -36,6 +36,11 @@ abstract class CrsConnectorBase implements CrsConnectorInterface {
     protected $credentials;
 
     /**
+     * @var bool
+     */
+    public $debug;
+
+    /**
      * CrsConnector constructor.
      *
      * @param string $wsdl
@@ -47,7 +52,8 @@ abstract class CrsConnectorBase implements CrsConnectorInterface {
      */
     public function __construct(
         string $wsdl,
-        array $credentials
+        array $credentials,
+        bool $debug = FALSE
     ) {
         if (!class_exists('SoapClient')) {
             throw new \Exception('PHP SOAP extension not installed.');
@@ -57,6 +63,7 @@ abstract class CrsConnectorBase implements CrsConnectorInterface {
         }
         $this->wsdl = $wsdl;
         $this->credentials = $credentials;
+        $this->debug = $debug;
     }
 
     /**

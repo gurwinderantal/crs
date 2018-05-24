@@ -214,7 +214,9 @@ class SynxisConnector extends CrsConnectorBase {
 
         try {
             $response = $this->client->CheckAvailability($request);
-            //$this->logMessage(__FUNCTION__);
+            if ($this->debug) {
+                $this->logMessage(__FUNCTION__);
+            }
             return $response;
         } catch (\Exception $exception) {
             // Handle error.
@@ -621,7 +623,9 @@ class SynxisConnector extends CrsConnectorBase {
 
         try {
             $response = $this->client->CreateReservations($request);
-            //$this->logMessage(__FUNCTION__);
+            if ($this->debug) {
+                $this->logMessage(__FUNCTION__);
+            }
             return $response;
         } catch (\Exception $exception) {
             // Handle error.
@@ -758,7 +762,9 @@ class SynxisConnector extends CrsConnectorBase {
 
         try {
             $response = $this->client->ReadReservations($request);
-            //$this->logMessage(__FUNCTION__);
+            if ($this->debug) {
+                $this->logMessage(__FUNCTION__);
+            }
             return $response;
         } catch (\Exception $exception) {
             // Handle error.
@@ -1157,7 +1163,9 @@ class SynxisConnector extends CrsConnectorBase {
 
         try {
             $response = $this->client->ModifyReservations($request);
-            //$this->logMessage(__FUNCTION__);
+            if ($this->debug) {
+                $this->logMessage(__FUNCTION__);
+            }
             return $response;
         } catch (\Exception $exception) {
             // Handle error.
@@ -1320,7 +1328,9 @@ class SynxisConnector extends CrsConnectorBase {
 
         try {
             $response = $this->client->CancelReservations($request);
-            //$this->logMessage(__FUNCTION__);
+            if ($this->debug) {
+                $this->logMessage(__FUNCTION__);
+            }
             return $response;
         } catch (\Exception $exception) {
             // Handle error.
@@ -1404,7 +1414,9 @@ class SynxisConnector extends CrsConnectorBase {
         );
         try {
             $response = $this->client->GetHotelDetails($request);
-            //$this->logMessage(__FUNCTION__);
+            if ($this->debug) {
+                $this->logMessage(__FUNCTION__);
+            }
             return $response;
         } catch (\Exception $exception) {
             // Handle error.

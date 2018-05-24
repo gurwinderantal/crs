@@ -212,7 +212,9 @@ class WindsurferConnector extends CrsConnectorBase {
 
         try {
             $response = current($this->client->CheckHotelAvailability($wrapper));
-            //$this->logMessage(__FUNCTION__);
+            if ($this->debug) {
+                $this->logMessage(__FUNCTION__);
+            }
             return $response;
         } catch (\Exception $exception) {
             // Handle error.
@@ -640,7 +642,9 @@ class WindsurferConnector extends CrsConnectorBase {
 
         try {
             $response = current($this->client->ProcessHotelReservation($wrapper));
-            //$this->logMessage(__FUNCTION__);
+            if ($this->debug) {
+                $this->logMessage(__FUNCTION__);
+            }
             return $response;
         } catch (\Exception $exception) {
             // Handle error.
@@ -697,7 +701,9 @@ class WindsurferConnector extends CrsConnectorBase {
 
         try {
             $response = current($this->client->GetHotelReservation($wrapper));
-            //$this->logMessage(__FUNCTION__);
+            if ($this->debug) {
+                $this->logMessage(__FUNCTION__);
+            }
             return $response;
         } catch (\Exception $exception) {
             // Handle error.
@@ -846,7 +852,9 @@ class WindsurferConnector extends CrsConnectorBase {
 
         try {
             $response = current($this->client->ProcessHotelReservation($wrapper));
-            //$this->logMessage(__FUNCTION__);
+            if ($this->debug) {
+                $this->logMessage(__FUNCTION__);
+            }
             return $response;
         } catch (\Exception $exception) {
             // Handle error.
