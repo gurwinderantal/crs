@@ -4,6 +4,7 @@ namespace GurwinderAntal\crs;
 
 use GurwinderAntal\crs\Type\Common\AddressInfo;
 use GurwinderAntal\crs\Type\Common\CountryName;
+use GurwinderAntal\crs\Type\Common\CustLoyalty;
 use GurwinderAntal\crs\Type\Common\Customer;
 use GurwinderAntal\crs\Type\Common\DateTimeSpan;
 use GurwinderAntal\crs\Type\Common\Guarantee;
@@ -384,6 +385,15 @@ class SynxisConnector extends CrsConnectorBase {
         $resGuests = [];
         foreach ($params['ResGuests'] as $resGuest) {
             // Build HotelReservation->ResGuest->Profiles->Profile->Customer
+            if (array_key_exists('MembershipID', $resGuest) && !empty($resGuest['MembershipID'])) {
+                $custLoyalty = new CustLoyalty(
+                    $resGuest['ProgramID'] ?? NULL,
+                    $resGuest['MembershipID'] ?? NULL
+                );
+            }
+            else {
+                $custLoyalty = NULL;
+            }
             $customer = new Customer(
                 new PersonName(
                     $resGuest['NamePrefix'] ?? NULL,
@@ -415,7 +425,7 @@ class SynxisConnector extends CrsConnectorBase {
                     $resGuest['DefaultInd'] ?? FALSE
                 ),
                 NULL,
-                NULL,
+                $custLoyalty,
                 NULL,
                 NULL,
                 NULL,
