@@ -387,7 +387,7 @@ class SynxisConnector extends CrsConnectorBase {
             // Build HotelReservation->ResGuest->Profiles->Profile->Customer
             if (array_key_exists('MembershipID', $resGuest) && !empty($resGuest['MembershipID'])) {
                 $custLoyalty = new CustLoyalty(
-                    $resGuest['ProgramID'] ?? NULL,
+                    $params['ProgramID'] ?? NULL,
                     $resGuest['MembershipID'] ?? NULL
                 );
             }
