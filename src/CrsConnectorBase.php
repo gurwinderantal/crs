@@ -47,6 +47,7 @@ abstract class CrsConnectorBase implements CrsConnectorInterface {
      *    URI of the WSDL file.
      * @param array $credentials
      *    An array containing credentials supplied by the CRS provider.
+     * @param bool $debug
      *
      * @throws \Exception
      */
@@ -69,8 +70,9 @@ abstract class CrsConnectorBase implements CrsConnectorInterface {
     /**
      * @param string $namespace
      * @param array $classmap
+     * @param bool $restricted
      */
-    public function initializeClient(string $namespace, array $classmap) {
+    public function initializeClient(string $namespace, array $classmap, bool $restricted = FALSE) {
         $context = stream_context_create([
             'ssl' => [
                 'verify_peer'       => FALSE,
@@ -78,12 +80,22 @@ abstract class CrsConnectorBase implements CrsConnectorInterface {
                 'allow_self_signed' => FALSE,
             ],
         ]);
-        $this->client = new \SoapClient($this->wsdl, [
-            'classmap'       => $classmap,
-            'exceptions'     => TRUE,
-            'trace'          => TRUE,
-            'stream_context' => $context,
-        ]);
+        if ($restricted) {
+            $this->client = new RestrictedSoapClient($this->wsdl, [
+                'classmap'       => $classmap,
+                'exceptions'     => TRUE,
+                'trace'          => $this->debug,
+                'stream_context' => $context,
+            ]);
+        }
+        else {
+            $this->client = new \SoapClient($this->wsdl, [
+                'classmap'       => $classmap,
+                'exceptions'     => TRUE,
+                'trace'          => $this->debug,
+                'stream_context' => $context,
+            ]);
+        }
         $this->setHeaders($namespace);
     }
 

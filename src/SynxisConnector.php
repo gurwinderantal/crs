@@ -243,7 +243,7 @@ class SynxisConnector extends CrsConnectorBase {
         $this->initializeClient('http://htng.org/1.1/Header/', [
             'OTA_HotelResRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelResRQ',
             'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
-        ]);
+        ], TRUE);
 
         // Build POS->Source->RequestorID->CompanyName
         $companyName = new CompanyName(
@@ -372,7 +372,7 @@ class SynxisConnector extends CrsConnectorBase {
                 $timeSpan,
                 $specialRequests,
                 $basicPropertyInfo,
-                $comments,
+                NULL,
                 NULL,
                 NULL,
                 NULL,
