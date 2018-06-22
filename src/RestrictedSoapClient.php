@@ -15,7 +15,7 @@ class RestrictedSoapClient extends \SoapClient {
      */
     public function __doRequest($request, $location, $action, $version, $one_way = 0) {
         // @TODO: Make this request to MyCheck instead of sending it to the CRS
-        $response = '';
+        $response = parent::__doRequest($request, $location, $action, $version, $one_way);
         return $response;
     }
 
