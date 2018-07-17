@@ -236,25 +236,26 @@ class WindsurferConnector extends CrsConnectorBase {
     /**
      * {@inheritdoc}
      */
-    public function createReservation($params) {
+    public function createReservation($params, $config) {
         $params['ResStatus'] = 'Book';
-        return $this->processReservation($params);
+        return $this->processReservation($params, $config);
     }
 
     /**
      * Executes operation on reservation.
      *
      * @param $params
+     * @param $config
      *
      * @return mixed
      */
-    public function processReservation($params) {
+    public function processReservation($params, $config = []) {
         $restricted = $params['ResStatus'] == 'Book' ? TRUE : FALSE;
         // Instantiate SOAP client
         $this->initializeClient('http://htng.org/2009B', [
             'OTA_HotelResRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelResRQ',
             'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
-        ], $restricted);
+        ], $restricted, $config);
 
         // Build POS->Source->BookingChannel
         $bookingChannel = new BookingChannel(

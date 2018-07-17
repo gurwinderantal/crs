@@ -72,10 +72,11 @@ interface CrsConnectorInterface {
      * @param $params
      *    An array containing reservation parameters. Array keys must be the
      *    the same as the SOAP XML element attributes.
+     * @param $config
      *
      * @return mixed
      */
-    public function createReservation($params);
+    public function createReservation($params, $config);
 
     /**
      * @param $params

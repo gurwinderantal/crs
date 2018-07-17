@@ -71,8 +71,9 @@ abstract class CrsConnectorBase implements CrsConnectorInterface {
      * @param string $namespace
      * @param array $classmap
      * @param bool $restricted
+     * @param array $config
      */
-    public function initializeClient(string $namespace, array $classmap, bool $restricted = FALSE) {
+    public function initializeClient(string $namespace, array $classmap, bool $restricted = FALSE, array $config = []) {
         $context = stream_context_create([
             'ssl' => [
                 'verify_peer'       => FALSE,
@@ -86,7 +87,7 @@ abstract class CrsConnectorBase implements CrsConnectorInterface {
                 'exceptions'     => TRUE,
                 'trace'          => $this->debug,
                 'stream_context' => $context,
-            ]);
+            ], $config);
         }
         else {
             $this->client = new \SoapClient($this->wsdl, [

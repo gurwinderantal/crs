@@ -238,12 +238,12 @@ class SynxisConnector extends CrsConnectorBase {
     /**
      * {@inheritdoc}
      */
-    public function createReservation($params) {
+    public function createReservation($params, $config) {
         // Instantiate SOAP client
         $this->initializeClient('http://htng.org/1.1/Header/', [
             'OTA_HotelResRQ' => 'GurwinderAntal\crs\Type\Request\OTA_HotelResRQ',
             'OTA_HotelResRS' => 'GurwinderAntal\crs\Type\Response\OTA_HotelResRS',
-        ], TRUE);
+        ], TRUE, $config);
 
         // Build POS->Source->RequestorID->CompanyName
         $companyName = new CompanyName(
