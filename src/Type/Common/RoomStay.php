@@ -2,8 +2,6 @@
 
 namespace GurwinderAntal\crs\Type\Common;
 
-use GurwinderAntal\crs\Type\Request\SpecialRequest;
-
 /**
  * Class RoomStay
  *
@@ -124,7 +122,7 @@ class RoomStay {
      * @param $DepositPayments
      * @param \GurwinderAntal\crs\Type\Common\ResGuestRPH[]|null $ResGuestRPHs
      * @param $ServiceRPHs
-     * @param $Memberships
+     * @param \GurwinderAntal\crs\Type\Common\Membership[]|null $Memberships
      * @param null|string $MarketCode
      * @param null|string $SourceOfBusiness
      * @param null|string $IndexNumber
@@ -145,7 +143,7 @@ class RoomStay {
         $DepositPayments,
         ?array $ResGuestRPHs,
         $ServiceRPHs,
-        $Memberships,
+        ?array $Memberships,
         ?string $MarketCode,
         ?string $SourceOfBusiness,
         ?string $IndexNumber

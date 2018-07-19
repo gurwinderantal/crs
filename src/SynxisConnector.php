@@ -4,7 +4,6 @@ namespace GurwinderAntal\crs;
 
 use GurwinderAntal\crs\Type\Common\AddressInfo;
 use GurwinderAntal\crs\Type\Common\CountryName;
-use GurwinderAntal\crs\Type\Common\CustLoyalty;
 use GurwinderAntal\crs\Type\Common\Customer;
 use GurwinderAntal\crs\Type\Common\DateTimeSpan;
 use GurwinderAntal\crs\Type\Common\Guarantee;
@@ -13,6 +12,7 @@ use GurwinderAntal\crs\Type\Common\GuestCount;
 use GurwinderAntal\crs\Type\Common\GuestCounts;
 use GurwinderAntal\crs\Type\Common\HotelReferenceGroup;
 use GurwinderAntal\crs\Type\Common\HotelSearchCriterion;
+use GurwinderAntal\crs\Type\Common\Membership;
 use GurwinderAntal\crs\Type\Common\PersonName;
 use GurwinderAntal\crs\Type\Common\Policies;
 use GurwinderAntal\crs\Type\Common\Profile;
@@ -358,6 +358,21 @@ class SynxisConnector extends CrsConnectorBase {
         else {
             $specialRequests = NULL;
         }
+        if (array_key_exists('MembershipID', $params['ResGuests'][0]) && !empty($params['ResGuests'][0]['MembershipID'])) {
+            $memberships = [
+                new Membership(
+                    $params['ProgramID'] ?? NULL,
+                    $params['BonusCode'] ?? NULL,
+                    $params['ResGuests'][0]['AccountID'] ?? NULL,
+                    $params['ResGuests'][0]['MembershipID'] ?? NULL,
+                    $params['TravelSector'] ?? NULL,
+                    $params['PointsEarned'] ?? NULL
+                ),
+            ];
+        }
+        else {
+            $memberships = NULL;
+        }
         // Build HotelReservation->RoomStays
         $roomStays = [
             new RoomStay(
@@ -376,7 +391,7 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL,
                 NULL,
                 NULL,
-                NULL,
+                $memberships,
                 $params['MarketCode'] ?? NULL,
                 $params['SourceOfBusiness'] ?? NULL,
                 $params['IndexNumber'] ?? NULL
@@ -385,15 +400,6 @@ class SynxisConnector extends CrsConnectorBase {
         $resGuests = [];
         foreach ($params['ResGuests'] as $resGuest) {
             // Build HotelReservation->ResGuest->Profiles->Profile->Customer
-            if (array_key_exists('MembershipID', $resGuest) && !empty($resGuest['MembershipID'])) {
-                $custLoyalty = new CustLoyalty(
-                    $params['ProgramID'] ?? NULL,
-                    $resGuest['MembershipID'] ?? NULL
-                );
-            }
-            else {
-                $custLoyalty = NULL;
-            }
             $customer = new Customer(
                 new PersonName(
                     $resGuest['NamePrefix'] ?? NULL,
@@ -425,7 +431,7 @@ class SynxisConnector extends CrsConnectorBase {
                     $resGuest['DefaultInd'] ?? FALSE
                 ),
                 NULL,
-                $custLoyalty,
+                NULL,
                 NULL,
                 NULL,
                 NULL,
