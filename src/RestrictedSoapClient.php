@@ -59,7 +59,7 @@ class RestrictedSoapClient extends \SoapClient {
                     'MAP_CC_TYPE',
                 ],
                 'mappings'     => [
-                    'cardTypes' => new \stdClass(),
+                    'cardTypes' => [],
                 ],
                 'postActions'  => [],
                 'json'         => [],
@@ -72,6 +72,26 @@ class RestrictedSoapClient extends \SoapClient {
         // Windsurfer's WSDL lists the service endpoint as http instead of https. MyCheck no likey.
         if ($crs == 'windsurfer') {
             $params['posRequest']['url'] = str_replace('http://', 'https://', $location);
+            $params['posRequest']['mappings']['cardTypes'] = [
+                'VISA'       => 'VISA',
+                'MASTERCARD' => 'MASTER',
+                'AMEX'       => 'AMEX',
+                'DISCOVER'   => 'DISCOVER',
+                'DINERS'     => 'DINERSCLUB',
+                'JCB'        => 'JCB',
+                'MAESTRO'    => 'MASTER',
+            ];
+        }
+        else {
+            $params['posRequest']['mappings']['cardTypes'] = [
+                'VISA'       => 'VI',
+                'MASTERCARD' => 'MC',
+                'AMEX'       => 'AX',
+                'DISCOVER'   => 'DS',
+                'DINERS'     => 'DN',
+                'JCB'        => 'JC',
+                'MAESTRO'    => 'SW',
+            ];
         }
         $params['pciRequest']['body'] = $this->extractToken($crs, $request);
         $params['posRequest']['body'] = urlencode($request);
@@ -187,12 +207,12 @@ class RestrictedSoapClient extends \SoapClient {
         return $response;
     }
 
-    public function logRequest($request) {
+    public function logRequest($request, $filename) {
         $dir = $_SERVER['DOCUMENT_ROOT']. '/sites/default/files/messages';
         if (!is_dir($dir)) {
             mkdir($dir, 0755, TRUE);
         }
-        $reqFile = fopen($dir . '/scratch.xml', 'w');
+        $reqFile = fopen($dir . '/' . $filename, 'w');
         fwrite($reqFile, $request);
         fclose($reqFile);
     }
