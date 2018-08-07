@@ -910,6 +910,22 @@ class SynxisConnector extends CrsConnectorBase {
         else {
             $specialRequests = NULL;
         }
+        // Add membership info
+        if (array_key_exists('MembershipID', $params['ResGuests'][0]) && !empty($params['ResGuests'][0]['MembershipID'])) {
+            $memberships = [
+                new Membership(
+                    $params['ProgramID'] ?? NULL,
+                    $params['BonusCode'] ?? NULL,
+                    $params['ResGuests'][0]['AccountID'] ?? NULL,
+                    $params['ResGuests'][0]['MembershipID'] ?? NULL,
+                    $params['TravelSector'] ?? NULL,
+                    $params['PointsEarned'] ?? NULL
+                ),
+            ];
+        }
+        else {
+            $memberships = NULL;
+        }
         // Build HotelResModify->RoomStays
         $roomStays = [
             new RoomStay(
@@ -928,7 +944,7 @@ class SynxisConnector extends CrsConnectorBase {
                 NULL,
                 NULL,
                 NULL,
-                NULL,
+                $memberships,
                 $params['MarketCode'] ?? NULL,
                 $params['SourceOfBusiness'] ?? NULL,
                 $params['IndexNumber'] ?? NULL
@@ -1012,6 +1028,16 @@ class SynxisConnector extends CrsConnectorBase {
                 $params['RPH'] ?? NULL,
                 NULL
             );
+        }
+        // Add any comments
+        if (array_key_exists('Comments', $params)) {
+            $comments = [];
+            foreach ($params['Comments'] as $comment) {
+                $comments[] = new Comment($comment['Text']);
+            }
+        }
+        else {
+            $comments = NULL;
         }
         if ($this->array_keys_exist([
             'CardCode',
@@ -1126,8 +1152,29 @@ class SynxisConnector extends CrsConnectorBase {
         if (array_key_exists('Services', $params)) {
             $services = [];
             foreach ($params['Services'] as $service) {
-                $services[] = new Service(
+                $serviceDetails = new ResCommonDetailType(
+                    new GuestCounts(
+                        [
+                            new GuestCount(
+                                self::AQC_ADULT,
+                                $service['Quantity'] ?? NULL,
+                                NULL
+                            ),
+                        ],
+                        $params['IsPerRoom'] ?? NULL
+                    ),
                     NULL,
+                    new DateTimeSpanType(
+                        $params['Start'] ?? NULL,
+                        $params['End'] ?? NULL,
+                        NULL,
+                        NULL
+                    ),
+                    NULL,
+                    NULL
+                );
+                $services[] = new Service(
+                    $serviceDetails,
                     NULL,
                     NULL,
                     NULL,
